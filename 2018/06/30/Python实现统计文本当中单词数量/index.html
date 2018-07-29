@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Python," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="关于用实现统计文本当中单词数量这个功能，代码进行一步一步的升级。 我做个回顾，或许以后还能写出更符合标准的代码。 1 刚看完《python编程：从入门到实践》的时候写的代码学习python的时候在《python编程：从入门到实践》书中第10章中学习了分析文本，当时写出了统计一个单词出现的频率： 1234567891011121314151617181920# 10-10 常见单词def row_c">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python实现统计文本当中单词数量">
+<meta property="og:url" content="http://yoursite.com/2018/06/30/Python实现统计文本当中单词数量/index.html">
+<meta property="og:site_name" content="剑十三">
+<meta property="og:description" content="关于用实现统计文本当中单词数量这个功能，代码进行一步一步的升级。 我做个回顾，或许以后还能写出更符合标准的代码。 1 刚看完《python编程：从入门到实践》的时候写的代码学习python的时候在《python编程：从入门到实践》书中第10章中学习了分析文本，当时写出了统计一个单词出现的频率： 1234567891011121314151617181920# 10-10 常见单词def row_c">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-12T16:38:14.625Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python实现统计文本当中单词数量">
+<meta name="twitter:description" content="关于用实现统计文本当中单词数量这个功能，代码进行一步一步的升级。 我做个回顾，或许以后还能写出更符合标准的代码。 1 刚看完《python编程：从入门到实践》的时候写的代码学习python的时候在《python编程：从入门到实践》书中第10章中学习了分析文本，当时写出了统计一个单词出现的频率： 1234567891011121314151617181920# 10-10 常见单词def row_c">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/30/Python实现统计文本当中单词数量/"/>
+
+
+
+
+
+  <title>Python实现统计文本当中单词数量 | 剑十三</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑十三</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">剑未配妥，身已江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/30/Python实现统计文本当中单词数量/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="高鹏">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/jugg.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑十三">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python实现统计文本当中单词数量</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-30T15:12:43+08:00">
+                2018-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>关于用实现统计文本当中单词数量这个功能，代码进行一步一步的升级。</p>
+<p>我做个回顾，或许以后还能写出更符合标准的代码。</p>
+<h3 id="1-刚看完《python编程：从入门到实践》的时候写的代码"><a href="#1-刚看完《python编程：从入门到实践》的时候写的代码" class="headerlink" title="1 刚看完《python编程：从入门到实践》的时候写的代码"></a>1 刚看完《python编程：从入门到实践》的时候写的代码</h3><p>学习python的时候在《python编程：从入门到实践》书中第10章中学习了分析文本，当时写出了统计一个单词出现的频率：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 10-10 常见单词</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">row_count</span><span class="params">(filename)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">            content = f_obj.read()</span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        msg = <span class="string">"The file "</span> + filename + <span class="string">" does not exist."</span></span><br><span class="line">        print(msg)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        content = content.replace(<span class="string">','</span>, <span class="string">' '</span>)</span><br><span class="line">        content = content.replace(<span class="string">'.'</span>, <span class="string">' '</span>)</span><br><span class="line">        content = content.replace(<span class="string">'-'</span>, <span class="string">' '</span>)</span><br><span class="line">        content = content.strip().lower()</span><br><span class="line">        words = content.split()</span><br><span class="line">        <span class="comment"># 统计row单词出现在文本中的次数</span></span><br><span class="line">        number = words.count(<span class="string">'row'</span>)</span><br><span class="line">        print(<span class="string">'row : %d'</span> % number)</span><br><span class="line"></span><br><span class="line">filename = <span class="string">'Heart of Darkness.txt'</span></span><br><span class="line">row_count(filename)</span><br></pre></td></tr></table></figure>
+<p>运行结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">row : 9</span><br></pre></td></tr></table></figure>
+<p>这个代码只是实现一个单词的出现次数的统计。</p>
+<p>并且还有一些问题。比如还有[a、(b这样的标点符号出现在单词中。</p>
+<h3 id="2-写完一个单词的统计，又扩展了对所有单词都进行统计并排序"><a href="#2-写完一个单词的统计，又扩展了对所有单词都进行统计并排序" class="headerlink" title="2 写完一个单词的统计，又扩展了对所有单词都进行统计并排序"></a>2 写完一个单词的统计，又扩展了对所有单词都进行统计并排序</h3><p>当时写完课后作业时，想到了能不能对所有单词都进行统计并进行排序呢，于是上网查了一些资料，写出了下面的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> operator <span class="keyword">import</span> itemgetter</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">words_list</span><span class="params">(filename)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">            content = f_obj.read()</span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        msg = <span class="string">"The file "</span> + filename + <span class="string">" does not exist."</span></span><br><span class="line">        print(msg)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        content = content.replace(<span class="string">','</span>, <span class="string">' '</span>)</span><br><span class="line">        content = content.replace(<span class="string">'.'</span>, <span class="string">' '</span>)</span><br><span class="line">        content = content.replace(<span class="string">'!'</span>, <span class="string">' '</span>)</span><br><span class="line">        content = content.replace(<span class="string">'-'</span>, <span class="string">' '</span>)</span><br><span class="line">        content = content.replace(<span class="string">'_'</span>, <span class="string">' '</span>)</span><br><span class="line">        content = content.replace(<span class="string">'('</span>, <span class="string">' '</span>)</span><br><span class="line">        content = content.replace(<span class="string">')'</span>, <span class="string">' '</span>)</span><br><span class="line">        content = content.strip()</span><br><span class="line">        words = [word.lower() <span class="keyword">for</span> word <span class="keyword">in</span> content.split()]</span><br><span class="line">        <span class="keyword">return</span> words</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">count_results</span><span class="params">(filename)</span>:</span></span><br><span class="line">    words_count = &#123;&#125;</span><br><span class="line">    words = words_list(filename)</span><br><span class="line">    words_count = words_count.fromkeys(words)</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> words_count.keys():</span><br><span class="line">        number = words.count(word)</span><br><span class="line">        words_count[word] = number</span><br><span class="line">    words_count = sorted(words_count.items(), key=itemgetter(<span class="number">1</span>), reverse=<span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">return</span> words_count</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    filename = <span class="string">'Heart of Darkness.txt'</span></span><br><span class="line">    words_count = count_results(filename)</span><br><span class="line">    <span class="keyword">for</span> word, word_count <span class="keyword">in</span> words_count[:<span class="number">10</span>]:</span><br><span class="line">        print(<span class="string">'&#123;0:&lt;10&#125; : &#123;1&#125;'</span>.format(word, word_count))</span><br></pre></td></tr></table></figure>
+<p>运行结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">the        : 2440</span><br><span class="line">of         : 1492</span><br><span class="line">a          : 1205</span><br><span class="line">and        : 1045</span><br><span class="line">i          : 1039</span><br><span class="line">to         : 967</span><br><span class="line">was        : 671</span><br><span class="line">in         : 668</span><br><span class="line">he         : 563</span><br><span class="line">had        : 503</span><br></pre></td></tr></table></figure>
+<p>还是有问题，还是有标点符号没有彻底清除，类似这种[a]、_a_。</p>
+<h3 id="3-学完正则表达式以后使用正则表达式进行分割单词"><a href="#3-学完正则表达式以后使用正则表达式进行分割单词" class="headerlink" title="3 学完正则表达式以后使用正则表达式进行分割单词"></a>3 学完正则表达式以后使用正则表达式进行分割单词</h3><p>学会使用正则以后，试着用正则来清除标点符号：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">from</span> operator <span class="keyword">import</span> itemgetter</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">words_list</span><span class="params">(filename)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">            content = f_obj.read()</span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        msg = <span class="string">"The file "</span> + filename + <span class="string">" does not exist."</span></span><br><span class="line">        print(msg)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        WORD_RE = re.compile(<span class="string">r'\W+'</span>)</span><br><span class="line">        words =  WORD_RE.split(content.lower())</span><br><span class="line">        <span class="keyword">return</span> words</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">count_results</span><span class="params">(filename)</span>:</span></span><br><span class="line">    words_count = &#123;&#125;</span><br><span class="line">    words = words_list(filename)</span><br><span class="line">    words_count = words_count.fromkeys(words)</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> words_count.keys():</span><br><span class="line">        number = words.count(word)</span><br><span class="line">        words_count[word] = number</span><br><span class="line">    words_count = sorted(words_count.items(), key=itemgetter(<span class="number">1</span>), reverse=<span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">return</span> words_count</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    filename = <span class="string">'Heart of Darkness.txt'</span></span><br><span class="line">    words_count = count_results(filename)</span><br><span class="line">    <span class="keyword">for</span> word, word_count <span class="keyword">in</span> words_count[:<span class="number">10</span>]:</span><br><span class="line">        print(<span class="string">'&#123;0:&lt;10&#125; : &#123;1&#125;'</span>.format(word, word_count))</span><br></pre></td></tr></table></figure>
+<p>统计结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">the        : 2468</span><br><span class="line">of         : 1496</span><br><span class="line">a          : 1209</span><br><span class="line">i          : 1153</span><br><span class="line">and        : 1062</span><br><span class="line">to         : 974</span><br><span class="line">in         : 673</span><br><span class="line">was        : 672</span><br><span class="line">he         : 596</span><br><span class="line">it         : 515</span><br></pre></td></tr></table></figure>
+<p>还是有问题，\w+包含[A-Za-z0-9_]，所以包含’_‘的单词也会被统计出来，比如说‘_that_’也会被统计，并且区别于that。</p>
+<p>首先想到就是先把下划线(_)替换为空格即可，不过也可以把_that_和that当做是2种单词。</p>
+<h3 id="4-还想到了一个不需要count的解法"><a href="#4-还想到了一个不需要count的解法" class="headerlink" title="4 还想到了一个不需要count的解法"></a>4 还想到了一个不需要count的解法</h3><p>今天看另一本书《流畅的python》，在学习字典和集合的时候想到了另一种解法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">count_results</span><span class="params">(filename)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">            content = f_obj.read()</span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        msg = <span class="string">"The file "</span> + filename + <span class="string">" does not exist."</span></span><br><span class="line">        print(msg)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        WORD_RE = re.compile(<span class="string">r'\w+'</span>)</span><br><span class="line">        words_count = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> match <span class="keyword">in</span> WORD_RE.finditer(content.lower()):</span><br><span class="line">            word = match.group()</span><br><span class="line">            <span class="comment"># occurrences = words_count.get(word, [])</span></span><br><span class="line">            <span class="comment"># occurrences.append(word)</span></span><br><span class="line">            <span class="comment"># words_count[word] = occurrences</span></span><br><span class="line">            words_count.setdefault(word, []).append(word)</span><br><span class="line">        words_count = &#123;word:len(value) <span class="keyword">for</span> word, value <span class="keyword">in</span> words_count.items()&#125;</span><br><span class="line">        words_count = sorted(words_count.items(), key=itemgetter(<span class="number">1</span>), reverse=<span class="keyword">True</span>)</span><br><span class="line">        <span class="keyword">return</span> words_count</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    filename = <span class="string">'Heart of Darkness.txt'</span></span><br><span class="line">    words_count = count_results(filename)</span><br><span class="line">    <span class="keyword">for</span> word, word_count <span class="keyword">in</span> words_count[:<span class="number">10</span>]:</span><br><span class="line">        print(<span class="string">'&#123;0:&lt;10&#125; : &#123;1&#125;'</span>.format(word, word_count))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">the        : 2468</span><br><span class="line">of         : 1496</span><br><span class="line">a          : 1209</span><br><span class="line">i          : 1153</span><br><span class="line">and        : 1062</span><br><span class="line">to         : 974</span><br><span class="line">in         : 673</span><br><span class="line">was        : 672</span><br><span class="line">he         : 596</span><br><span class="line">it         : 515</span><br></pre></td></tr></table></figure>
+<p>这个方法比使用count的方法速度要快上不少。</p>
+<h3 id="5-count方法和len方法速度比较"><a href="#5-count方法和len方法速度比较" class="headerlink" title="5 count方法和len方法速度比较"></a>5 count方法和len方法速度比较</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">from</span> operator <span class="keyword">import</span> itemgetter</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">words_list</span><span class="params">(filename)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">            content = f_obj.read()</span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        msg = <span class="string">"The file "</span> + filename + <span class="string">" does not exist."</span></span><br><span class="line">        print(msg)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        WORD_RE = re.compile(<span class="string">r'\W+'</span>)</span><br><span class="line">        words = WORD_RE.split(content.lower())</span><br><span class="line">        <span class="keyword">return</span> words</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">count_results</span><span class="params">(filename)</span>:</span></span><br><span class="line">    words_count = &#123;&#125;</span><br><span class="line">    words = words_list(filename)</span><br><span class="line">    words_count = words_count.fromkeys(words)</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> words_count.keys():</span><br><span class="line">        number = words.count(word)</span><br><span class="line">        words_count[word] = number</span><br><span class="line">    words_count = sorted(words_count.items(), key=itemgetter(<span class="number">1</span>), reverse=<span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">return</span> words_count</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">count_words</span><span class="params">(filename)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">            content = f_obj.read()</span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        msg = <span class="string">"The file "</span> + filename + <span class="string">" does not exist."</span></span><br><span class="line">        print(msg)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        WORD_RE = re.compile(<span class="string">r'\w+'</span>)</span><br><span class="line">        words_count = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> match <span class="keyword">in</span> WORD_RE.finditer(content.lower()):</span><br><span class="line">            word = match.group()</span><br><span class="line">            <span class="comment"># occurrences = words_count.get(word, [])</span></span><br><span class="line">            <span class="comment"># occurrences.append(word)</span></span><br><span class="line">            <span class="comment"># words_count[word] = occurrences</span></span><br><span class="line">            words_count.setdefault(word, []).append(word)</span><br><span class="line">        words_count = &#123;word: len(value) <span class="keyword">for</span> word, value <span class="keyword">in</span> words_count.items()&#125;</span><br><span class="line">        words_count = sorted(words_count.items(), key=itemgetter(<span class="number">1</span>), reverse=<span class="keyword">True</span>)</span><br><span class="line">        <span class="keyword">return</span> words_count</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">import</span> timeit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_count_results</span><span class="params">()</span>:</span></span><br><span class="line">        filename = <span class="string">'Heart of Darkness.txt'</span></span><br><span class="line">        words_count = count_results(filename)</span><br><span class="line">        <span class="keyword">return</span> words_count</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_count_words</span><span class="params">()</span>:</span></span><br><span class="line">        filename = <span class="string">'Heart of Darkness.txt'</span></span><br><span class="line">        words_count = count_words(filename)</span><br><span class="line">        <span class="keyword">return</span> words_count</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    time_1 = timeit.Timer(<span class="string">'test_count_results()'</span>, setup=<span class="string">"from __main__ import test_count_results"</span>)</span><br><span class="line">    time_2 = timeit.Timer(<span class="string">'test_count_words()'</span>, setup=<span class="string">"from __main__ import test_count_words"</span>)</span><br><span class="line"></span><br><span class="line">    print(time_1.timeit(number=<span class="number">10</span>))</span><br><span class="line">    print(time_2.timeit(number=<span class="number">10</span>))</span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">54.662403376761674</span><br><span class="line">0.5711055088342789</span><br></pre></td></tr></table></figure>
+<p>结果发现差距还是挺大的。</p>
+<p>说一个我认为的原因：</p>
+<p>count需要遍历列表，遍历列表是很消耗时间的，时间复杂度为O(n)；</p>
+<p>而使用len()方法时，CPython会直接从内存来读取属性值，当然要快很多。</p>
+<p>以下摘自《流畅的python》第一章</p>
+<blockquote>
+<p>如何使用特殊方法</p>
+<p>首先明确一点，特殊方法的存在是为了被Python解释器调用的，你自己并不需要调用它们。也就是说没有my_object.__len()__这种写法，而应该使用len(my_object)。在执行len(my_object)的时候，如果my_object是一个自定义类的对象，那么Python会自己去调用其中由你实现的__len__方法。</p>
+<p><strong>然而如果是Python内置的类型，比如列表（list）、字符串（str）、字节系列（bytearray）等，那么CPython会抄个近路，__len__实际上会直接返回PyVarObject里的ob_size属性。</strong>PyVarObject是表示内存中长度可变的内置对象的C语言结构体。直接读取这个值比调用一个方法要快很多。</p>
+</blockquote>
+<p>目前知识掌握的不太多，还不能很肯定。</p>
+<p>说不定以后还有其他的改进，可能未完待续。</p>
+<h3 id="6-使用计数器（Counter）方法来实现（目前为止个人觉得最佳解法）"><a href="#6-使用计数器（Counter）方法来实现（目前为止个人觉得最佳解法）" class="headerlink" title="6 使用计数器（Counter）方法来实现（目前为止个人觉得最佳解法）"></a>6 使用计数器（Counter）方法来实现（目前为止个人觉得最佳解法）</h3><p>好吧，今天在学习《流畅的python》时，又发现了目前为止我认为最佳解决方式。</p>
+<blockquote>
+<p><strong>collections.Counter</strong></p>
+<p>这个映射类型会给键准备一个整体计数器。</p>
+<p>每次更新一个键的时候会增加这个计数器。所以这个类型可以用来给可散列表对象计数，或者是当成多重集合来用——多重集合就是集合里的元素可以出现不止一次。</p>
+<p>Counter实现了+和-运算符用来合并记录，还有像most_common([n])这类很有用的方法。most_common([n])会按照次序返回映射里最常见的n个键和他们的计数，详情参阅文档（<a href="https://docs.python.org/3/library/collections.html#collections.Counter）。" target="_blank" rel="noopener">https://docs.python.org/3/library/collections.html#collections.Counter）。</a></p>
+</blockquote>
+<p>看一下使用Counter类来实现对单词进行统计的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> collections</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">words_list</span><span class="params">(filename)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">            content = f_obj.read()</span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        msg = <span class="string">"The file "</span> + filename + <span class="string">" does not exist."</span></span><br><span class="line">        print(msg)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        WORD_RE = re.compile(<span class="string">r'\W+'</span>)</span><br><span class="line">        words = WORD_RE.split(content.lower())</span><br><span class="line">        <span class="keyword">return</span> words</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">words_counter</span><span class="params">(filename)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">            content = f_obj.read()</span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        msg = <span class="string">"The file "</span> + filename + <span class="string">" does not exist."</span></span><br><span class="line">        print(msg)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        words = words_list(filename)</span><br><span class="line">        words_count = collections.Counter(words)</span><br><span class="line">        <span class="keyword">return</span> words_count</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ != <span class="string">'__main__'</span>:</span><br><span class="line">    filename = <span class="string">'Heart of Darkness.txt'</span></span><br><span class="line">	words_count = words_counter(filename)</span><br><span class="line">    <span class="comment"># 注意这个显示前10需要使用words_count.most_common(10)方法</span></span><br><span class="line">	<span class="keyword">for</span> word, word_count <span class="keyword">in</span> words_count.most_common(<span class="number">10</span>):</span><br><span class="line">    	print(<span class="string">'&#123;0:&lt;20&#125; : &#123;1&#125;'</span>.format(word, word_count))</span><br></pre></td></tr></table></figure>
+<p>结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">the                  : 2468</span><br><span class="line">of                   : 1496</span><br><span class="line">a                    : 1209</span><br><span class="line">i                    : 1153</span><br><span class="line">and                  : 1062</span><br><span class="line">to                   : 974</span><br><span class="line">in                   : 673</span><br><span class="line">was                  : 672</span><br><span class="line">he                   : 596</span><br><span class="line">it                   : 515</span><br></pre></td></tr></table></figure>
+<p>连排序（sorted）都省了，理论上应该更快。我们来测试一下速度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">import</span> timeit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_count_results</span><span class="params">()</span>:</span></span><br><span class="line">        filename = <span class="string">'Heart of Darkness.txt'</span></span><br><span class="line">        words_count = count_results(filename)</span><br><span class="line">        <span class="keyword">return</span> words_count</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_count_words</span><span class="params">()</span>:</span></span><br><span class="line">        filename = <span class="string">'Heart of Darkness.txt'</span></span><br><span class="line">        words_count = count_words(filename)</span><br><span class="line">        <span class="keyword">return</span> words_count</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_words_counter</span><span class="params">()</span>:</span></span><br><span class="line">        filename = <span class="string">'Heart of Darkness.txt'</span></span><br><span class="line">        words_count = words_counter(filename)</span><br><span class="line">        <span class="keyword">return</span> words_count</span><br><span class="line"></span><br><span class="line">    time_1 = timeit.Timer(<span class="string">'test_count_results()'</span>, setup=<span class="string">"from __main__ import test_count_results"</span>)</span><br><span class="line">    time_2 = timeit.Timer(<span class="string">'test_count_words()'</span>, setup=<span class="string">"from __main__ import test_count_words"</span>)</span><br><span class="line">    time_3 = timeit.Timer(<span class="string">'test_words_counter()'</span>, setup=<span class="string">"from __main__ import test_words_counter"</span>)</span><br><span class="line"></span><br><span class="line">    print(time_1.timeit(number=<span class="number">10</span>))</span><br><span class="line">    print(time_2.timeit(number=<span class="number">10</span>))</span><br><span class="line">    print(time_3.timeit(number=<span class="number">10</span>))</span><br></pre></td></tr></table></figure>
+<p>结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">36.760553128615015</span><br><span class="line">0.37998618675253937</span><br><span class="line">0.2645591842058579</span><br></pre></td></tr></table></figure>
+<p>果然速度更快了。</p>
+<p>还能未完待续吗？</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/28/Python学习笔记-正则表达式/" rel="next" title="Python学习笔记-正则表达式与re模块">
+                <i class="fa fa-chevron-left"></i> Python学习笔记-正则表达式与re模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/13/Python学习笔记-函数内省/" rel="prev" title="Python学习笔记-函数内省">
+                Python学习笔记-函数内省 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/jugg.JPG"
+                alt="高鹏" />
+            
+              <p class="site-author-name" itemprop="name">高鹏</p>
+              <p class="site-description motion-element" itemprop="description">有人的地方就有江湖</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://processon.com/" title="在线画图" target="_blank">在线画图</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://regex101.com/" title="正则表达式" target="_blank">正则表达式</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-刚看完《python编程：从入门到实践》的时候写的代码"><span class="nav-number">1.</span> <span class="nav-text">1 刚看完《python编程：从入门到实践》的时候写的代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-写完一个单词的统计，又扩展了对所有单词都进行统计并排序"><span class="nav-number">2.</span> <span class="nav-text">2 写完一个单词的统计，又扩展了对所有单词都进行统计并排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-学完正则表达式以后使用正则表达式进行分割单词"><span class="nav-number">3.</span> <span class="nav-text">3 学完正则表达式以后使用正则表达式进行分割单词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-还想到了一个不需要count的解法"><span class="nav-number">4.</span> <span class="nav-text">4 还想到了一个不需要count的解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-count方法和len方法速度比较"><span class="nav-number">5.</span> <span class="nav-text">5 count方法和len方法速度比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-使用计数器（Counter）方法来实现（目前为止个人觉得最佳解法）"><span class="nav-number">6.</span> <span class="nav-text">6 使用计数器（Counter）方法来实现（目前为止个人觉得最佳解法）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">高鹏</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

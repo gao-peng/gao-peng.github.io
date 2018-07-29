@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Python," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="学习《流畅的Python时》一等函数的函数内省时，有一些疑问：  什么是函数内省？ 函数内省有什么作用？  书上没有涉及内省的概念，所以在网上查阅了一下资料来记录一下函数内省。 这篇笔记抄录于《Python自省指南》，由于这篇文章使用的是Python 2，我用Python 3再抄录一遍。 以及后面有我自己的补充，主要是加上书上的内容以及自己的理解。 什么是自省 在日常生活中，自省（introspe">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python学习笔记-函数内省">
+<meta property="og:url" content="http://yoursite.com/2018/07/13/Python学习笔记-函数内省/index.html">
+<meta property="og:site_name" content="剑十三">
+<meta property="og:description" content="学习《流畅的Python时》一等函数的函数内省时，有一些疑问：  什么是函数内省？ 函数内省有什么作用？  书上没有涉及内省的概念，所以在网上查阅了一下资料来记录一下函数内省。 这篇笔记抄录于《Python自省指南》，由于这篇文章使用的是Python 2，我用Python 3再抄录一遍。 以及后面有我自己的补充，主要是加上书上的内容以及自己的理解。 什么是自省 在日常生活中，自省（introspe">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-12T16:37:19.269Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python学习笔记-函数内省">
+<meta name="twitter:description" content="学习《流畅的Python时》一等函数的函数内省时，有一些疑问：  什么是函数内省？ 函数内省有什么作用？  书上没有涉及内省的概念，所以在网上查阅了一下资料来记录一下函数内省。 这篇笔记抄录于《Python自省指南》，由于这篇文章使用的是Python 2，我用Python 3再抄录一遍。 以及后面有我自己的补充，主要是加上书上的内容以及自己的理解。 什么是自省 在日常生活中，自省（introspe">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/13/Python学习笔记-函数内省/"/>
+
+
+
+
+
+  <title>Python学习笔记-函数内省 | 剑十三</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑十三</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">剑未配妥，身已江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/13/Python学习笔记-函数内省/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="高鹏">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/jugg.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑十三">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python学习笔记-函数内省</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-13T00:19:51+08:00">
+                2018-07-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>学习《流畅的Python时》一等函数的函数内省时，有一些疑问：</p>
+<ul>
+<li>什么是函数内省？</li>
+<li>函数内省有什么作用？</li>
+</ul>
+<p>书上没有涉及内省的概念，所以在网上查阅了一下资料来记录一下函数内省。</p>
+<p>这篇笔记抄录于<a href="https://www.ibm.com/developerworks/cn/linux/l-pyint/#ibm-pcon" target="_blank" rel="noopener">《Python自省指南》</a>，由于这篇文章使用的是Python 2，我用Python 3再抄录一遍。</p>
+<p>以及后面有我自己的补充，主要是加上书上的内容以及自己的理解。</p>
+<h1 id="什么是自省"><a href="#什么是自省" class="headerlink" title="什么是自省"></a>什么是自省</h1><hr>
+<p>在日常生活中，自省（introspection）是一种自我检查行为。自省是指对某人自身思想、情绪、动机和行为的检查。伟大的哲学家苏格拉底将生命中的大部分时间用于自我检查，并鼓励他的雅典朋友们也这样做。他甚至对自己作出了这样的要求：“未经自省的生命不值得存在。” </p>
+<p>在计算机编程中，自省是指这种能力：<strong>检查某些事物以确定它是什么，它知道什么以及它能做什么。</strong>自省向程序员提供了极大的灵活性和控制力。一旦您使用了支持自省的编程预言，就会产生类似这样的感觉：“未经检查的对象不值得实例化”。</p>
+<p>本文介绍了 Python 编程语言的自省能力。整个 Python 语言对自省提供了深入而广泛的支持。实际上，很难想象假如 Python 语言没有其自省特性是什么样子。在读完本文时，您应该能够非常轻松地洞察到自己 Python 对象的“灵魂”。</p>
+<blockquote>
+<p><strong>自省和反射</strong></p>
+<p>在网上有很多资料把自省和反射理解为一个概念，也有理解为不同概念的，在此讨论一下。</p>
+<blockquote>
+<p><strong>自省在<a href="https://en.wikipedia.org/wiki/Type_introspection" target="_blank" rel="noopener">wiki</a>上的解释</strong>：在计算机科学中，内省是指计算机程序在运行时（Run time）检查对象（Object）类型的一种能力，通常也可以称作运行时类型检查。  </p>
+<p>不应该将内省和反射混淆。相对于内省，反射更进一步，是指计算机程序在运行时（Run time）可以访问、检测和修改它本身状态或行为的一种能力。</p>
+</blockquote>
+<p>搜索自省和反射的区别，大部分都是讲java的，而python几乎都把自省和反射理解为一个概念。</p>
+<p>有一个博客写到——我感 反射与自省其实是一回事 只是在JAVA中把自省说成反射，在PYTHON中把反射说成自省。 </p>
+<p>我也是这么觉得，所以目前姑且先把自省和反射理解为一个概念。以后有新的想法再来解释。</p>
+</blockquote>
+<p>在深入研究更高级的技术之前，我们尽可能用最普通的方式来研究 Python 自省。有些读者甚至可能会争论说：我们开始时所讨论的特性不应称之为“自省”。我们必须承认，它们是否属于自省的范畴还有待讨论。但从本节的意图出发，我们所关心的只是找出有趣问题的答案。</p>
+<p>现在让我们以交互方式使用 Python 来开始研究。这是前面已经在使用的一种方式。</p>
+<h2 id="联机帮助"><a href="#联机帮助" class="headerlink" title="联机帮助"></a>联机帮助</h2><p>在交互模式下，用 help 向 Python 请求帮助。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; help()</span><br><span class="line"></span><br><span class="line">Welcome to Python 3.6&apos;s help utility!</span><br><span class="line"></span><br><span class="line">If this is your first time using Python, you should definitely check out</span><br><span class="line">the tutorial on the Internet at https://docs.python.org/3.6/tutorial/.</span><br><span class="line"></span><br><span class="line">Enter the name of any module, keyword, or topic to get help on writing</span><br><span class="line">Python programs and using Python modules.  To quit this help utility and</span><br><span class="line">return to the interpreter, just type &quot;quit&quot;.</span><br><span class="line"></span><br><span class="line">To get a list of available modules, keywords, symbols, or topics, type</span><br><span class="line">&quot;modules&quot;, &quot;keywords&quot;, &quot;symbols&quot;, or &quot;topics&quot;.  Each module also comes</span><br><span class="line">with a one-line summary of what it does; to list the modules whose name</span><br><span class="line">or summary contain a given string such as &quot;spam&quot;, type &quot;modules spam&quot;.</span><br><span class="line"></span><br><span class="line">help&gt;</span><br></pre></td></tr></table></figure>
+<p>这时候就进入了联机帮助状态，根据提示输入<code>keywords</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">help&gt; keywords</span><br><span class="line"></span><br><span class="line">Here is a list of the Python keywords.  Enter any keyword to get more help.</span><br><span class="line"></span><br><span class="line">False               def                 if                  raise</span><br><span class="line">None                del                 import              return</span><br><span class="line">True                elif                in                  try</span><br><span class="line">and                 else                is                  while</span><br><span class="line">as                  except              lambda              with</span><br><span class="line">assert              finally             nonlocal            yield</span><br><span class="line">break               for                 not</span><br><span class="line">class               from                or</span><br><span class="line">continue            global              pass</span><br></pre></td></tr></table></figure>
+<p>现在显示出了Python关键词的列表。按照说明我们继续输入关键字获取关键字的相关文档。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">help&gt; in                                                                   </span><br><span class="line">Membership test operations                                                 </span><br><span class="line">**************************                                                 </span><br><span class="line">                                                                           </span><br><span class="line">The operators &quot;in&quot; and &quot;not in&quot; test for membership.  &quot;x in s&quot;             </span><br><span class="line">evaluates to &quot;True&quot; if *x* is a member of *s*, and &quot;False&quot; otherwise.      </span><br><span class="line">&quot;x not in s&quot; returns the negation of &quot;x in s&quot;.  All built-in sequences     </span><br><span class="line">and set types support this as well as dictionary, for which &quot;in&quot; tests     </span><br><span class="line">whether the dictionary has a given key. For container types such as        </span><br><span class="line">list, tuple, set, frozenset, dict, or collections.deque, the               </span><br><span class="line">expression &quot;x in y&quot; is equivalent to &quot;any(x is e or x == e for e in        </span><br><span class="line">y)&quot;.                                                                       </span><br><span class="line">                                                                           </span><br><span class="line">For the string and bytes types, &quot;x in y&quot; is &quot;True&quot; if and only if *x*      </span><br><span class="line">is a substring of *y*.  An equivalent test is &quot;y.find(x) != -1&quot;.           </span><br><span class="line">Empty strings are always considered to be a substring of any other         </span><br><span class="line">string, so &quot;&quot;&quot; in &quot;abc&quot;&quot; will return &quot;True&quot;.                               </span><br><span class="line">                                                                           </span><br><span class="line">For user-defined classes which define the &quot;__contains__()&quot; method, &quot;x      </span><br><span class="line">in y&quot; returns &quot;True&quot; if &quot;y.__contains__(x)&quot; returns a true value, and      </span><br><span class="line">&quot;False&quot; otherwise.                                                         </span><br><span class="line">                                                                           </span><br><span class="line">For user-defined classes which do not define &quot;__contains__()&quot; but do       </span><br><span class="line">define &quot;__iter__()&quot;, &quot;x in y&quot; is &quot;True&quot; if some value &quot;z&quot; with &quot;x ==       </span><br><span class="line">z&quot; is produced while iterating over &quot;y&quot;.  If an exception is raised        </span><br><span class="line">during the iteration, it is as if &quot;in&quot; raised that exception.              </span><br><span class="line">                                                                           </span><br><span class="line">Lastly, the old-style iteration protocol is tried: if a class defines      </span><br><span class="line">&quot;__getitem__()&quot;, &quot;x in y&quot; is &quot;True&quot; if and only if there is a non-         </span><br><span class="line">negative integer index *i* such that &quot;x == y[i]&quot;, and all lower            </span><br><span class="line">integer indices do not raise &quot;IndexError&quot; exception.  (If any other        </span><br><span class="line">exception is raised, it is as if &quot;in&quot; raised that exception).              </span><br><span class="line">                                                                           </span><br><span class="line">The operator &quot;not in&quot; is defined to have the inverse true value of         </span><br><span class="line">&quot;in&quot;.                                                                      </span><br><span class="line">                                                                           </span><br><span class="line">Related help topics: SEQUENCEMETHODS</span><br></pre></td></tr></table></figure>
+<p>正如您从这个示例可以看到的，Python 的联机帮助实用程序会显示关于各种主题或特定对象的信息。<strong>帮助实用程序很有用，并确实利用了 Python 的自省能力。</strong>但仅仅使用帮助不会揭示帮助是如何获得其信息的。而且，因为本文的目的是揭示 Python 自省的所有秘密，所以我们必须迅速地跳出对帮助实用程序的讨论。 </p>
+<p>最后让我们来获得一个可用模块的列表。 </p>
+<p>模块只是包含 Python 代码的文本文件，其名称后缀是 <code>.py</code> 。如果在 Python 提示符下输入<code>help(&#39;modules&#39;)</code> ，或在 help 提示符下输入 <code>modules</code> ，则会看到一长列可用模块，类似于下面所示的部分列表。<strong>自己尝试它以观察您的系统中有哪些可用模块，并了解为什么会认为 Python 是“自带电池”的。</strong> 就是说 Python 在被安装时，就带了很多模块，这些模块是你以后开发中会用到的，比喻成电池，好比开发的助力工具），或者说是 Python 一被安装，就已经包含有的模块，不用我们费力再安装了。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">help&gt; modules</span><br><span class="line"></span><br><span class="line">Please wait a moment while I gather a list of all available modules...</span><br><span class="line"></span><br><span class="line">D:\Microsoft Visual Studio\Shared\Python36_64\lib\site-packages\IPython\kernel\__init__.py:13: ShimWarning: The `IPython.kernel` package has been deprecated since IPython 4.0.You should import from ipykernel or jupyter_client instead.</span><br><span class="line">  &quot;You should import from ipykernel or jupyter_client instead.&quot;, ShimWarning)</span><br><span class="line">IPython             asynchat            idna                sched</span><br><span class="line">__future__          asyncio             imaplib             secrets</span><br><span class="line">_ast                asyncore            imghdr              select</span><br><span class="line">...</span><br><span class="line">ast                 idlelib             runpy</span><br><span class="line"></span><br><span class="line">Enter any module name to get more help.  Or, type &quot;modules spam&quot; to search</span><br><span class="line">for modules whose name or summary contain the string &quot;spam&quot;.</span><br></pre></td></tr></table></figure>
+<h2 id="dir-函数"><a href="#dir-函数" class="headerlink" title="dir()函数"></a>dir()函数</h2><p>尽管查找和导入模块相对容易，但要记住每个模块包含什么却不是这么简单。你或许并不希望总是必须查看源代码来找出答案。幸运的是，<strong>Python 提供了一种方法，可以使用内置的 dir() 函数来检查模块（以及其它对象）的内容</strong>。</p>
+<p>其实，这个东西我们已经一直在使用。</p>
+<p><strong>dir() 函数可能是 Python 自省机制中最著名的部分了。它返回传递给它的任何对象的属性名称经过排序的列表。如果不指定对象，则 dir() 返回当前作用域中（理解为某个范围）的名称。</strong>让我们将 dir() 函数应用于 keyword 模块，并观察它揭示了什么： </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> keyword</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir(keyword)</span><br><span class="line">[<span class="string">'__all__'</span>, <span class="string">'__builtins__'</span>, <span class="string">'__cached__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__file__'</span>, <span class="string">'__loader__'</span>, <span class="string">'__name__'</span>, <span class="string">'__package__'</span>, <span class="string">'__spec__'</span>, <span class="string">'iskeyword'</span>, <span class="string">'kwlist'</span>, <span class="string">'main'</span>]</span><br></pre></td></tr></table></figure>
+<p><strong>如果不带任何参数，则 dir() 返回当前作用域中的名称。</strong>请注意，因为我们先前导入了 keyword ，所以它们出现在列表中。导入模块将把该模块的名称添加到当前作用域： </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir()</span><br><span class="line">[<span class="string">'__annotations__'</span>, <span class="string">'__builtins__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__loader__'</span>, <span class="string">'__name__'</span>, <span class="string">'__package__'</span>, <span class="string">'__spec__'</span>, <span class="string">'keyword'</span>]</span><br></pre></td></tr></table></figure>
+<p>dir() 函数是内置函数，这意味着我们不必为了使用该函数而导入模块。不必做任何操作，Python 就可识别内置函数。</p>
+<p>再观察，看到调用 dir() 后返回了这个名称 <code>__builtins__</code> 。也许此处有连接。让我们在 Python 提示符下输入名称 <code>__builtins__</code> ，并观察 Python 是否会告诉我们关于它的任何有趣的事情：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>__builtins__</span><br><span class="line">&lt;module <span class="string">'__builtin__'</span> (built-<span class="keyword">in</span>)&gt;</span><br></pre></td></tr></table></figure>
+<p>因此 <code>__builtins__</code> 看起来象是当前作用域中绑定到名为 <code>__builtin__</code> 的模块对象的名称。（因为模块不是只有多个单一值的简单对象，所以 Python 改在尖括号中显示关于模块的信息。）</p>
+<p>注：如果您在磁盘上寻找 <code>__builtin__.py</code> 文件，将空手而归。这个特殊的模块对象是 Python 解释器凭空创建的，因为它包含着解释器始终可用的项。尽管看不到物理文件，但我们仍可以将 dir() 函数应用于这个对象，以观察所有内置函数、错误对象以及它所包含的几个杂项属性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir(__builtins__)</span><br><span class="line">[<span class="string">'ArithmeticError'</span>, <span class="string">'AssertionError'</span>, <span class="string">'AttributeError'</span>, <span class="string">'BaseException'</span>, <span class="string">'BlockingIOError'</span>, <span class="string">'BrokenPipeError'</span>, <span class="string">'BufferError'</span>, <span class="string">'BytesWarning'</span>, <span class="string">'ChildProcessError'</span>, <span class="string">'ConnectionAbortedError'</span>, <span class="string">'ConnectionError'</span>, <span class="string">'ConnectionRefusedError'</span>, <span class="string">'ConnectionResetError'</span>, <span class="string">'DeprecationWarning'</span>, <span class="string">'EOFError'</span>, <span class="string">'Ellipsis'</span>, <span class="string">'EnvironmentError'</span>, <span class="string">'Exception'</span>, <span class="string">'False'</span>, <span class="string">'FileExistsError'</span>, <span class="string">'FileNotFoundError'</span>, <span class="string">'FloatingPointError'</span>, <span class="string">'FutureWarning'</span>, <span class="string">'GeneratorExit'</span>, <span class="string">'IOError'</span>, <span class="string">'ImportError'</span>, <span class="string">'ImportWarning'</span>, <span class="string">'IndentationError'</span>, <span class="string">'IndexError'</span>, <span class="string">'InterruptedError'</span>, <span class="string">'IsADirectoryError'</span>, <span class="string">'KeyError'</span>, <span class="string">'KeyboardInterrupt'</span>, <span class="string">'LookupError'</span>, <span class="string">'MemoryError'</span>, <span class="string">'ModuleNotFoundError'</span>, <span class="string">'NameError'</span>, <span class="string">'None'</span>, <span class="string">'NotADirectoryError'</span>, <span class="string">'NotImplemented'</span>, <span class="string">'NotImplementedError'</span>, <span class="string">'OSError'</span>, <span class="string">'OverflowError'</span>, <span class="string">'PendingDeprecationWarning'</span>, <span class="string">'PermissionError'</span>, <span class="string">'ProcessLookupError'</span>, <span class="string">'RecursionError'</span>, <span class="string">'ReferenceError'</span>, <span class="string">'ResourceWarning'</span>, <span class="string">'RuntimeError'</span>, <span class="string">'RuntimeWarning'</span>, <span class="string">'StopAsyncIteration'</span>, <span class="string">'StopIteration'</span>, <span class="string">'SyntaxError'</span>, <span class="string">'SyntaxWarning'</span>, <span class="string">'SystemError'</span>, <span class="string">'SystemExit'</span>, <span class="string">'TabError'</span>, <span class="string">'TimeoutError'</span>, <span class="string">'True'</span>, <span class="string">'TypeError'</span>, <span class="string">'UnboundLocalError'</span>, <span class="string">'UnicodeDecodeError'</span>, <span class="string">'UnicodeEncodeError'</span>, <span class="string">'UnicodeError'</span>, <span class="string">'UnicodeTranslateError'</span>, <span class="string">'UnicodeWarning'</span>, <span class="string">'UserWarning'</span>, <span class="string">'ValueError'</span>, <span class="string">'Warning'</span>, <span class="string">'WindowsError'</span>, <span class="string">'ZeroDivisionError'</span>, <span class="string">'_'</span>, <span class="string">'__build_class__'</span>, <span class="string">'__debug__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__import__'</span>, <span class="string">'__loader__'</span>, <span class="string">'__name__'</span>, <span class="string">'__package__'</span>, <span class="string">'__spec__'</span>, <span class="string">'abs'</span>, <span class="string">'all'</span>, <span class="string">'any'</span>, <span class="string">'ascii'</span>, <span class="string">'bin'</span>, <span class="string">'bool'</span>, <span class="string">'bytearray'</span>, <span class="string">'bytes'</span>, <span class="string">'callable'</span>, <span class="string">'chr'</span>, <span class="string">'classmethod'</span>, <span class="string">'compile'</span>, <span class="string">'complex'</span>, <span class="string">'copyright'</span>, <span class="string">'credits'</span>, <span class="string">'delattr'</span>, <span class="string">'dict'</span>, <span class="string">'dir'</span>, <span class="string">'divmod'</span>, <span class="string">'enumerate'</span>, <span class="string">'eval'</span>, <span class="string">'exec'</span>, <span class="string">'exit'</span>, <span class="string">'filter'</span>, <span class="string">'float'</span>, <span class="string">'format'</span>, <span class="string">'frozenset'</span>, <span class="string">'getattr'</span>, <span class="string">'globals'</span>, <span class="string">'hasattr'</span>, <span class="string">'hash'</span>, <span class="string">'help'</span>, <span class="string">'hex'</span>, <span class="string">'id'</span>, <span class="string">'input'</span>, <span class="string">'int'</span>, <span class="string">'isinstance'</span>, <span class="string">'issubclass'</span>, <span class="string">'iter'</span>, <span class="string">'len'</span>, <span class="string">'license'</span>, <span class="string">'list'</span>, <span class="string">'locals'</span>, <span class="string">'map'</span>, <span class="string">'max'</span>, <span class="string">'memoryview'</span>, <span class="string">'min'</span>, <span class="string">'next'</span>, <span class="string">'object'</span>, <span class="string">'oct'</span>, <span class="string">'open'</span>, <span class="string">'ord'</span>, <span class="string">'pow'</span>, <span class="string">'print'</span>, <span class="string">'property'</span>, <span class="string">'quit'</span>, <span class="string">'range'</span>, <span class="string">'repr'</span>, <span class="string">'reversed'</span>, <span class="string">'round'</span>, <span class="string">'set'</span>, <span class="string">'setattr'</span>, <span class="string">'slice'</span>, <span class="string">'sorted'</span>, <span class="string">'staticmethod'</span>, <span class="string">'str'</span>, <span class="string">'sum'</span>, <span class="string">'super'</span>, <span class="string">'tuple'</span>, <span class="string">'type'</span>, <span class="string">'vars'</span>, <span class="string">'zip'</span>]</span><br></pre></td></tr></table></figure>
+<p><strong>dir() 函数适用于所有对象类型，包括字符串、整数、列表、元组、字典、函数、定制类、类实例和类方法</strong>。</p>
+<p>例如将 dir() 应用于字符串对象，如您所见，即使简单的 Python 字符串也有许多属性 ：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir(<span class="string">"This is a str."</span>)</span><br><span class="line">[<span class="string">'__add__'</span>, <span class="string">'__class__'</span>, <span class="string">'__contains__'</span>, <span class="string">'__delattr__'</span>, <span class="string">'__dir__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__eq__'</span>, <span class="string">'__format__'</span>, <span class="string">'__ge__'</span>, <span class="string">'__getattribute__'</span>, <span class="string">'__getitem__'</span>, <span class="string">'__getnewargs__'</span>, <span class="string">'__gt__'</span>, <span class="string">'__hash__'</span>, <span class="string">'__init__'</span>, <span class="string">'__init_subclass__'</span>, <span class="string">'__iter__'</span>, <span class="string">'__le__'</span>, <span class="string">'__len__'</span>, <span class="string">'__lt__'</span>, <span class="string">'__mod__'</span>, <span class="string">'__mul__'</span>, <span class="string">'__ne__'</span>, <span class="string">'__new__'</span>, <span class="string">'__reduce__'</span>, <span class="string">'__reduce_ex__'</span>, <span class="string">'__repr__'</span>, <span class="string">'__rmod__'</span>, <span class="string">'__rmul__'</span>, <span class="string">'__setattr__'</span>, <span class="string">'__sizeof__'</span>, <span class="string">'__str__'</span>, <span class="string">'__subclasshook__'</span>, <span class="string">'capitalize'</span>, <span class="string">'casefold'</span>, <span class="string">'center'</span>, <span class="string">'count'</span>, <span class="string">'encode'</span>, <span class="string">'endswith'</span>, <span class="string">'expandtabs'</span>, <span class="string">'find'</span>, <span class="string">'format'</span>, <span class="string">'format_map'</span>, <span class="string">'index'</span>, <span class="string">'isalnum'</span>, <span class="string">'isalpha'</span>, <span class="string">'isdecimal'</span>, <span class="string">'isdigit'</span>, <span class="string">'isidentifier'</span>, <span class="string">'islower'</span>, <span class="string">'isnumeric'</span>, <span class="string">'isprintable'</span>, <span class="string">'isspace'</span>, <span class="string">'istitle'</span>, <span class="string">'isupper'</span>, <span class="string">'join'</span>, <span class="string">'ljust'</span>, <span class="string">'lower'</span>, <span class="string">'lstrip'</span>, <span class="string">'maketrans'</span>, <span class="string">'partition'</span>, <span class="string">'replace'</span>, <span class="string">'rfind'</span>, <span class="string">'rindex'</span>, <span class="string">'rjust'</span>, <span class="string">'rpartition'</span>, <span class="string">'rsplit'</span>, <span class="string">'rstrip'</span>, <span class="string">'split'</span>, <span class="string">'splitlines'</span>, <span class="string">'startswith'</span>, <span class="string">'strip'</span>, <span class="string">'swapcase'</span>, <span class="string">'title'</span>, <span class="string">'translate'</span>, <span class="string">'upper'</span>, <span class="string">'zfill'</span>]</span><br></pre></td></tr></table></figure>
+<p>我们来看一下其他的对象类型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir(<span class="number">43</span>)</span><br><span class="line">[<span class="string">'__abs__'</span>, <span class="string">'__add__'</span>, <span class="string">'__and__'</span>, <span class="string">'__bool__'</span>, <span class="string">'__ceil__'</span>, <span class="string">'__class__'</span>, <span class="string">'__delattr__'</span>, <span class="string">'__dir__'</span>, <span class="string">'__divmod__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__eq__'</span>, <span class="string">'__float__'</span>, <span class="string">'__floor__'</span>, <span class="string">'__floordiv__'</span>, <span class="string">'__format__'</span>, <span class="string">'__ge__'</span>, <span class="string">'__getattribute__'</span>, <span class="string">'__getnewargs__'</span>, <span class="string">'__gt__'</span>, <span class="string">'__hash__'</span>, <span class="string">'__index__'</span>, <span class="string">'__init__'</span>, <span class="string">'__init_subclass__'</span>, <span class="string">'__int__'</span>, <span class="string">'__invert__'</span>, <span class="string">'__le__'</span>, <span class="string">'__lshift__'</span>, <span class="string">'__lt__'</span>, <span class="string">'__mod__'</span>, <span class="string">'__mul__'</span>, <span class="string">'__ne__'</span>, <span class="string">'__neg__'</span>, <span class="string">'__new__'</span>, <span class="string">'__or__'</span>, <span class="string">'__pos__'</span>, <span class="string">'__pow__'</span>, <span class="string">'__radd__'</span>, <span class="string">'__rand__'</span>, <span class="string">'__rdivmod__'</span>, <span class="string">'__reduce__'</span>, <span class="string">'__reduce_ex__'</span>, <span class="string">'__repr__'</span>, <span class="string">'__rfloordiv__'</span>, <span class="string">'__rlshift__'</span>, <span class="string">'__rmod__'</span>, <span class="string">'__rmul__'</span>, <span class="string">'__ror__'</span>, <span class="string">'__round__'</span>, <span class="string">'__rpow__'</span>, <span class="string">'__rrshift__'</span>, <span class="string">'__rshift__'</span>, <span class="string">'__rsub__'</span>, <span class="string">'__rtruediv__'</span>, <span class="string">'__rxor__'</span>, <span class="string">'__setattr__'</span>, <span class="string">'__sizeof__'</span>, <span class="string">'__str__'</span>, <span class="string">'__sub__'</span>, <span class="string">'__subclasshook__'</span>, <span class="string">'__truediv__'</span>, <span class="string">'__trunc__'</span>, <span class="string">'__xor__'</span>, <span class="string">'bit_length'</span>, <span class="string">'conjugate'</span>, <span class="string">'denominator'</span>, <span class="string">'from_bytes'</span>, <span class="string">'imag'</span>, <span class="string">'numerator'</span>, <span class="string">'real'</span>, <span class="string">'to_bytes'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir(&#123;&#125;)</span><br><span class="line">[<span class="string">'__class__'</span>, <span class="string">'__contains__'</span>, <span class="string">'__delattr__'</span>, <span class="string">'__delitem__'</span>, <span class="string">'__dir__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__eq__'</span>, <span class="string">'__format__'</span>, <span class="string">'__ge__'</span>, <span class="string">'__getattribute__'</span>, <span class="string">'__getitem__'</span>, <span class="string">'__gt__'</span>, <span class="string">'__hash__'</span>, <span class="string">'__init__'</span>, <span class="string">'__init_subclass__'</span>, <span class="string">'__iter__'</span>, <span class="string">'__le__'</span>, <span class="string">'__len__'</span>, <span class="string">'__lt__'</span>, <span class="string">'__ne__'</span>, <span class="string">'__new__'</span>, <span class="string">'__reduce__'</span>, <span class="string">'__reduce_ex__'</span>, <span class="string">'__repr__'</span>, <span class="string">'__setattr__'</span>, <span class="string">'__setitem__'</span>, <span class="string">'__sizeof__'</span>, <span class="string">'__str__'</span>, <span class="string">'__subclasshook__'</span>, <span class="string">'clear'</span>, <span class="string">'copy'</span>, <span class="string">'fromkeys'</span>, <span class="string">'get'</span>, <span class="string">'items'</span>, <span class="string">'keys'</span>, <span class="string">'pop'</span>, <span class="string">'popitem'</span>, <span class="string">'setdefault'</span>, <span class="string">'update'</span>, <span class="string">'values'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir(set)</span><br><span class="line">[<span class="string">'__and__'</span>, <span class="string">'__class__'</span>, <span class="string">'__contains__'</span>, <span class="string">'__delattr__'</span>, <span class="string">'__dir__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__eq__'</span>, <span class="string">'__format__'</span>, <span class="string">'__ge__'</span>, <span class="string">'__getattribute__'</span>, <span class="string">'__gt__'</span>, <span class="string">'__hash__'</span>, <span class="string">'__iand__'</span>, <span class="string">'__init__'</span>, <span class="string">'__init_subclass__'</span>, <span class="string">'__ior__'</span>, <span class="string">'__isub__'</span>, <span class="string">'__iter__'</span>, <span class="string">'__ixor__'</span>, <span class="string">'__le__'</span>, <span class="string">'__len__'</span>, <span class="string">'__lt__'</span>, <span class="string">'__ne__'</span>, <span class="string">'__new__'</span>, <span class="string">'__or__'</span>, <span class="string">'__rand__'</span>, <span class="string">'__reduce__'</span>, <span class="string">'__reduce_ex__'</span>, <span class="string">'__repr__'</span>, <span class="string">'__ror__'</span>, <span class="string">'__rsub__'</span>, <span class="string">'__rxor__'</span>, <span class="string">'__setattr__'</span>, <span class="string">'__sizeof__'</span>, <span class="string">'__str__'</span>, <span class="string">'__sub__'</span>, <span class="string">'__subclasshook__'</span>, <span class="string">'__xor__'</span>, <span class="string">'add'</span>, <span class="string">'clear'</span>, <span class="string">'copy'</span>, <span class="string">'difference'</span>, <span class="string">'difference_update'</span>, <span class="string">'discard'</span>, <span class="string">'intersection'</span>, <span class="string">'intersection_update'</span>, <span class="string">'isdisjoint'</span>, <span class="string">'issubset'</span>, <span class="string">'issuperset'</span>, <span class="string">'pop'</span>, <span class="string">'remove'</span>, <span class="string">'symmetric_difference'</span>, <span class="string">'symmetric_difference_update'</span>, <span class="string">'union'</span>, <span class="string">'update'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir(list)</span><br><span class="line">[<span class="string">'__add__'</span>, <span class="string">'__class__'</span>, <span class="string">'__contains__'</span>, <span class="string">'__delattr__'</span>, <span class="string">'__delitem__'</span>, <span class="string">'__dir__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__eq__'</span>, <span class="string">'__format__'</span>, <span class="string">'__ge__'</span>, <span class="string">'__getattribute__'</span>, <span class="string">'__getitem__'</span>, <span class="string">'__gt__'</span>, <span class="string">'__hash__'</span>, <span class="string">'__iadd__'</span>, <span class="string">'__imul__'</span>, <span class="string">'__init__'</span>, <span class="string">'__init_subclass__'</span>, <span class="string">'__iter__'</span>, <span class="string">'__le__'</span>, <span class="string">'__len__'</span>, <span class="string">'__lt__'</span>, <span class="string">'__mul__'</span>, <span class="string">'__ne__'</span>, <span class="string">'__new__'</span>, <span class="string">'__reduce__'</span>, <span class="string">'__reduce_ex__'</span>, <span class="string">'__repr__'</span>, <span class="string">'__reversed__'</span>, <span class="string">'__rmul__'</span>, <span class="string">'__setattr__'</span>, <span class="string">'__setitem__'</span>, <span class="string">'__sizeof__'</span>, <span class="string">'__str__'</span>, <span class="string">'__subclasshook__'</span>, <span class="string">'append'</span>, <span class="string">'clear'</span>, <span class="string">'copy'</span>, <span class="string">'count'</span>, <span class="string">'extend'</span>, <span class="string">'index'</span>, <span class="string">'insert'</span>, <span class="string">'pop'</span>, <span class="string">'remove'</span>, <span class="string">'reverse'</span>, <span class="string">'sort'</span>]</span><br></pre></td></tr></table></figure>
+<p><strong>通过<code>dir()</code>函数获取对象的属性以及方法，我们就可以随时的了解我们创建的对象包含了什么，以及可以做些什么。</strong></p>
+<h2 id="文档字符串"><a href="#文档字符串" class="headerlink" title="文档字符串"></a>文档字符串</h2><p>在许多 dir() 示例中，您可能会注意到的一个属性是 <code>__doc__</code> 属性。这个属性是一个字符串，它包含了描述对象的注释。Python 称之为文档字符串或 docstring 。</p>
+<p>如果模块、类、方法或函数定义的第一条语句是字符串，那么该字符串会作为对象的 <code>__doc__</code> 属性与该对象关联起来。例如，看一下 str 类型对象的文档字符串。因为文档字符串通常包含嵌入的换行 \n ，我们将使用 Python 的 print 语句，以便输出更易于阅读： </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(str.__doc__)</span><br><span class="line">str(object='') -&gt; str</span><br><span class="line">str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</span><br><span class="line"></span><br><span class="line">Create a new string object <span class="keyword">from</span> the given object. If encoding <span class="keyword">or</span></span><br><span class="line">errors <span class="keyword">is</span> specified, then the object must expose a data buffer</span><br><span class="line">that will be decoded using the given encoding <span class="keyword">and</span> error handler.</span><br><span class="line">Otherwise, returns the result of object.__str__() (<span class="keyword">if</span> defined)</span><br><span class="line"><span class="keyword">or</span> repr(object).</span><br><span class="line">encoding defaults to sys.getdefaultencoding().</span><br><span class="line">errors defaults to <span class="string">'strict'</span>.</span><br></pre></td></tr></table></figure>
+<h2 id="利用自省检查-Python-对象"><a href="#利用自省检查-Python-对象" class="headerlink" title="利用自省检查 Python 对象"></a>利用自省检查 Python 对象</h2><p>前面已经好几次提到了“对象（object）”这个词，但一直没有真正定义它。编程环境中的对象很像。现实世界中的对象。实际的对象有一定的形状、大小、重量和其它特征。实际的对象还能够对其环境进行响应、与其它对象交互或执行任务。计算机中的对象试图模拟我们身边现实世界中的对象，包括象文档、日程表和业务过程这样的抽象对象。 </p>
+<p>其实，我总觉得把 object 翻译成对象，让人感觉很没有具象的感觉，因为在汉语里面，对象是一个很笼统的词汇。另外一种翻译，流行于台湾，把它称为“物件”，倒是挺不错的理解。当然，名词就不纠缠了，关键是理解内涵。关于面向对象编程，可以阅读维基百科的介绍——<a href="http://zh.wikipedia.org/zh/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1#.E7.89.A9.E4.BB.B6.E5.B0.8E.E5.90.91.E7.9A.84.E8.AF.AD.E8.A8.80" target="_blank" rel="noopener">面向对象程序设计</a>——先了解大概。</p>
+<p>类似于实际的对象，几个计算机对象可能共享共同的特征，同时保持它们自己相对较小的变异特征。想一想您在书店中看到的书籍。书籍的每个物理副本都可能有污迹、几张破损的书页或唯一的标识号。尽管每本书都是唯一的对象，但都拥有相同标题的每本书都只是原始模板的实例，并保留了原始模板的大多数特征。</p>
+<p><strong>对于面向对象的类和类实例也是如此。例如，可以看到每个 Python 子符串都被赋予了一些属性， dir() 函数揭示了这些属性。</strong></p>
+<p><strong>于是在计算机术语中，对象是拥有标识和值的事物，属于特定类型、具有特定特征和以特定方式执行操作。 </strong>并且，对象从一个或多个父类继承了它们的许多属性。除了关键字和特殊符号（象运算符，如 + 、 - 、 * 、 ** 、 / 、 % 、 &lt; 、 &gt; 等）外，Python 中的所有东西都是对象。Python 具有一组丰富的对象类型：字符串、整数、浮点、列表、元组、字典、函数、类、类实例、模块、文件等。</p>
+<p>当您有一个任意的对象（也许是一个作为参数传递给函数的对象）时，可能希望知道一些关于该对象的情况。如希望 Python 告诉我们：</p>
+<ul>
+<li>对象的名称是什么？</li>
+<li>这是哪种类型的对象？</li>
+<li>对象知道些什么？</li>
+<li>对象能做些什么？</li>
+<li>对象的父对象是谁？</li>
+</ul>
+<h3 id="名称"><a href="#名称" class="headerlink" title="名称"></a>名称</h3><p>并非所有对象都有名称，但那些有名称的对象都将名称存储在其 <code>__name__</code> 属性中。注：名称是从对象而不是引用该对象的变量中派生的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>l = list</span><br><span class="line"><span class="comment"># dir(l)和dir(list)结果相同</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir(l)</span><br><span class="line">[<span class="string">'__add__'</span>, <span class="string">'__class__'</span>, <span class="string">'__contains__'</span>, <span class="string">'__delattr__'</span>, <span class="string">'__delitem__'</span>, <span class="string">'__dir__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__eq__'</span>, <span class="string">'__format__'</span>, <span class="string">'__ge__'</span>, <span class="string">'__getattribute__'</span>, <span class="string">'__getitem__'</span>, <span class="string">'__gt__'</span>, <span class="string">'__hash__'</span>, <span class="string">'__iadd__'</span>, <span class="string">'__imul__'</span>, <span class="string">'__init__'</span>, <span class="string">'__init_subclass__'</span>, <span class="string">'__iter__'</span>, <span class="string">'__le__'</span>, <span class="string">'__len__'</span>, <span class="string">'__lt__'</span>, <span class="string">'__mul__'</span>, <span class="string">'__ne__'</span>, <span class="string">'__new__'</span>, <span class="string">'__reduce__'</span>, <span class="string">'__reduce_ex__'</span>, <span class="string">'__repr__'</span>, <span class="string">'__reversed__'</span>, <span class="string">'__rmul__'</span>, <span class="string">'__setattr__'</span>, <span class="string">'__setitem__'</span>, <span class="string">'__sizeof__'</span>, <span class="string">'__str__'</span>, <span class="string">'__subclasshook__'</span>, <span class="string">'append'</span>, <span class="string">'clear'</span>, <span class="string">'copy'</span>, <span class="string">'count'</span>, <span class="string">'extend'</span>, <span class="string">'index'</span>, <span class="string">'insert'</span>, <span class="string">'pop'</span>, <span class="string">'remove'</span>, <span class="string">'reverse'</span>, <span class="string">'sort'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir(list)</span><br><span class="line">[<span class="string">'__add__'</span>, <span class="string">'__class__'</span>, <span class="string">'__contains__'</span>, <span class="string">'__delattr__'</span>, <span class="string">'__delitem__'</span>, <span class="string">'__dir__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__eq__'</span>, <span class="string">'__format__'</span>, <span class="string">'__ge__'</span>, <span class="string">'__getattribute__'</span>, <span class="string">'__getitem__'</span>, <span class="string">'__gt__'</span>, <span class="string">'__hash__'</span>, <span class="string">'__iadd__'</span>, <span class="string">'__imul__'</span>, <span class="string">'__init__'</span>, <span class="string">'__init_subclass__'</span>, <span class="string">'__iter__'</span>, <span class="string">'__le__'</span>, <span class="string">'__len__'</span>, <span class="string">'__lt__'</span>, <span class="string">'__mul__'</span>, <span class="string">'__ne__'</span>, <span class="string">'__new__'</span>, <span class="string">'__reduce__'</span>, <span class="string">'__reduce_ex__'</span>, <span class="string">'__repr__'</span>, <span class="string">'__reversed__'</span>, <span class="string">'__rmul__'</span>, <span class="string">'__setattr__'</span>, <span class="string">'__setitem__'</span>, <span class="string">'__sizeof__'</span>, <span class="string">'__str__'</span>, <span class="string">'__subclasshook__'</span>, <span class="string">'append'</span>, <span class="string">'clear'</span>, <span class="string">'copy'</span>, <span class="string">'count'</span>, <span class="string">'extend'</span>, <span class="string">'index'</span>, <span class="string">'insert'</span>, <span class="string">'pop'</span>, <span class="string">'remove'</span>, <span class="string">'reverse'</span>, <span class="string">'sort'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>l.__name__ </span><br><span class="line"><span class="string">'list'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>list.__name__</span><br><span class="line"><span class="string">'list'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 我之前讲过__name__的用法</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>__name__          <span class="comment">#这是不一样的</span></span><br><span class="line"><span class="string">'__main__'</span></span><br></pre></td></tr></table></figure>
+<p>模块拥有名称，Python 解释器本身被认为是顶级模块或主模块。当以交互的方式运行 Python 时，局部 <code>__name__</code> 变量被赋予值 <code>&#39;__main__&#39;</code> 。同样地，当从命令行执行 Python 模块，而不是将其导入另一个模块时，其 <code>__name__</code> 属性被赋予值 <code>&#39;__main__&#39;</code> ，而不是该模块的实际名称。这样，模块可以查看其自身的 <code>__name__</code> 值来自行确定它们自己正被如何使用，是作为另一个程序的支持，还是作为从命令行执行的主应用程序。因此，下面这条惯用的语句在 Python 模块中是很常见的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="comment"># Do something appropriate here, like calling a</span></span><br><span class="line">    <span class="comment"># main() function defined elsewhere in this module.</span></span><br><span class="line">    main()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="comment"># Do nothing. This module has been imported by another</span></span><br><span class="line">    <span class="comment"># module that wants to make use of the functions,</span></span><br><span class="line">    <span class="comment"># classes and other useful bits it has defined.</span></span><br></pre></td></tr></table></figure>
+<h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><p><code>type()</code> 函数有助于我们确定对象是字符串还是整数，或是其它类型的对象。它通过返回类型对象来做到这一点。（其实就相当于访问对象<code>__class__</code>属性，个人理解）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>list.__class__</span><br><span class="line">&lt;<span class="class"><span class="keyword">class</span> '<span class="title">type</span>'&gt;</span></span><br><span class="line"><span class="class">&gt;&gt;&gt; <span class="title">type</span><span class="params">(list)</span></span></span><br><span class="line"><span class="class">&lt;<span class="title">class</span> '<span class="title">type</span>'&gt;</span></span><br><span class="line"><span class="class">&gt;&gt;&gt; [].<span class="title">__class__</span></span></span><br><span class="line"><span class="class">&lt;<span class="title">class</span> '<span class="title">list</span>'&gt;</span></span><br><span class="line"><span class="class">&gt;&gt;&gt; <span class="title">type</span><span class="params">([])</span></span></span><br><span class="line"><span class="class">&lt;<span class="title">class</span> '<span class="title">list</span>'&gt;</span></span><br><span class="line">&gt;&gt;&gt; &#123;&#125;.__class__</span><br><span class="line">&lt;<span class="class"><span class="keyword">class</span> '<span class="title">dict</span>'&gt;</span></span><br><span class="line"><span class="class">&gt;&gt;&gt; <span class="title">type</span><span class="params">(&#123;&#125;)</span></span></span><br><span class="line"><span class="class">&lt;<span class="title">class</span> '<span class="title">dict</span>'&gt;</span></span><br><span class="line"><span class="class">&gt;&gt;&gt; '<span class="title">python</span>'.<span class="title">__class__</span></span></span><br><span class="line"><span class="class">&lt;<span class="title">class</span> '<span class="title">str</span>'&gt;</span></span><br><span class="line"><span class="class">&gt;&gt;&gt; <span class="title">type</span><span class="params">(<span class="string">'python'</span>)</span></span></span><br><span class="line"><span class="class">&lt;<span class="title">class</span> '<span class="title">str</span>'&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="标识"><a href="#标识" class="headerlink" title="标识"></a>标识</h3><p>先前说过，每个对象都有标识、类型和值。值得注意的是，可能有多个变量引用同一对象，同样地，变量可以引用看起来相似（有相同的类型和值），但拥有截然不同标识的多个对象。当更改对象时（如将某一项添加到列表），这种关于对象标识的概念尤其重要，如在下面的示例中， list_1 和 list_2 变量引用同一个列表对象。正如您在示例中所见， <code>id()</code> 函数给任何给定对象返回唯一的标识符。 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(id.__doc__)</span><br><span class="line">Return the identity of an object.</span><br><span class="line"></span><br><span class="line">This <span class="keyword">is</span> guaranteed to be unique among simultaneously existing objects.</span><br><span class="line">(CPython uses the object<span class="string">'s memory address.)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># list_1和list_2标识不同</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; list_1 = [1, 2, 3]</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; list_2 = [1, 2, 3]</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; id(list_1)</span></span><br><span class="line"><span class="string">1740112651912</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; id(list_2)</span></span><br><span class="line"><span class="string">1740117536520</span></span><br><span class="line"><span class="string"># a和b标识相同</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; a = 1</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; b = 1</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; id(a)</span></span><br><span class="line"><span class="string">1653632016</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; id(b)</span></span><br><span class="line"><span class="string">1653632016</span></span><br></pre></td></tr></table></figure>
+<p>Python中会为每个出现的对象分配内存，哪怕他们的值完全相等（注意是相等不是相同）。</p>
+<h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><p>对象拥有属性，并且 <code>dir()</code> 函数会返回这些属性的列表。但是，有时我们只想测试一个或多个属性是否存在。</p>
+<p>如果对象具有我们正在考虑的属性，那么通常希望只检索该属性。这个任务可以由<code>hasattr()</code>和 <code>getattr()</code> 函数来完成。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(hasattr.__doc__)</span><br><span class="line"><span class="comment">#判断一个对象里面是否有name属性或者name方法，返回BOOL值，有name特性返回True， 否则返回False。</span></span><br><span class="line">需要注意的是name要用括号括起来</span><br><span class="line">Return whether the object has an attribute <span class="keyword">with</span> the given name.</span><br><span class="line"></span><br><span class="line">This <span class="keyword">is</span> done by calling getattr(obj, name) <span class="keyword">and</span> catching AttributeError.</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(getattr.__doc__)</span><br><span class="line"><span class="comment"># 获取对象object的属性或者方法，如果存在打印出来，如果不存在，打印出默认值，默认值可选。</span></span><br><span class="line"><span class="comment"># 需要注意的是，如果是返回的对象的方法，返回的是方法的内存地址，如果需要运行这个方法，可以在后面添加一对括号。</span></span><br><span class="line">getattr(object, name[, default]) -&gt; value</span><br><span class="line"></span><br><span class="line">Get a named attribute <span class="keyword">from</span> an object; getattr(x, <span class="string">'y'</span>) <span class="keyword">is</span> equivalent to x.y.</span><br><span class="line">When a default argument <span class="keyword">is</span> given, it <span class="keyword">is</span> returned when the attribute doesn<span class="string">'t</span></span><br><span class="line"><span class="string">exist; without it, an exception is raised in that case.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&gt;&gt;&gt; hasattr(list, '</span>__add__<span class="string">')</span></span><br><span class="line"><span class="string">True</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; hasattr(dict, '</span>__add__<span class="string">')</span></span><br><span class="line"><span class="string">False</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&gt;&gt;&gt; list_1 = [1, 3, 2]</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; getattr(list_1, '</span>sort<span class="string">')</span></span><br><span class="line"><span class="string">&lt;built-in method sort of list object at 0x0000019526CAEAC8&gt;</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; getattr(list_1, '</span>sort<span class="string">')()</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; list_1</span></span><br><span class="line"><span class="string">[1, 2, 3]</span></span><br></pre></td></tr></table></figure>
+<p>此外还有<code>setattr</code>——为对象添加变量或方法 、<code>delattr</code>——删除对象中的变量（不能用于删除方法）。 </p>
+<h3 id="可调用"><a href="#可调用" class="headerlink" title="可调用"></a>可调用</h3><p>Python数据类型文档列出了7种可调用对象。</p>
+<ol>
+<li><p><strong>用户定义的函数</strong></p>
+<p>使用def语句或lambda表达式创建。</p>
+</li>
+<li><p><strong>内置函数</strong></p>
+<p>使用C语言（CPython）实现的函数，如len或time.strftime。</p>
+</li>
+<li><p><strong>内置方法</strong></p>
+<p>使用C语言实现的方法，如dict.get。</p>
+</li>
+<li><p><strong>方法</strong></p>
+<p>在类的定义体中定义的函数</p>
+</li>
+<li><p><strong>类</strong></p>
+<p>调用类时会运行类的__new__方法创建一个实例，然后运行__init__方法，初始化实例，最后把实例返回给对方。</p>
+</li>
+<li><p><strong>类的实例</strong></p>
+<p>如果类定义了__call__方法，那么它的实例可以作为函数调用</p>
+</li>
+<li><p><strong>生成器函数</strong></p>
+<p>使用yield关键字的函数或方法。调用生成器函数返回的是生成器对象。</p>
+</li>
+</ol>
+<p>Python中有各种各样可调用类型，因此判断对象能否调用，最安全的方法是使用内置的<code>callable()</code>函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(callable.__doc__)</span><br><span class="line">Return whether the object <span class="keyword">is</span> callable (i.e., some kind of function).</span><br><span class="line"></span><br><span class="line">Note that classes are callable, <span class="keyword">as</span> are instances of classes <span class="keyword">with</span> a</span><br><span class="line">__call__() method.</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>abs, str, <span class="number">13</span></span><br><span class="line">(&lt;built-in function abs&gt;, &lt;class 'str'&gt;, 13)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>[callable(obj) <span class="keyword">for</span> obj <span class="keyword">in</span> (abs, str, <span class="number">13</span>)]</span><br><span class="line">[<span class="keyword">True</span>, <span class="keyword">True</span>, <span class="keyword">False</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><p>在 <code>type()</code> 函数提供对象的类型时，还可以使用 <code>isinstance()</code> 函数测试对象，以确定它是否是某个特定类型或定制类的实例： </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(isinstance.__doc__)</span><br><span class="line">Return whether an object <span class="keyword">is</span> an instance of a <span class="class"><span class="keyword">class</span> <span class="title">or</span> <span class="title">of</span> <span class="title">a</span> <span class="title">subclass</span> <span class="title">thereof</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line">A tuple, as in ``isinstance(x, (A, B, ...))``, may be given as the target to</span><br><span class="line">check against. This <span class="keyword">is</span> equivalent to ``isinstance(x, A) <span class="keyword">or</span> isinstance(x, B)</span><br><span class="line"><span class="keyword">or</span> ...`` etc.</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>isinstance(<span class="number">2</span>, int)</span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>isinstance(<span class="number">2</span>, str)</span><br><span class="line"><span class="keyword">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>isinstance([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], list)</span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>isinstance(&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;, set)</span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>isinstance(&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;, dict)</span><br><span class="line"><span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<h3 id="子类"><a href="#子类" class="headerlink" title="子类"></a>子类</h3><p>关于类的问题，有一个“继承”概念，有继承就有父子问题，这是在现实生活中很正常的，在编程语言中也是如此。 </p>
+<p>在类这一级别，可以根据一个类来定义另一个类，同样地，这个新类会按照层次化的方式继承属性。Python 甚至支持多重继承，多重继承意味着可以用多个父类来定义一个类，这个新类继承了多个父类。 <code>issubclass()</code> 函数使我们可以查看一个类是不是继承了另一个类： </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(issubclass.__doc__)</span><br><span class="line">Return whether <span class="string">'cls'</span> <span class="keyword">is</span> a derived <span class="keyword">from</span> another <span class="class"><span class="keyword">class</span> <span class="title">or</span> <span class="title">is</span> <span class="title">the</span> <span class="title">same</span> <span class="title">class</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line">A tuple, as in ``issubclass(x, (A, B, ...))``, may be given as the target to</span><br><span class="line">check against. This <span class="keyword">is</span> equivalent to ``issubclass(x, A) <span class="keyword">or</span> issubclass(x, B)</span><br><span class="line"><span class="keyword">or</span> ...`` etc.</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> abc <span class="keyword">import</span> ABC, abstractmethod</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="class"><span class="keyword">class</span> <span class="title">Test</span><span class="params">(ABC)</span>:</span>         </span><br><span class="line"><span class="meta">... </span>    @abstractmethod      </span><br><span class="line"><span class="meta">... </span>    <span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(self)</span>:</span>      </span><br><span class="line"><span class="meta">... </span>            <span class="string">"""test"""</span>   </span><br><span class="line"><span class="meta">... </span>                         </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>issubclass(Test, ABC)    </span><br><span class="line"><span class="keyword">True</span></span><br></pre></td></tr></table></figure>
+<h1 id="函数内省"><a href="#函数内省" class="headerlink" title="函数内省"></a>函数内省</h1><hr>
+<p>我们使用实例来讲述函数内省的具体作用。</p>
+<p>这部分参考与《流畅的Python》第五章。</p>
+<p>首先定义一个函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clip</span><span class="params">(text:str, max_len:<span class="string">'int &gt; 0'</span>=<span class="number">80</span>)</span> -&gt; str:</span></span><br><span class="line">    <span class="string">"""在max_len前面或后面的第一个空格处截断文本"""</span></span><br><span class="line">    end = <span class="keyword">None</span></span><br><span class="line">    <span class="keyword">if</span> len(text) &gt; max_len:</span><br><span class="line">        space_before = text.rfind(<span class="string">' '</span>, <span class="number">0</span>, max_len)</span><br><span class="line">        <span class="keyword">if</span> space_before &gt;= <span class="number">0</span>:</span><br><span class="line">            end = space_before</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            space_after = text.rfind(<span class="string">' '</span>, max_len)</span><br><span class="line">            <span class="keyword">if</span> space_after &gt;= <span class="number">0</span>:</span><br><span class="line">                end = space_after</span><br><span class="line">    <span class="keyword">if</span> end <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">        end = len(text)</span><br><span class="line">    <span class="keyword">return</span> text[:end].rstrip()</span><br></pre></td></tr></table></figure>
+<h2 id="使用dir-获取函数的属性"><a href="#使用dir-获取函数的属性" class="headerlink" title="使用dir()获取函数的属性"></a>使用dir()获取函数的属性</h2><p>使用dir函数可以探知clip具有下述属性：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">'__annotations__'</span>, <span class="string">'__call__'</span>, <span class="string">'__class__'</span>, <span class="string">'__closure__'</span>, <span class="string">'__code__'</span>, <span class="string">'__defaults__'</span>, <span class="string">'__delattr__'</span>, <span class="string">'__dict__'</span>, <span class="string">'__dir__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__eq__'</span>, <span class="string">'__format__'</span>, <span class="string">'__ge__'</span>, <span class="string">'__get__'</span>, <span class="string">'__getattribute__'</span>, <span class="string">'__globals__'</span>, <span class="string">'__gt__'</span>, <span class="string">'__hash__'</span>, <span class="string">'__init__'</span>, <span class="string">'__init_subclass__'</span>, <span class="string">'__kwdefaults__'</span>, <span class="string">'__le__'</span>, <span class="string">'__lt__'</span>, <span class="string">'__module__'</span>, <span class="string">'__name__'</span>, <span class="string">'__ne__'</span>, <span class="string">'__new__'</span>, <span class="string">'__qualname__'</span>, <span class="string">'__reduce__'</span>, <span class="string">'__reduce_ex__'</span>, <span class="string">'__repr__'</span>, <span class="string">'__setattr__'</span>, <span class="string">'__sizeof__'</span>, <span class="string">'__str__'</span>, <span class="string">'__subclasshook__'</span>]</span><br></pre></td></tr></table></figure>
+<p>其中大多数属性是Python对象共有的。我们重点说明函数专有而用户定义的一般对象没有的属性。</p>
+<p>计算两个属性集合的差集便能得到函数专有的属性列表：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="class"><span class="keyword">class</span> <span class="title">C</span>:</span> <span class="keyword">pass</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj = C()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">()</span>:</span> <span class="keyword">pass</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sorted(set(dir(func)) - set(dir(obj)))</span><br><span class="line">[<span class="string">'__annotations__'</span>, <span class="string">'__call__'</span>, <span class="string">'__closure__'</span>, <span class="string">'__code__'</span>, <span class="string">'__defaults__'</span>, <span class="string">'__get__'</span>, <span class="string">'__globals__'</span>, <span class="string">'__kwdefaults__'</span>, <span class="string">'__name__'</span>, <span class="string">'__qualname__'</span>]</span><br></pre></td></tr></table></figure>
+<p>列出这些属性的简要说明：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>__annotations__</td>
+<td>dict</td>
+<td>参数和返回值的注解</td>
+</tr>
+<tr>
+<td>__call__</td>
+<td>method-wrapper</td>
+<td>实现（）运算符，即可调用对象协议</td>
+</tr>
+<tr>
+<td>__closure__</td>
+<td>tuple</td>
+<td>函数闭包，即自由变量的绑定（通常是None）</td>
+</tr>
+<tr>
+<td>__code__</td>
+<td>code</td>
+<td>编译成字节码的函数元数据和函数定义体</td>
+</tr>
+<tr>
+<td>__defaults__</td>
+<td>tuple</td>
+<td>形式参数的默认值</td>
+</tr>
+<tr>
+<td>__get__</td>
+<td>method-wrapper</td>
+<td>实现制度描述符协议</td>
+</tr>
+<tr>
+<td>__globals__</td>
+<td>dict</td>
+<td>函数所在模块中的全局变量</td>
+</tr>
+<tr>
+<td>__kwdefaults__</td>
+<td>dict</td>
+<td>仅限关键字形式参数的默认值</td>
+</tr>
+<tr>
+<td>__name__</td>
+<td>str</td>
+<td>函数名称</td>
+</tr>
+<tr>
+<td>__qualname__</td>
+<td>str</td>
+<td>函数的限定名称，如Random.choice</td>
+</tr>
+</tbody>
+</table>
+<h2 id="获取函数注解"><a href="#获取函数注解" class="headerlink" title="获取函数注解"></a>获取函数注解</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> clip <span class="keyword">import</span> clip</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>clip.__annotations__</span><br><span class="line">&#123;'text': &lt;class 'str'&gt;, 'max_len': 'int &gt; 0', 'return': &lt;class 'str'&gt;&#125;</span><br></pre></td></tr></table></figure>
+<p>函数声明中的各个参数可以在：之后增加注解表达式。如果参数有默认值，注解放在参数名和=号之间。如果想注解返回值，在）和函数声明末尾的：之间添加-&gt;表达式。这个表达式可以是任何类型。注解中最常用的类型是类（如str或int）和字符串（如’int&gt;0’）。</p>
+<h2 id="获取函数文档字符串"><a href="#获取函数文档字符串" class="headerlink" title="获取函数文档字符串"></a>获取函数文档字符串</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>clip.__doc__</span><br><span class="line"><span class="string">'在max_len前面或后面的第一个空格处截断文本'</span></span><br></pre></td></tr></table></figure>
+<h2 id="获取函数参数信息"><a href="#获取函数参数信息" class="headerlink" title="获取函数参数信息"></a>获取函数参数信息</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>clip.__defaults__                                                                                                       </span><br><span class="line">(<span class="number">80</span>,)                                                                                                                       </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>clip.__code__                                                                                                           </span><br><span class="line">&lt;code object clip at <span class="number">0x000001ABE1308780</span>, file <span class="string">"C:\Users\Peng.Gao\Desktop\fluency_python\c5\clip.py"</span>, line <span class="number">1</span>&gt;                </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>clip.__code__.co_varnames                                                                                               </span><br><span class="line">(<span class="string">'text'</span>, <span class="string">'max_len'</span>, <span class="string">'end'</span>, <span class="string">'space_before'</span>, <span class="string">'space_after'</span>)                                                                   </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>clip.__code__.co_argcount    </span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>可以看出这种组织信息的方式并不是很便利的。</p>
+<p>之后再介绍更好的方式inspect模块。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/30/Python实现统计文本当中单词数量/" rel="next" title="Python实现统计文本当中单词数量">
+                <i class="fa fa-chevron-left"></i> Python实现统计文本当中单词数量
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/13/Python学习笔记-time模块/" rel="prev" title="Python学习笔记-time模块">
+                Python学习笔记-time模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/jugg.JPG"
+                alt="高鹏" />
+            
+              <p class="site-author-name" itemprop="name">高鹏</p>
+              <p class="site-description motion-element" itemprop="description">有人的地方就有江湖</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://processon.com/" title="在线画图" target="_blank">在线画图</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://regex101.com/" title="正则表达式" target="_blank">正则表达式</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是自省"><span class="nav-number">1.</span> <span class="nav-text">什么是自省</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#联机帮助"><span class="nav-number">1.1.</span> <span class="nav-text">联机帮助</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dir-函数"><span class="nav-number">1.2.</span> <span class="nav-text">dir()函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文档字符串"><span class="nav-number">1.3.</span> <span class="nav-text">文档字符串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用自省检查-Python-对象"><span class="nav-number">1.4.</span> <span class="nav-text">利用自省检查 Python 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#名称"><span class="nav-number">1.4.1.</span> <span class="nav-text">名称</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型"><span class="nav-number">1.4.2.</span> <span class="nav-text">类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标识"><span class="nav-number">1.4.3.</span> <span class="nav-text">标识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性"><span class="nav-number">1.4.4.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可调用"><span class="nav-number">1.4.5.</span> <span class="nav-text">可调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例"><span class="nav-number">1.4.6.</span> <span class="nav-text">实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#子类"><span class="nav-number">1.4.7.</span> <span class="nav-text">子类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#函数内省"><span class="nav-number">2.</span> <span class="nav-text">函数内省</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用dir-获取函数的属性"><span class="nav-number">2.1.</span> <span class="nav-text">使用dir()获取函数的属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取函数注解"><span class="nav-number">2.2.</span> <span class="nav-text">获取函数注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取函数文档字符串"><span class="nav-number">2.3.</span> <span class="nav-text">获取函数文档字符串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取函数参数信息"><span class="nav-number">2.4.</span> <span class="nav-text">获取函数参数信息</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">高鹏</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
