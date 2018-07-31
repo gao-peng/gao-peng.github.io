@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Ansible," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Ansible配置文件笔记Ansible读取配置文件的顺序  ANSIBLE_CONFIG（如果设置了环境变量）  ansible.cfg（当前目录）   ~/.ansible.cfg（当前用户宿主目录）  /etc/ansible.cfg  命令语法 1ansible-config [view|dump|list] [--help] [options] [ansible.cfg] options">
+<meta name="keywords" content="Ansible">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ansible学习笔记-Config">
+<meta property="og:url" content="http://yoursite.com/2018/07/30/Ansible学习笔记-Config/index.html">
+<meta property="og:site_name" content="剑十三">
+<meta property="og:description" content="Ansible配置文件笔记Ansible读取配置文件的顺序  ANSIBLE_CONFIG（如果设置了环境变量）  ansible.cfg（当前目录）   ~/.ansible.cfg（当前用户宿主目录）  /etc/ansible.cfg  命令语法 1ansible-config [view|dump|list] [--help] [options] [ansible.cfg] options">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-30T14:35:51.280Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ansible学习笔记-Config">
+<meta name="twitter:description" content="Ansible配置文件笔记Ansible读取配置文件的顺序  ANSIBLE_CONFIG（如果设置了环境变量）  ansible.cfg（当前目录）   ~/.ansible.cfg（当前用户宿主目录）  /etc/ansible.cfg  命令语法 1ansible-config [view|dump|list] [--help] [options] [ansible.cfg] options">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/30/Ansible学习笔记-Config/"/>
+
+
+
+
+
+  <title>Ansible学习笔记-Config | 剑十三</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑十三</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">剑未配妥，身已江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/30/Ansible学习笔记-Config/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="高鹏">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/jugg.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑十三">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ansible学习笔记-Config</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-30T17:58:25+08:00">
+                2018-07-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Ansible/" itemprop="url" rel="index">
+                    <span itemprop="name">Ansible</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Ansible配置文件笔记"><a href="#Ansible配置文件笔记" class="headerlink" title="Ansible配置文件笔记"></a>Ansible配置文件笔记</h1><p><strong>Ansible读取配置文件的顺序</strong></p>
+<ul>
+<li><p><code>ANSIBLE_CONFIG</code>（如果设置了环境变量）</p>
+</li>
+<li><p><code>ansible.cfg</code>（当前目录） </p>
+</li>
+<li><code>~/.ansible.cfg</code>（当前用户宿主目录） </li>
+<li><code>/etc/ansible.cfg</code></li>
+</ul>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p><strong>语法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-config [view|dump|list] [--help] [options] [ansible.cfg]</span><br></pre></td></tr></table></figure>
+<p><strong>options</strong></p>
+<p><code>--version</code> — 版本号</p>
+<p><code>-c &lt;CONFIG_FILE&gt;, --config &lt;CONFIG_FILE&gt;</code> — 指定配置文件路径</p>
+<p><code>-v, --verbose</code> — 详细模式（-vvv表示更多，-vvvv表示开启连接调试）</p>
+<p><strong>view</strong></p>
+<p>显示当前的配置文件</p>
+<p><strong>dump</strong></p>
+<p>显示当前设置，如果指定了配置文件，则覆盖配置文件</p>
+<p><code>--only-changed</code> — 仅显示从默认值更改的配置 </p>
+<p><strong>list</strong></p>
+<p>列出lib/constants.py的所有配置，并显示env和配置文件的名称</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>在此记录一下配置文件各个选项的作用：</p>
+<blockquote>
+<p>以下配置项在实际文件中都被注释，大多数情况下使用默认配置，根据自己的需要修改。</p>
+<p>为了显示效果，我把注释都去掉了。</p>
+</blockquote>
+<h3 id="defaults"><a href="#defaults" class="headerlink" title="defaults"></a>defaults</h3><p>日常可能用到的配置，多数保持默认即可。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[defaults]</span></span><br><span class="line"><span class="comment"># Inventory文件</span></span><br><span class="line"><span class="comment"># 默认：/etc/ansible/hosts</span></span><br><span class="line"><span class="attr">inventory</span>      = /etc/ansible/hosts</span><br><span class="line"><span class="comment"># lib库存放目录</span></span><br><span class="line"><span class="comment"># 默认：~/.ansible/plugins/modules:/usr/share/ansible/plugins/modules</span></span><br><span class="line"><span class="attr">library</span>        = /usr/share/my_modules/</span><br><span class="line"><span class="comment"># 模块目录</span></span><br><span class="line"><span class="comment"># 默认：~/.ansible/plugins/module_utils:/usr/share/ansible/plugins/module_util</span></span><br><span class="line"><span class="attr">module_utils</span>   = /usr/share/my_module_utils/</span><br><span class="line"><span class="comment"># 远程主机临时文件存放目录</span></span><br><span class="line"><span class="comment"># 默认：~/.ansible/tmp</span></span><br><span class="line"><span class="attr">remote_tmp</span>     = ~/.ansible/tmp</span><br><span class="line"><span class="comment"># 本地临时文件存放目录</span></span><br><span class="line"><span class="comment"># 默认：~/.ansible/tmp</span></span><br><span class="line"><span class="attr">local_tmp</span>      = ~/.ansible/tmp</span><br><span class="line"><span class="comment"># 模块黑名单文件（2.5版本及以后）</span></span><br><span class="line"><span class="comment"># 默认：None</span></span><br><span class="line"><span class="attr">plugin_filters_cfg</span> = /etc/ansible/plugin_filters.yml</span><br><span class="line"><span class="comment"># 并发数</span></span><br><span class="line"><span class="comment"># 默认：5</span></span><br><span class="line"><span class="attr">forks</span>          = <span class="number">5</span></span><br><span class="line"><span class="comment"># 轮询时间间隔</span></span><br><span class="line"><span class="comment"># 默认：15</span></span><br><span class="line"><span class="attr">poll_interval</span>  = <span class="number">15</span></span><br><span class="line"><span class="comment"># sudo用户</span></span><br><span class="line"><span class="comment"># 默认：None</span></span><br><span class="line"><span class="attr">sudo_user</span>      = root</span><br><span class="line"><span class="comment"># 是否需要sudo密码</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">ask_sudo_pass</span> = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 是否需要密码，如果使用秘钥验证不需要修改此配置</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">ask_pass</span>      = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 传输模式</span></span><br><span class="line"><span class="comment"># 默认：smart（smart模式会在ssh和paramiko之间切换，取决于操作系统和ssh版本。</span></span><br><span class="line"><span class="comment"># 可选：ssh、paramiko</span></span><br><span class="line"><span class="attr">transport</span>      = smart</span><br><span class="line"><span class="comment"># 远程链接端口号</span></span><br><span class="line"><span class="comment"># 默认：None（将使用连接插件的默认端口号，比如使用ssh连接时会使用控制端ssh的默认端口号）</span></span><br><span class="line"><span class="attr">remote_port</span>    = <span class="number">22</span></span><br><span class="line"><span class="comment"># 模块在远程主机执行时使用的语言环境设置（只有module_set_locale=True时才生效）</span></span><br><span class="line"><span class="comment"># 默认：defaults（尝试将控制器的LANG环境变量设置为远程主机的LANG环境变量）</span></span><br><span class="line"><span class="attr">module_lang</span>    = C</span><br><span class="line"><span class="attr">module_set_locale</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># Gathering Facts的默认策略（每个play在执行时都会先执行一个默认任务：收集远程系统的信息）</span></span><br><span class="line"><span class="comment"># 默认：implicit（缓存插件将被忽略，Facts数据将被收集，除非在playbook文件中加上gather_facts: false）</span></span><br><span class="line"><span class="comment"># 可选：explicit（不收集Facts数据，除非在playbook文件中加上gather_facts: True）</span></span><br><span class="line"><span class="comment"># 可选：smart（智能模式，会收集没有发现Facts数据的主机，如果已经收集了，将不会再进行收集任务）</span></span><br><span class="line"><span class="comment"># explicit和smart都可使用缓存插件</span></span><br><span class="line"><span class="attr">gathering</span> = implicit</span><br><span class="line"><span class="comment"># 定义获取Facts信息的子集</span></span><br><span class="line"><span class="comment"># 默认：all（获取全部信息）</span></span><br><span class="line"><span class="comment"># 可选：network（收集最简信息和网络信息）</span></span><br><span class="line"><span class="comment"># 可选：hardware（收集硬件信息）</span></span><br><span class="line"><span class="comment"># 可选：virtual（收集最简信息和虚拟信息）</span></span><br><span class="line"><span class="comment"># 可选：facter（从facter中导入信息，需要远程主机安装facter包）</span></span><br><span class="line"><span class="comment"># 可选：ohai（从ohai中导入信息，需要远程主机安装ohai包）</span></span><br><span class="line"><span class="comment"># 可以使用逗号来组合（network,hardware）</span></span><br><span class="line"><span class="comment"># 可以使用感叹号来排除（!hardware,!facter,!ohai）</span></span><br><span class="line"><span class="comment"># 最简信息总是会被采集</span></span><br><span class="line"><span class="attr">gather_subset</span> = all</span><br><span class="line"><span class="comment"># 收集Facts信息的超时时间，不适用ansible hosts -m setup</span></span><br><span class="line"><span class="comment"># 默认：10</span></span><br><span class="line"><span class="attr">gather_timeout</span> = <span class="number">10</span></span><br><span class="line"><span class="comment"># 角色路径，可用:分隔不同的路径</span></span><br><span class="line"><span class="comment"># 默认：~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles</span></span><br><span class="line"><span class="attr">roles_path</span> = /etc/ansible/roles</span><br><span class="line"><span class="comment"># 首次链接是否需要检查key认证</span></span><br><span class="line"><span class="comment"># 默认：True</span></span><br><span class="line"><span class="comment"># 建议改为False</span></span><br><span class="line"><span class="attr">host_key_checking</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 改变默认回调，一次只能启用一个'stdout'类型</span></span><br><span class="line"><span class="comment"># 可自定义插件来改变回调显示的格式等</span></span><br><span class="line"><span class="comment"># 默认：default</span></span><br><span class="line"><span class="attr">stdout_callback</span> = skippy</span><br><span class="line"><span class="comment"># 白名单的回调列表，并非所有回调都需要列入白名单，但Ansible自带的许多回调都需要加入白名单列表，因为不希望他们被默认激活</span></span><br><span class="line"><span class="comment"># 默认：[]</span></span><br><span class="line"><span class="attr">callback_whitelist</span> = timer, mail</span><br><span class="line"><span class="comment"># 设定任务是否为静态，2.0版本默认动态。若设置为True，则像1.x版本那样为静态。</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">task_includes_static</span> = <span class="literal">False</span></span><br><span class="line"><span class="attr">handler_includes_static</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># sudo可执行文件名</span></span><br><span class="line"><span class="comment"># 默认：sudo</span></span><br><span class="line"><span class="attr">sudo_exe</span> = sudo</span><br><span class="line"><span class="comment"># sudo参数</span></span><br><span class="line"><span class="comment"># 默认：-H -S -n</span></span><br><span class="line"><span class="attr">sudo_flags</span> = -H -S -n</span><br><span class="line"><span class="comment"># ssh超时时间</span></span><br><span class="line"><span class="comment"># 默认：10</span></span><br><span class="line"><span class="attr">timeout</span> = <span class="number">10</span></span><br><span class="line"><span class="comment"># 默认的远程连接用户</span></span><br><span class="line"><span class="comment"># 默认：None（当前正在执行任务的用户）</span></span><br><span class="line"><span class="attr">remote_user</span> = root</span><br><span class="line"><span class="comment"># 日志文件</span></span><br><span class="line"><span class="comment"># 默认：None（不打印日志）</span></span><br><span class="line"><span class="attr">log_path</span> = /var/log/ansible.log</span><br><span class="line"><span class="comment"># ansible默认的执行模块</span></span><br><span class="line"><span class="comment"># 默认：command</span></span><br><span class="line"><span class="attr">module_name</span> = command</span><br><span class="line"><span class="comment"># 执行脚本的解释器</span></span><br><span class="line"><span class="comment"># 默认：/bin/sh</span></span><br><span class="line"><span class="attr">executable</span> = /bin/sh</span><br><span class="line"><span class="comment"># 变量重叠式，是优先级高的替换优先级低的还是合并（python中的字典），不建议设置</span></span><br><span class="line"><span class="comment"># 默认：replace</span></span><br><span class="line"><span class="attr">hash_behaviour</span> = replace</span><br><span class="line"><span class="comment"># 使角色中的变量无法从其他角色中访问。默认情况下，角色中的变量将在全局变量范围中可见。为了防止这种情况，可以启用以下选项，只有tasks的任务和handlers得任务可以看到角色变量</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">private_role_vars</span> = <span class="literal">yes</span></span><br><span class="line"><span class="comment"># jinja2的扩展应用</span></span><br><span class="line"><span class="comment"># 默认：[]</span></span><br><span class="line"><span class="attr">jinja2_extensions</span> = jinja2.ext.do,jinja2.ext.i18n</span><br><span class="line"><span class="comment"># 私钥文件路径</span></span><br><span class="line"><span class="comment"># 默认：None</span></span><br><span class="line"><span class="attr">private_key_file</span> = /path/to/file</span><br><span class="line"><span class="comment"># vault密码文件路径</span></span><br><span class="line"><span class="comment"># 默认：None</span></span><br><span class="line"><span class="attr">vault_password_file</span> = /path/to/vault_password_file</span><br><span class="line"><span class="comment"># 定义一个Jinja2变量，可以插入到Ansible配置模版系统生成的文件中</span></span><br><span class="line"><span class="comment"># 默认：Ansible managed</span></span><br><span class="line"><span class="attr">ansible_managed</span> = Ansible managed</span><br><span class="line"><span class="comment"># 是否显示跳过的任务状态，不管任务是否被跳过，任务头仍然会显示出来</span></span><br><span class="line"><span class="comment"># 默认：True</span></span><br><span class="line"><span class="attr">display_skipped_hosts</span> = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 清楚情况下playbook会为每个运行的任务打印一个标题。如果指定了标题名，则会打印这个标题；如果没有指定标题，playbook会根据任务的行动来判断当前的任务是什么。如果设置了这个变量，那么playbook会在标题中包含任务的参数。</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">display_args_to_stdout</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 如果所引用的变量名称错误的话, 是否让ansible在执行步骤上失败</span></span><br><span class="line"><span class="comment"># 默认：True</span></span><br><span class="line"><span class="attr">error_on_undefined_vars</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 是否禁用系统可能出现的问题相关的警告</span></span><br><span class="line"><span class="comment"># 默认：True</span></span><br><span class="line"><span class="attr">system_warnings</span> = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 将不再使用的语言特性显示弃用警告，并将在以后的版本中删除</span></span><br><span class="line"><span class="comment"># 默认：True</span></span><br><span class="line"><span class="attr">deprecation_warnings</span> = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 默认情况下，当使用shell或命令模块时，该命令将发出警告。这些警告可以通过调整这个设置为False来关闭，还可以使用模块选项警告在任务级别控制它（warn=yes|no）</span></span><br><span class="line"><span class="comment"># 默认：True</span></span><br><span class="line"><span class="attr">command_warnings</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 以下为插件存放目录</span></span><br><span class="line"><span class="comment"># 默认：~/.ansible/plugins/插件名:/usr/share/ansible/plugins/插件名</span></span><br><span class="line"><span class="attr">action_plugins</span>     = /usr/share/ansible/plugins/action</span><br><span class="line"><span class="attr">cache_plugins</span>      = /usr/share/ansible/plugins/cache</span><br><span class="line"><span class="attr">callback_plugins</span>   = /usr/share/ansible/plugins/callback</span><br><span class="line"><span class="attr">connection_plugins</span> = /usr/share/ansible/plugins/connection</span><br><span class="line"><span class="attr">lookup_plugins</span>     = /usr/share/ansible/plugins/lookup</span><br><span class="line"><span class="attr">inventory_plugins</span>  = /usr/share/ansible/plugins/inventory</span><br><span class="line"><span class="attr">vars_plugins</span>       = /usr/share/ansible/plugins/vars</span><br><span class="line"><span class="attr">filter_plugins</span>     = /usr/share/ansible/plugins/filter</span><br><span class="line"><span class="attr">test_plugins</span>       = /usr/share/ansible/plugins/test</span><br><span class="line"><span class="attr">terminal_plugins</span>   = /usr/share/ansible/plugins/terminal</span><br><span class="line"><span class="attr">strategy_plugins</span>   = /usr/share/ansible/plugins/strategy</span><br><span class="line"><span class="comment"># play的默认策略</span></span><br><span class="line"><span class="comment"># 默认：linear（线性）</span></span><br><span class="line"><span class="comment"># 可选：free（尽快）以及其他的策略插件</span></span><br><span class="line"><span class="attr">strategy</span> = free</span><br><span class="line"><span class="comment"># 控制callback插件（前面有设置插件的路径）是否在运行/usr/bin/ansible的时候被加载</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">bin_ansible_callbacks</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 是否开启cowsay功能，不想使用可以通过export ANSIBLE_NOCOWS=1来关闭</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">nocows</span> = <span class="number">1</span></span><br><span class="line"><span class="comment"># 指定cowsay还是随机选择模块（cow_whitelist选项中的模块）</span></span><br><span class="line"><span class="comment"># 默认：default</span></span><br><span class="line"><span class="attr">cow_selection</span> = random</span><br><span class="line"><span class="comment"># cowsay白名单</span></span><br><span class="line"><span class="comment"># 默认：[‘bud-frogs’, ‘bunny’, ‘cheese’, ‘daemon’, ‘default’, ‘dragon’, ‘elephant-in-snake’, ‘elephant’, ‘eyes’, ‘hellokitty’, ‘kitty’, ‘luke-koala’, ‘meow’, ‘milk’, ‘moofasa’, ‘moose’, ‘ren’, ‘sheep’, ‘small’, ‘stegosaurus’, ‘stimpy’, ‘supermilker’, ‘three-eyes’, ‘turkey’, ‘turtle’, ‘tux’, ‘udder’, ‘vader-koala’, ‘vader’, ‘www’]</span></span><br><span class="line"><span class="attr">cow_whitelist</span>=bud-frogs,bunny,cheese,daemon,default,dragon,elephant-in-snake,elephant,e<span class="literal">yes</span>,hellokitty,kitty,luke-koala,meow,milk,moofasa,moose,ren,sheep,small,stegosaurus,stimpy,supermilker,three-e<span class="literal">yes</span>,turkey,turtle,tux,udder,vader-koala,vader,www</span><br><span class="line"><span class="comment"># 默认ansible会为输出结果加上颜色,用来更好的区分状态信息和失败信息.如果你想关闭这一功能,可以把nocolor设置为1</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">nocolor</span> = <span class="number">1</span></span><br><span class="line"><span class="comment"># fact值默认存储在内存中，可以设置存储在redis等其他缓存型数据库中</span></span><br><span class="line"><span class="comment"># 默认：memory</span></span><br><span class="line"><span class="attr">fact_caching</span> = memory</span><br><span class="line"><span class="comment"># 当playbook失败的情况下，是否创建一个重试文件</span></span><br><span class="line"><span class="comment"># 默认：True</span></span><br><span class="line"><span class="attr">retry_files_enabled</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 重试文件的路径</span></span><br><span class="line"><span class="comment"># 默认：None（当前执行目录）</span></span><br><span class="line"><span class="attr">retry_files_save_path</span> = ~/.ansible-retry</span><br><span class="line"><span class="comment"># Ansible可以优化在循环时使用列表参数调用模块的操作。 而不是每个with_项调用模块一次，该模块会一次调用所有项目一次。该参数记录哪些action是这样操作的。</span></span><br><span class="line"><span class="comment"># 默认：apk, apt, dnf, homebrew, openbsd_pkg, pacman, pkgng, yum, zypper</span></span><br><span class="line"><span class="attr">squash_actions</span> = apk,apt,dnf,homebrew,pacman,pkgng,yum,zypper</span><br><span class="line"><span class="comment"># 任务数据的日志记录</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">no_log</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 在远程主机上是否禁止任务的日志记录，但在控制主机上仍然会记录</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">no_target_syslog</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># （不知）</span></span><br><span class="line"><span class="attr">allow_world_readable_tmpfiles</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 控制发送到工作进程的变量的压缩级别，此值必须是从0到9的整数。</span></span><br><span class="line"><span class="comment"># 默认：0（不压缩）</span></span><br><span class="line"><span class="attr">var_compression_level</span> = <span class="number">9</span></span><br><span class="line"><span class="comment"># 压缩方法</span></span><br><span class="line"><span class="comment"># 默认：ZIP_DEFLATED（zip压缩）</span></span><br><span class="line"><span class="comment"># 可选：ZIP_STORED（无压缩）</span></span><br><span class="line"><span class="attr">module_compression</span> = <span class="string">'ZIP_DEFLATED'</span></span><br><span class="line"><span class="comment"># 控制--diff文件上的截止点（以字节为单位），设置0则为无限制（可能对内存有影响）</span></span><br><span class="line"><span class="comment"># 默认：104448</span></span><br><span class="line"><span class="attr">max_diff_size</span> = <span class="number">1048576</span></span><br><span class="line"><span class="comment"># 将在2.8本本删除不讨论</span></span><br><span class="line"><span class="attr">merge_multiple_cli_flags</span> = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 是否显示定制的stats信息</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">show_custom_stats</span> = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 当使用目录作为库存源时忽略的扩展列表</span></span><br><span class="line"><span class="comment"># 默认：&#123;&#123;(BLACKLIST_EXTS + ( ‘~’, ‘.orig’, ‘.ini’, ‘.cfg’, ‘.retry’))&#125;&#125;</span></span><br><span class="line"><span class="attr">inventory_ignore_extensions</span> = ~, .orig, .bak, .ini, .cfg, .retry, .pyc, .pyo</span><br><span class="line"><span class="comment"># 针对网络设备优化的备选执行路径，除非了解它是怎么工作的，否则不要改动</span></span><br><span class="line"><span class="comment"># 默认：ult:	[‘eos’, ‘nxos’, ‘ios’, ‘iosxr’, ‘junos’, ‘enos’, ‘ce’, ‘vyos’, ‘sros’, ‘dellos9’, ‘dellos10’, ‘dellos6’, ‘asa’, ‘aruba’, ‘aireos’, ‘bigip’, ‘ironware’, ‘onyx’]</span></span><br><span class="line"><span class="attr">network_group_modules</span> = eos, nxos, ios, iosxr, junos, vyos</span><br><span class="line"><span class="comment"># 是否允许忽略不安全的数据（通过诸如查找（'foo'）之类的变量，或者作为带有'withfoo'的循环使用的变量）</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">allow_unsafe_lookups</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 为所有的paly设置默认错误</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">any_errors_fatal</span> = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<h3 id="inventory"><a href="#inventory" class="headerlink" title="inventory"></a>inventory</h3><p>主机清单的相关配置。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[inventory]</span></span><br><span class="line"><span class="comment"># 主机清单插件，也决定使用的顺序</span></span><br><span class="line"><span class="comment"># 默认：[‘host_list’, ‘script’, ‘yaml’, ‘ini’, ‘auto’]</span></span><br><span class="line"><span class="attr">enable_plugins</span>=host_list, virtualbox, yaml, constructed</span><br><span class="line"><span class="comment"># 同defaults中inventory_ignore_extensions选项</span></span><br><span class="line"><span class="attr">ignore_extensions</span> = .pyc, .pyo, .swp, .bak, ~, .rpm, .md, .txt, ~, .orig, .ini, .cfg, .retry</span><br><span class="line"><span class="comment"># 在使用目录作为库存源时忽略的模式</span></span><br><span class="line"><span class="comment"># 默认：[]</span></span><br><span class="line"><span class="attr">ignore_patterns</span> =</span><br><span class="line"><span class="comment"># 如果为True，未解析的主机为error，否则为警告</span></span><br><span class="line"><span class="attr">unparsed_is_failed</span> = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<h3 id="privilege-escalation"><a href="#privilege-escalation" class="headerlink" title="privilege_escalation"></a>privilege_escalation</h3><p>sudo用户提权的相关配置。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 是否允许sudo命令成为另外一个用户</span></span><br><span class="line"><span class="comment"># 默认：false</span></span><br><span class="line"><span class="attr">become</span>=<span class="literal">True</span></span><br><span class="line"><span class="comment"># sudo的方式</span></span><br><span class="line"><span class="comment"># 默认：sudo</span></span><br><span class="line"><span class="attr">become_method</span>=sudo</span><br><span class="line"><span class="comment"># 特权升级时称为的用户</span></span><br><span class="line"><span class="comment"># 默认：root</span></span><br><span class="line"><span class="attr">become_user</span>=root</span><br><span class="line"><span class="comment"># sudo后是否验证密码</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">become_ask_pass</span>=<span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<h3 id="paramiko-connection"><a href="#paramiko-connection" class="headerlink" title="paramiko_connection"></a>paramiko_connection</h3><p>paramiko连接相关配置，目前已经不常用，基本适用ssh连接。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 该部分已经不怎么用，简单了解</span></span><br><span class="line"><span class="section">[paramiko_connection]</span></span><br><span class="line"><span class="comment"># 不记录新主机的key以提升效率</span></span><br><span class="line"><span class="attr">record_host_keys</span>=<span class="literal">False</span></span><br><span class="line"><span class="comment"># 禁用sudo功能</span></span><br><span class="line"><span class="attr">pty</span>=<span class="literal">False</span></span><br><span class="line"><span class="comment"># 是否显示公钥文件</span></span><br><span class="line"><span class="attr">look_for_keys</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 是否自动添加公钥文件</span></span><br><span class="line"><span class="attr">host_key_auto_add</span> = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<h3 id="ssh-connection"><a href="#ssh-connection" class="headerlink" title="ssh_connection"></a>ssh_connection</h3><p>ssh连接相关配置。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[ssh_connection]</span></span><br><span class="line"><span class="comment"># ssh连接时的参数</span></span><br><span class="line"><span class="comment"># 默认：-C -o ControlMaster=auto -o ControlPersist=60s</span></span><br><span class="line"><span class="attr">ssh_args</span> = -C -o ControlMaster=auto -o ControlPersist=<span class="number">60</span>s</span><br><span class="line"><span class="comment"># 保存ControlPath套接字的目录</span></span><br><span class="line"><span class="comment"># 默认：~/.ansible/pc</span></span><br><span class="line"><span class="attr">control_path_dir</span> = ~/.ansible/cp</span><br><span class="line"><span class="comment"># 保存ControlPath套接字位置</span></span><br><span class="line"><span class="comment"># 默认：None</span></span><br><span class="line"><span class="attr">control_path</span> =</span><br><span class="line"><span class="comment"># 默认情况下，ansible的执行流程是把生成好的本地python脚本put到远程服务器然后运行。如果开启了pipelining，整个流程少了一个put脚本到远程服务器的步骤，直接在SSH的会话中进行，可以提高整个执行效率。</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="comment"># 可选：True(需要被控的远程服务器将/etc/sudoers中的Defaults requiretty注释掉)</span></span><br><span class="line"><span class="attr">pipelining</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 控制文件传输机制（旧）</span></span><br><span class="line"><span class="comment"># 默认：smart（先尝试使用sftp，再尝试使用scp）</span></span><br><span class="line"><span class="comment"># 可选：True（只使用scp传输文件）</span></span><br><span class="line"><span class="comment"># 可选：False（只使用sftp传输文件）</span></span><br><span class="line"><span class="attr">scp_if_ssh</span> = smart</span><br><span class="line"><span class="comment"># 控制文件传输的机制(新)</span></span><br><span class="line"><span class="comment"># 默认：smart（按顺序尝试使用sftp、scp、dd）</span></span><br><span class="line"><span class="comment"># 可选：sftp（只使用stfp传输文件）</span></span><br><span class="line"><span class="comment"># 可选：scp（只使用scp传输文件）</span></span><br><span class="line"><span class="comment"># 可选：piped（只使用dd传输文件）</span></span><br><span class="line"><span class="attr">transfer_method</span> = smart</span><br><span class="line"><span class="comment"># sftp是否使用批处理模式来传输文件</span></span><br><span class="line"><span class="comment"># 默认：True</span></span><br><span class="line"><span class="comment"># 可选：False（只有在您的sftp版本在批处理模式上有问题时才应禁用）</span></span><br><span class="line"><span class="attr">sftp_batch_mode</span> = <span class="literal">False</span></span><br><span class="line"><span class="comment"># 不知</span></span><br><span class="line"><span class="attr">use_tty</span> = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 在不可到达的情况下，重试SSH连接到主机的次数。对于每次重试尝试，都有一个指数级的回退，所以在第一次尝试之后，有1s等待，然后是2s、4s等，直到30s（max）。</span></span><br><span class="line"><span class="comment"># 默认：0</span></span><br><span class="line"><span class="attr">retries</span> = <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h3 id="persistent-connection"><a href="#persistent-connection" class="headerlink" title="persistent_connection"></a>persistent_connection</h3><p>持久化连接的相关配置。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[persistent_connection]</span></span><br><span class="line"><span class="comment"># 持久连接超时值，如果在超时值过期之前没有收到新的请求，则连接关闭</span></span><br><span class="line"><span class="comment"># 默认：30</span></span><br><span class="line"><span class="attr">connect_timeout</span> = <span class="number">30</span></span><br><span class="line"><span class="comment"># 重试超时值，这个值必须大于command_timeout值，并且小于connect_timeout</span></span><br><span class="line"><span class="comment"># 默认：30</span></span><br><span class="line"><span class="attr">connect_retry_timeout</span> = <span class="number">15</span></span><br><span class="line"><span class="comment"># 响应超时时间值</span></span><br><span class="line"><span class="comment"># 默认：10</span></span><br><span class="line"><span class="attr">command_timeout</span> = <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<h3 id="accelerate"><a href="#accelerate" class="headerlink" title="accelerate"></a>accelerate</h3><p>accelerate模式（加速模式）的相关配置。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加速连接端口</span></span><br><span class="line"><span class="comment"># 默认：5099</span></span><br><span class="line"><span class="attr">accelerate_port</span> = <span class="number">5099</span></span><br><span class="line"><span class="comment"># 命令执行超时时间，单位秒</span></span><br><span class="line"><span class="comment"># 默认：30</span></span><br><span class="line"><span class="attr">accelerate_timeout</span> = <span class="number">30</span></span><br><span class="line"><span class="comment"># 连接超时时间，单位秒</span></span><br><span class="line"><span class="comment"># 默认：5.0</span></span><br><span class="line"><span class="attr">accelerate_connect_timeout</span> = <span class="number">5.0</span></span><br><span class="line"><span class="comment"># 进程超时时间，单位分钟</span></span><br><span class="line"><span class="comment"># 默认：30</span></span><br><span class="line"><span class="attr">accelerate_daemon_timeout</span> = <span class="number">30</span></span><br><span class="line"><span class="comment"># 是否允许加载多个私钥</span></span><br><span class="line"><span class="comment"># 默认：no</span></span><br><span class="line"><span class="comment">#accelerate_multi_key = yes</span></span><br></pre></td></tr></table></figure>
+<h3 id="selinux"><a href="#selinux" class="headerlink" title="selinux"></a>selinux</h3><p>selinux的相关配置。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[selinux]</span></span><br><span class="line"><span class="comment"># 文件系统在处理安全上下文时需要特殊处理，定义复制现有上下文的文件系统</span></span><br><span class="line"><span class="comment"># 默认：fuse, nfs, vboxsf, ramfs, 9p</span></span><br><span class="line"><span class="attr">special_context_filesystems</span> = nfs,vboxsf,fuse,ramfs,<span class="number">9</span>p</span><br><span class="line"><span class="comment"># 是否以允许libvirt_lxc连接在没有SELinux的情况下工作</span></span><br><span class="line"><span class="comment"># 默认：False</span></span><br><span class="line"><span class="attr">libvirt_lxc_noseclabel</span> = <span class="literal">yes</span></span><br></pre></td></tr></table></figure>
+<h3 id="colors"><a href="#colors" class="headerlink" title="colors"></a>colors</h3><p>颜色的相关配置。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这部分根据自己需要修改，基本不会进行配置。</span></span><br><span class="line"><span class="section">[colors]</span></span><br><span class="line"><span class="attr">highlight</span> = white</span><br><span class="line"><span class="attr">verbose</span> = blue</span><br><span class="line"><span class="attr">warn</span> = bright purple</span><br><span class="line"><span class="attr">error</span> = red</span><br><span class="line"><span class="attr">debug</span> = dark gray</span><br><span class="line"><span class="attr">deprecate</span> = purple</span><br><span class="line"><span class="attr">skip</span> = cyan</span><br><span class="line"><span class="attr">unreachable</span> = red</span><br><span class="line"><span class="attr">ok</span> = green</span><br><span class="line"><span class="attr">changed</span> = yellow</span><br><span class="line"><span class="attr">diff_add</span> = green</span><br><span class="line"><span class="attr">diff_remove</span> = red</span><br><span class="line"><span class="attr">diff_lines</span> = cyan</span><br></pre></td></tr></table></figure>
+<h3 id="diff"><a href="#diff" class="headerlink" title="diff"></a>diff</h3><p>打印差异的相关配置。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[diff]</span></span><br><span class="line"><span class="comment"># 是否总是打印改变状态是的差异</span></span><br><span class="line"><span class="comment"># 默认：no</span></span><br><span class="line"><span class="comment"># 可选：yes（相当于--diff）</span></span><br><span class="line"><span class="attr">always</span> = <span class="literal">no</span></span><br><span class="line"><span class="comment"># 打印文件差异时，需要显示上下文的行数</span></span><br><span class="line"><span class="comment"># 默认：3</span></span><br><span class="line"><span class="attr">context</span> = <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Ansible/" rel="tag"># Ansible</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/23/Centos 内存信息/" rel="next" title="Centos 内存信息">
+                <i class="fa fa-chevron-left"></i> Centos 内存信息
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/30/Ansible学习笔记-Inventory/" rel="prev" title="Ansible学习笔记-Inventory">
+                Ansible学习笔记-Inventory <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/jugg.JPG"
+                alt="高鹏" />
+            
+              <p class="site-author-name" itemprop="name">高鹏</p>
+              <p class="site-description motion-element" itemprop="description">有人的地方就有江湖</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://processon.com/" title="在线画图" target="_blank">在线画图</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://regex101.com/" title="正则表达式" target="_blank">正则表达式</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Ansible配置文件笔记"><span class="nav-number">1.</span> <span class="nav-text">Ansible配置文件笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#命令"><span class="nav-number">1.1.</span> <span class="nav-text">命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">1.2.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#defaults"><span class="nav-number">1.2.1.</span> <span class="nav-text">defaults</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inventory"><span class="nav-number">1.2.2.</span> <span class="nav-text">inventory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#privilege-escalation"><span class="nav-number">1.2.3.</span> <span class="nav-text">privilege_escalation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#paramiko-connection"><span class="nav-number">1.2.4.</span> <span class="nav-text">paramiko_connection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh-connection"><span class="nav-number">1.2.5.</span> <span class="nav-text">ssh_connection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#persistent-connection"><span class="nav-number">1.2.6.</span> <span class="nav-text">persistent_connection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#accelerate"><span class="nav-number">1.2.7.</span> <span class="nav-text">accelerate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#selinux"><span class="nav-number">1.2.8.</span> <span class="nav-text">selinux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#colors"><span class="nav-number">1.2.9.</span> <span class="nav-text">colors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#diff"><span class="nav-number">1.2.10.</span> <span class="nav-text">diff</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">高鹏</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
