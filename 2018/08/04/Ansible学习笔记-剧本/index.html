@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Ansible," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Playbook笔记Ansible提供两种完成任务的方式：  ansible — Ad-hoc，解决一些简单或者临时遇到的任务，相当于Linux的系统命令行下的shell命令 ansible-playbook — Playbook，解决复杂或者固化下来的任务，相当于Linux系统的Shell脚本  这次记录Palybook的使用方法。 Playbook命令用法1234567891011121314">
+<meta name="keywords" content="Ansible">
+<meta property="og:type" content="article">
+<meta property="og:title" content="剑十三">
+<meta property="og:url" content="http://yoursite.com/2018/08/04/Ansible学习笔记-剧本/index.html">
+<meta property="og:site_name" content="剑十三">
+<meta property="og:description" content="Playbook笔记Ansible提供两种完成任务的方式：  ansible — Ad-hoc，解决一些简单或者临时遇到的任务，相当于Linux的系统命令行下的shell命令 ansible-playbook — Playbook，解决复杂或者固化下来的任务，相当于Linux系统的Shell脚本  这次记录Palybook的使用方法。 Playbook命令用法1234567891011121314">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-10T12:30:55.182Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="剑十三">
+<meta name="twitter:description" content="Playbook笔记Ansible提供两种完成任务的方式：  ansible — Ad-hoc，解决一些简单或者临时遇到的任务，相当于Linux的系统命令行下的shell命令 ansible-playbook — Playbook，解决复杂或者固化下来的任务，相当于Linux系统的Shell脚本  这次记录Palybook的使用方法。 Playbook命令用法1234567891011121314">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/04/Ansible学习笔记-剧本/"/>
+
+
+
+
+
+  <title> | 剑十三</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑十三</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">剑未配妥，身已江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/04/Ansible学习笔记-剧本/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="高鹏">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/jugg.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑十三">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-04T17:30:57+08:00">
+                2018-08-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Ansible/" itemprop="url" rel="index">
+                    <span itemprop="name">Ansible</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Playbook笔记"><a href="#Playbook笔记" class="headerlink" title="Playbook笔记"></a>Playbook笔记</h1><p>Ansible提供两种完成任务的方式：</p>
+<ul>
+<li><strong>ansible</strong> — Ad-hoc，解决一些简单或者临时遇到的任务，相当于Linux的系统命令行下的shell命令</li>
+<li><strong>ansible-playbook</strong> — Playbook，解决复杂或者固化下来的任务，相当于Linux系统的Shell脚本</li>
+</ul>
+<p>这次记录Palybook的使用方法。</p>
+<h2 id="Playbook命令用法"><a href="#Playbook命令用法" class="headerlink" title="Playbook命令用法"></a>Playbook命令用法</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">Usage: ansible-playbook [options] playbook.yml [playbook2 ...]</span><br><span class="line">Options:</span><br><span class="line"><span class="comment"># vault密码</span></span><br><span class="line"> --ask-vault-pass</span><br><span class="line"><span class="comment"># 模拟任务运行，并不会真正执行。</span></span><br><span class="line">  -C, --check</span><br><span class="line"><span class="comment"># 当更改（小的）文件和模板时，显示这些文件的差异，大文件使用--</span></span><br><span class="line">  -D, --diff</span><br><span class="line"><span class="comment"># 设置外部变量，如果是变量文件在文件前面加'@'</span></span><br><span class="line">  -e EXTRA_VARS, --extra-vars=EXTRA_VARS</span><br><span class="line"><span class="comment"># 清除每个远程主机上的facts缓存</span></span><br><span class="line">  --flush-cache</span><br><span class="line"><span class="comment"># 即使任务失败也强制运行handlers任务</span></span><br><span class="line">  --force-handlers</span><br><span class="line"><span class="comment"># 指定并发数，默认为5</span></span><br><span class="line">  -f FORKS, --forks=FORKS</span><br><span class="line"><span class="comment"># 帮助信息</span></span><br><span class="line">  -h, --help</span><br><span class="line"><span class="comment"># 指定inventory文件</span></span><br><span class="line">  -i INVENTORY, --inventory=INVENTORY, --inventory-file=INVENTORY</span><br><span class="line"><span class="comment"># 进一步限制所选主机/组模式</span></span><br><span class="line">  -l SUBSET, --limit=SUBSET</span><br><span class="line"><span class="comment"># 列出主机列表，不执行任务</span></span><br><span class="line">  --list-hosts</span><br><span class="line"><span class="comment"># 列出所有可用标记</span></span><br><span class="line">  --list-tags</span><br><span class="line"><span class="comment"># 列出所有将要执行的任务</span></span><br><span class="line">  --list-tasks</span><br><span class="line"><span class="comment"># 执行模块的存放路径</span></span><br><span class="line">  -M MODULE_PATH, --module-path=MODULE_PATH</span><br><span class="line"><span class="comment"># 跳过指定标签的任务</span></span><br><span class="line">  --skip-tags=SKIP_TAGS</span><br><span class="line"><span class="comment"># 从匹配的任务名称开始进行任务</span></span><br><span class="line">  --start-at-task=START_AT_TASK</span><br><span class="line"><span class="comment"># 在运行前确认每个要执行的任务，一步一步的执行</span></span><br><span class="line">  --step                </span><br><span class="line"><span class="comment"># yml语法监测</span></span><br><span class="line">  --syntax-check</span><br><span class="line"><span class="comment"># 仅运行指定的tags任务</span></span><br><span class="line">  -t TAGS, --tags=TAGS</span><br><span class="line"><span class="comment"># 指定vault id</span></span><br><span class="line">  --vault-id=VAULT_IDS</span><br><span class="line"><span class="comment"># 指定vault password文件</span></span><br><span class="line">  --vault-password-file</span><br><span class="line"><span class="comment"># 详细模式，-vvv表示更多，-vvvv表示启用连接调试</span></span><br><span class="line">  -v, --verbose </span><br><span class="line"><span class="comment"># 版本信息</span></span><br><span class="line">  --version             show program's version number and exit</span><br><span class="line">  </span><br><span class="line"> Connection Options:</span><br><span class="line"><span class="comment"># ssh认证密码</span></span><br><span class="line">    -k, --ask-pass </span><br><span class="line"><span class="comment"># 指定秘钥文件</span></span><br><span class="line">    --private-key=PRIVATE_KEY_FILE, --key-file=PRIVATE_KEY_FILE</span><br><span class="line"><span class="comment"># 指定远程主机运行命令的用户，默认None（以当前系统用户）</span></span><br><span class="line">    -u REMOTE_USER, --user=REMOTE_USER</span><br><span class="line"><span class="comment"># 指定连接方式，默认smart</span></span><br><span class="line">    -c CONNECTION, --connection=CONNECTION</span><br><span class="line"><span class="comment"># 连接远程主机超时时间，单位秒，默认为10秒</span></span><br><span class="line">    -T TIMEOUT, --timeout=TIMEOUT</span><br><span class="line"><span class="comment"># 指定sftp/scp/ssh连接时的参数（例如ProxyCommand）</span></span><br><span class="line">    --ssh-common-args=SSH_COMMON_ARGS</span><br><span class="line"><span class="comment"># 指定sftp的额外参数（例如-f,-l）</span></span><br><span class="line">    --sftp-extra-args=SFTP_EXTRA_ARGS</span><br><span class="line"><span class="comment"># 指定scp的额外参数（例如-l）</span></span><br><span class="line">    --scp-extra-args=SCP_EXTRA_ARGS</span><br><span class="line"><span class="comment"># 指定ssh的额外参数（例如-R）</span></span><br><span class="line">    --ssh-extra-args=SSH_EXTRA_ARGS</span><br><span class="line">    </span><br><span class="line">Privilege Escalation Options:</span><br><span class="line"><span class="comment"># 相当于linuxsudu命令，不建议使用，建议使用become</span></span><br><span class="line">    -s, --sudo</span><br><span class="line"><span class="comment"># 所需的sudo用户，不建议使用，建议使用become</span></span><br><span class="line">    -U SUDO_USER, --sudo-user=SUDO_USER</span><br><span class="line"><span class="comment"># 使用su来运行任务，不建议使用，建议使用become                       </span></span><br><span class="line">    -S, --su  </span><br><span class="line"><span class="comment"># 使用su来作为这个用户运行任务，不建议使用，建议使用become</span></span><br><span class="line">    -R SU_USER, --su-user=SU_USER</span><br><span class="line"><span class="comment"># 在运行命令时告诉可以成为另一个用户，没有密码提示</span></span><br><span class="line">    -b, --become</span><br><span class="line"><span class="comment"># 指定升级特权时的方法，默认sudo，可以选择的有[ sudo | su | pbrun | pfexec | doas | dzdo | ksu | runas | pmrun | enable | machinectl ]</span></span><br><span class="line">    --become-method=BECOME_METHOD</span><br><span class="line"><span class="comment"># 指定运行任务的用户，默认root用户</span></span><br><span class="line">    --become-user=BECOME_USER</span><br><span class="line"><span class="comment"># sudo密码，不建议使用，建议使用become</span></span><br><span class="line">    --ask-sudo-pass</span><br><span class="line"><span class="comment"># su密码，不建议使用，建议使用become</span></span><br><span class="line">    --ask-su-pass</span><br><span class="line"><span class="comment"># 请求权限提升的密码，即使用become时所需的密码</span></span><br><span class="line">    -K, --ask-become-pass</span><br></pre></td></tr></table></figure>
+<h2 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h2><h3 id="remote-user"><a href="#remote-user" class="headerlink" title="remote_user"></a>remote_user</h3><p>指定Play用户。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">test</span></span><br><span class="line"><span class="attr">  remove_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">test</span> <span class="string">connection</span></span><br><span class="line">  	<span class="attr">ping:</span></span><br><span class="line">  	<span class="comment"># 为单个任务细分执行的用户</span></span><br><span class="line">  	<span class="attr">remote_user:</span> <span class="string">gaopeng</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>也可以在ansible.cfg中配置连接远程服务器的默认用户。</p>
+</blockquote>
+<h3 id="become、become-method"><a href="#become、become-method" class="headerlink" title="become、become_method"></a>become、become_method</h3><p>提权。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">test</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">gaopeng</span></span><br><span class="line"><span class="attr">  become:</span> <span class="literal">yes</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - service:</span></span><br><span class="line"><span class="attr">      name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">      state:</span> <span class="string">started</span></span><br><span class="line">    <span class="comment"># 为单个任务使用管理员权限</span></span><br><span class="line"><span class="attr">    become:</span> <span class="literal">yes</span></span><br><span class="line"><span class="attr">    become_method:</span> <span class="string">sudo</span></span><br></pre></td></tr></table></figure>
+<h2 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h2><p>handlers是Ansible提供的条件机制，与tasks比较类似，都是去执行某些操作。但是，handler只有在被notify触发以后才会执行，如果没有被触发，则不会执行。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">Modify</span> <span class="string">the</span> <span class="string">Nginx</span> <span class="string">configuration</span></span><br><span class="line"><span class="attr">    replace:</span> <span class="string">path=/etc/nginx/nginx.conf</span> <span class="string">regexp="listen(.*)</span> <span class="number">80</span> <span class="string">(.*)"</span></span><br><span class="line">             <span class="string">replace="listen\1</span> <span class="number">8088</span> <span class="string">\2"</span> <span class="string">backup=yes</span></span><br><span class="line"><span class="attr">    notify:</span> <span class="string">restart</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">Modify</span> <span class="string">the</span> <span class="string">MySQL</span> <span class="string">configuration</span></span><br><span class="line">  	<span class="attr">replace:</span> <span class="string">path=/etc/my.cnf</span> <span class="string">regexp="\b3306\b"</span> <span class="string">replace="6033"</span> <span class="string">backup=yes</span></span><br><span class="line">  	<span class="attr">notify:</span> <span class="string">restart</span> <span class="string">mysql</span></span><br><span class="line"><span class="attr">  handlers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">restart</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">    service:</span> <span class="string">name=nginx</span> <span class="string">state=restarted</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">restart</span> <span class="string">mysql</span></span><br><span class="line">  	<span class="attr">service:</span> <span class="string">name=mysqld</span> <span class="string">state=restarted</span></span><br></pre></td></tr></table></figure>
+<p>在使用Handler的过程中，有以下几点需要额外注意：</p>
+<ul>
+<li><p>Handler只有在其所在的任务被执行时，才会被运行；如果一个任务中定义了notify去调用Handler，但是由于条件判断等原因，该任务未被执行，那么Handler同样不会被执行。</p>
+</li>
+<li><p>Handler只会在Play的末尾运行一次；如果想在一个Playbook的中间运行Handler，刚需要使用meta模块来实现，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- meta: flush_handlers</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果一个Play在运行到调用Handler的语句之前失败了，那么这个Handler将不会被执行。我们可以使用mega模块的—force-handlers选项来强制执行Handler，即使是Handler所在的Play中途运行失败。</p>
+</li>
+</ul>
+<h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2><p>tags可以对任务进行打标签的操作，当任务存在标签以后，就可以在执行playbook时，借助标签，指定执行哪些任务，或者指定不执行哪些任务。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">Install</span> <span class="string">ntp</span></span><br><span class="line"><span class="attr">  yum:</span> <span class="string">name=ntp</span> <span class="string">state=present</span></span><br><span class="line"><span class="attr">  tags:</span> <span class="string">ntp</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- name:</span> <span class="string">Configure</span> <span class="string">ntp</span> <span class="string">file</span></span><br><span class="line"><span class="attr">  template:</span> <span class="string">src=ntp.conf.j2</span> <span class="string">dest=/etc/ntp.conf</span></span><br><span class="line"><span class="attr">  tags:</span> <span class="string">ntp</span></span><br><span class="line"><span class="attr">  notify:</span> <span class="string">restart</span> <span class="string">ntp</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- name:</span> <span class="string">Start</span> <span class="string">the</span> <span class="string">ntp</span> <span class="string">service</span></span><br><span class="line"><span class="attr">  service:</span> <span class="string">name=ntpd</span> <span class="string">state=started</span> <span class="string">enabled=yes</span></span><br><span class="line">  <span class="comment"># 多个标签</span></span><br><span class="line"><span class="attr">  tags:</span> <span class="string">ntp,service</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- name:</span> <span class="string">test</span> <span class="string">to</span> <span class="string">see</span> <span class="string">if</span> <span class="string">selinux</span> <span class="string">is</span> <span class="string">running</span></span><br><span class="line"><span class="attr">  command:</span> <span class="string">getenforce</span></span><br><span class="line"><span class="attr">  register:</span> <span class="string">sestatus</span></span><br><span class="line"><span class="attr">  changed_when:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>执行包括ntp标签的任务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; ansible-playbook --tags ntp ntp.yml</span><br><span class="line">&gt; ansible-playbook --tags ntp,service ntp.yml</span><br></pre></td></tr></table></figure>
+<p>不执行包括ntp标签的任务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; ansible-playbook --skip-tags ntp.yml</span><br></pre></td></tr></table></figure>
+<h3 id="特殊标签"><a href="#特殊标签" class="headerlink" title="特殊标签"></a>特殊标签</h3><ul>
+<li>always（yaml文件中使用） — 当任务的tags值指定为always时，这个任务总是会被执行，除非使用<code>--skip-tags</code>明确指定不执行对应的任务</li>
+<li>never （yaml文件中使用）— 与always作用相反</li>
+<li>tagged（ansible-playbook命令使用）— 仅执行（或跳过）有标签的任务</li>
+<li>untagged（ansible-playbook命令使用）— 仅执行（或跳过）没有标签的任务</li>
+<li>all（ansible-playbook命令使用）— 默认使用，所有任务都会被执行</li>
+</ul>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="用户自定义变量"><a href="#用户自定义变量" class="headerlink" title="用户自定义变量"></a>用户自定义变量</h3><ol>
+<li><p>定义变量</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line">  	<span class="attr">login_port:</span> <span class="number">3306</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>放入单独的文件中</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line">  	<span class="bullet">-</span> <span class="string">vars/server_vars.yml</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="Facts变量"><a href="#Facts变量" class="headerlink" title="Facts变量"></a>Facts变量</h3><p>直接使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; ansible env2 -m setup</span><br></pre></td></tr></table></figure>
+<p>关闭Facts：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br></pre></td></tr></table></figure>
+<h3 id="注册变量"><a href="#注册变量" class="headerlink" title="注册变量"></a>注册变量</h3><p>把任务执行结果当做一个变量的值。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">Test</span> <span class="string">database</span> <span class="string">connection</span></span><br><span class="line"><span class="attr">  shell:</span> <span class="string">mysql</span> <span class="bullet">-P&#123;&#123;</span> <span class="string">mysql_port</span> <span class="string">&#125;&#125;</span> <span class="bullet">-u&#123;&#123;</span> <span class="string">mysql_root_user</span> <span class="string">&#125;&#125;</span> <span class="bullet">-p&#123;&#123;</span> <span class="string">mysql_root_pass</span> <span class="string">&#125;&#125;</span> <span class="bullet">-e</span> <span class="string">"use mysql;"</span></span><br><span class="line"><span class="attr">  register:</span> <span class="string">mysql_connect_result</span></span><br><span class="line"><span class="attr">  ignore_errors:</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<h3 id="命令行变量"><a href="#命令行变量" class="headerlink" title="命令行变量"></a>命令行变量</h3><p>执行时传入的额外变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; ansible-playbook test.yml --extra-vars <span class="string">"login_port=3306"</span></span><br><span class="line"><span class="comment"># Json格式</span></span><br><span class="line">&gt; ansible-playbook test.yml --extra-vars <span class="string">"&#123;'login_port': '3306'&#125;"</span></span><br><span class="line"><span class="comment"># Json文件</span></span><br><span class="line">&gt; ansible-playbook test.yml --extra-vars <span class="string">"@vars.json"</span></span><br></pre></td></tr></table></figure>
+<h3 id="变量优先级"><a href="#变量优先级" class="headerlink" title="变量优先级"></a>变量优先级</h3><p><strong>由低到高：</strong></p>
+<ul>
+<li>role defaults</li>
+<li>inventory file or script group vars </li>
+<li>inventory group_vars</li>
+<li>playbook group_vars</li>
+<li>inventory group_vars</li>
+<li>playbook group_vars</li>
+<li>inventory file or script host vars </li>
+<li>inventory host_vars</li>
+<li>playbook host_vars</li>
+<li>host facts / cached set_facts </li>
+<li>play vars</li>
+<li>play vars_prompt</li>
+<li>play vars_files</li>
+<li>role vars (defined in role/vars/main.yml)</li>
+<li>block vars (only for tasks in block)</li>
+<li>task vars (only for the task)</li>
+<li>include_vars</li>
+<li>set_facts / registered vars</li>
+<li>role (and include_role) params</li>
+<li>include params</li>
+<li>extra vars (always win precedence)</li>
+</ul>
+<ol>
+<li><p>role defaults</p>
+<p>在<strong>roles/x/defaults/main.yml</strong>文件中定义的变量。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment"># file roles/mysql/defaults/main.yml</span></span><br><span class="line"><span class="attr">mysql_port:</span> <span class="number">3306</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>inventory vars</p>
+<p>在<strong>inventory</strong>文件中定义的变量。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># file: /etc/ansible/hosts</span></span><br><span class="line"><span class="section">[mysql]</span></span><br><span class="line">192.168.198.22 mysql_port=3306 ntp_server=192.168.198.21 role=master</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>inventory group_vars</p>
+<p>有两个地方可以定义group_vars：</p>
+<ul>
+<li>inventory文件中直接定义。</li>
+<li>inventory文件同级的子文件夹group_vars下定义，放在group同名的文件中。</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># inventory文件中直接定义</span></span><br><span class="line"><span class="string">[all:vars]</span></span><br><span class="line"><span class="string">ntp_server=192.168.198.21</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># inventory文件同级的子文件夹group_vars下定义</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="string">ntp_server=192.168.198.21</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><h3 id="标准循环"><a href="#标准循环" class="headerlink" title="标准循环"></a>标准循环</h3><p>可以理解为Python中的列表循环，也等同于旧版本的<strong>with_list</strong>。</p>
+<p><strong>items中元素为字符串用法</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># loop用法</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    loop:</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="number">3</span><span class="string">]</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 旧版本</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    with_list:</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="number">3</span><span class="string">]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 效果等同于Python中的list循环</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]:</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ok: [env2] =&gt; (item=1) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: 1</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=2) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: 2</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=3) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: 3</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>items中元素为字典用法：</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">False</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">yum</span> <span class="string">install</span> <span class="string">package</span></span><br><span class="line"><span class="attr">    yum:</span> <span class="string">name=&#123;&#123;</span> <span class="string">item.name</span> <span class="string">&#125;&#125;</span> <span class="string">state=&#123;&#123;</span> <span class="string">item.state</span> <span class="string">&#125;&#125;</span></span><br><span class="line"><span class="attr">    loop:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">&#123;name:</span> <span class="string">"tree"</span><span class="string">,</span> <span class="attr">state:</span> <span class="string">"latest"</span><span class="string">&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">&#123;name:</span> <span class="string">"openssh-clients"</span><span class="string">,</span> <span class="attr">state:</span> <span class="string">"present"</span><span class="string">&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">&#123;name:</span> <span class="string">"vim"</span><span class="string">,</span> <span class="attr">state:</span> <span class="string">"latest"</span> <span class="string">&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">&#123;name:</span> <span class="string">"mysql"</span><span class="string">,</span> <span class="attr">state:</span> <span class="string">"present"</span> <span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 同样相当于Python中的list循环</span></span><br><span class="line">items = [&#123;<span class="string">'name'</span>: <span class="string">'tree'</span>, <span class="string">'state'</span>: <span class="string">'latest'</span>&#125;, &#123;<span class="string">'name'</span>: <span class="string">'vim'</span>, <span class="string">'state'</span>: <span class="string">'present'</span>&#125;]</span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">    name = item[<span class="string">'name'</span>]</span><br><span class="line">    state = item[<span class="string">'state'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.key &#125;&#125;</span>, <span class="template-variable">&#123;&#123; item.value &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    loop:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">&#123;key:</span> <span class="number">1</span><span class="string">,</span> <span class="attr">value:</span> <span class="number">2</span><span class="string">&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">&#123;key:</span> <span class="number">3</span><span class="string">,</span> <span class="attr">value:</span> <span class="number">4</span><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ok: [env2] =&gt; (item=&#123;u&apos;key&apos;: 1, u&apos;value&apos;: 2&#125;) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;1, 2&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=&#123;u&apos;key&apos;: 3, u&apos;value&apos;: 4&#125;) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;3, 4&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="嵌套循环"><a href="#嵌套循环" class="headerlink" title="嵌套循环"></a>嵌套循环</h3><p>可以理解为Python中product(it1, … , iteN, repeat=1)，等同于旧版本的<strong>with_nested/with_cartesian</strong>。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># product用法</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    list_one:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">1</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">2</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">3</span></span><br><span class="line"><span class="attr">    list_two:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">a</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">b</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">c</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; list_one |product(list_two)|list &#125;&#125;</span>"</span></span><br><span class="line">    </span><br><span class="line"><span class="comment"># 旧版本</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    with_cartesian:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="number">3</span><span class="string">]</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">['a',</span> <span class="string">'b'</span><span class="string">,</span> <span class="string">'c'</span><span class="string">]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 效果等同于Python中的product，计算笛卡尔积，从输入的各个可迭代对象中获取元素，合并成由N个元素组成的元组</span></span><br><span class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> product</span><br><span class="line"></span><br><span class="line">list_one = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">list_two = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> product(list_one, list_two):</span><br><span class="line">    print(i)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更直白的方式，使用列表推导来计算笛卡尔积</span></span><br><span class="line">list_one = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">list_two = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>]</span><br><span class="line">items = [(x, y) <span class="keyword">for</span> x <span class="keyword">in</span> list_one <span class="keyword">for</span> y <span class="keyword">in</span> list_two]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> product(list_one, list_two):</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+<h3 id="并行循环"><a href="#并行循环" class="headerlink" title="并行循环"></a>并行循环</h3><p>可以理解为Python中的zip(it1, …, itN)、zip_longest(it1, …, itN, fillvalue=None)，等同于旧版本的<strong>with_together</strong>。</p>
+<blockquote>
+<p><strong>with_together</strong>仅等同于zip_longest用法，一下会举例说明。</p>
+</blockquote>
+<p><strong>zip用法：</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># zip用法，旧版本没有此对应用法</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    list_one:</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="number">3</span><span class="string">,</span> <span class="number">4</span><span class="string">,</span> <span class="number">5</span><span class="string">]</span></span><br><span class="line"><span class="attr">    list_two:</span> <span class="string">[a,</span> <span class="string">b,</span> <span class="string">c]</span></span><br><span class="line"><span class="attr">    list_three:</span> <span class="string">[x,</span> <span class="string">y,</span> <span class="string">z,</span> <span class="string">d]</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; list_one|zip(list_two, list_three)|list &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<p>输出结果为：（注意list_one中的4、5与list_three中的d都没有输出）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">ok: [env2] =&gt; (item=[1, u&apos;a&apos;, u&apos;x&apos;]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: [</span><br><span class="line">        1, </span><br><span class="line">        &quot;a&quot;, </span><br><span class="line">        &quot;x&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=[2, u&apos;b&apos;, u&apos;y&apos;]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: [</span><br><span class="line">        2, </span><br><span class="line">        &quot;b&quot;, </span><br><span class="line">        &quot;y&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=[3, u&apos;c&apos;, u&apos;z&apos;]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: [</span><br><span class="line">        3, </span><br><span class="line">        &quot;c&quot;, </span><br><span class="line">        &quot;z&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 效果等同于Python中的zip，并行从输入的各个可迭代对象中获取元素，产生由N个元素组成的元组，只要有一个可迭代对象到头了，就默默停止</span></span><br><span class="line">list_one = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">list_two = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>]</span><br><span class="line">items = zip(list_one, list_two)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> zip(list_one, list_two):</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+<p><strong>zip_longest用法：</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># zip_longest用法</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    list_one:</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="number">3</span><span class="string">,</span> <span class="number">4</span><span class="string">,</span> <span class="number">5</span><span class="string">]</span></span><br><span class="line"><span class="attr">    list_two:</span> <span class="string">[a,</span> <span class="string">b,</span> <span class="string">c,</span> <span class="string">d]</span></span><br><span class="line"><span class="attr">    list_three:</span> <span class="string">[x,</span> <span class="string">y,</span> <span class="string">z]</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; list_one|zip_longest(list_two, list_three)|list &#125;&#125;</span>"</span></span><br><span class="line">    </span><br><span class="line"><span class="comment"># 旧版本</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    with_together:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="number">3</span><span class="string">,</span> <span class="number">4</span><span class="string">,</span> <span class="number">5</span><span class="string">]</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[a,</span> <span class="string">b,</span> <span class="string">c,</span> <span class="string">d]</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[x,</span> <span class="string">y,</span> <span class="string">z]</span></span><br></pre></td></tr></table></figure>
+<p>输出结果为：（注意list_one中的4、5与list_three中的d都被输出）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">ok: [env2] =&gt; (item=[1, u&apos;a&apos;, u&apos;x&apos;]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: [</span><br><span class="line">        1, </span><br><span class="line">        &quot;a&quot;, </span><br><span class="line">        &quot;x&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=[2, u&apos;b&apos;, u&apos;y&apos;]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: [</span><br><span class="line">        2, </span><br><span class="line">        &quot;b&quot;, </span><br><span class="line">        &quot;y&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=[3, u&apos;c&apos;, u&apos;z&apos;]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: [</span><br><span class="line">        3, </span><br><span class="line">        &quot;c&quot;, </span><br><span class="line">        &quot;z&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=[4, u&apos;d&apos;, None]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: [</span><br><span class="line">        4, </span><br><span class="line">        &quot;d&quot;, </span><br><span class="line">        null</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=[5, None, None]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: [</span><br><span class="line">        5, </span><br><span class="line">        null, </span><br><span class="line">        null</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 效果等同于Python中的zip_longest，并行从输入的各个可迭代对象中获取元素，产生由N个元素组成的元组，等到最长的可迭代对象到头后才停止，空缺的值使用fillvalue填充（默认为None）</span></span><br><span class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> zip_longest</span><br><span class="line"></span><br><span class="line">list_one = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">list_two = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>]</span><br><span class="line">items = zip(list_one, list_two)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> zip_longest(list_one, list_two):</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+<p>当然也可以使用fillvalue修改默认值</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    list_one:</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="number">3</span><span class="string">,</span> <span class="number">4</span><span class="string">,</span> <span class="number">5</span><span class="string">]</span></span><br><span class="line"><span class="attr">    list_two:</span> <span class="string">[a,</span> <span class="string">b,</span> <span class="string">c,</span> <span class="string">d]</span></span><br><span class="line"><span class="attr">    list_three:</span> <span class="string">[x,</span> <span class="string">y,</span> <span class="string">z]</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; list_one|zip_longest(list_two, list_three, fillvalue='不知道')|list &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<p>此时输出结果中默认值不在是null了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ok: [env2] =&gt; (item=[4, u&apos;d&apos;, u&apos;\u4e0d\u77e5\u9053&apos;]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: [</span><br><span class="line">        4, </span><br><span class="line">        &quot;d&quot;, </span><br><span class="line">        &quot;不知道&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=[5, u&apos;\u4e0d\u77e5\u9053&apos;, u&apos;\u4e0d\u77e5\u9053&apos;]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: [</span><br><span class="line">        5, </span><br><span class="line">        &quot;不知道&quot;, </span><br><span class="line">        &quot;不知道&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="展开循环"><a href="#展开循环" class="headerlink" title="展开循环"></a>展开循环</h3><p>可以理解为Python中的chain(it1, …, itN)与numpy.flatten，仅仅类似而不是用chain或numpy.flatten去实现的。旧版本为<strong>with_flattened、with_items</strong>。</p>
+<p><strong>with_items用法：</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># flatten(levels=1)用法</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    list_1:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="string">[3,</span> <span class="number">4</span><span class="string">]]</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[[a,</span> <span class="string">b],</span> <span class="string">[c,</span> <span class="string">d]]</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; list_1|flatten(levels=1) &#125;&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 旧版本</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    with_items:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="string">[3,</span> <span class="number">4</span><span class="string">]]</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[[a,</span> <span class="string">b],</span> <span class="string">[c,</span> <span class="string">d]]</span></span><br></pre></td></tr></table></figure>
+<p><strong>with_flattened用法：</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># flatten用法</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    list_1:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="string">[3,</span> <span class="number">4</span><span class="string">]]</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[[a,</span> <span class="string">b],</span> <span class="string">[c,</span> <span class="string">d]]</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; list_1|flatten &#125;&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 旧版本：</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    with_flattened:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="string">[3,</span> <span class="number">4</span><span class="string">]]</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">[[a,</span> <span class="string">b],</span> <span class="string">[c,</span> <span class="string">d]]</span></span><br></pre></td></tr></table></figure>
+<p>源码实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> MutableSequence</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">flatten</span><span class="params">(mylist, levels=None)</span>:</span></span><br><span class="line"></span><br><span class="line">    ret = []</span><br><span class="line">    <span class="keyword">for</span> element <span class="keyword">in</span> mylist:</span><br><span class="line">        <span class="keyword">if</span> element <span class="keyword">in</span> (<span class="keyword">None</span>, <span class="string">'None'</span>, <span class="string">'null'</span>):</span><br><span class="line">            <span class="comment"># ignore undefined items</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">elif</span> isinstance(element, MutableSequence):</span><br><span class="line">            <span class="keyword">if</span> levels <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">                ret.extend(flatten(element))</span><br><span class="line">            <span class="keyword">elif</span> levels &gt;= <span class="number">1</span>:</span><br><span class="line">                levels = int(levels) - <span class="number">1</span></span><br><span class="line">                ret.extend(flatten(element, levels=levels))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                ret.append(element)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ret.append(element)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    list_1 = [[<span class="number">1</span>, <span class="number">2</span>, [<span class="number">3</span>, <span class="number">4</span>]],[[<span class="string">'a'</span>, <span class="string">'b'</span>], [<span class="string">'c'</span>, <span class="string">'d'</span>]]]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> flatten(list_1, levels=<span class="number">1</span>):</span><br><span class="line">        print(i)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> flatten(list_1):</span><br><span class="line">        print(i)</span><br></pre></td></tr></table></figure>
+<h3 id="索引循环"><a href="#索引循环" class="headerlink" title="索引循环"></a>索引循环</h3><p>可以理解为Python中的enumerate(sequence, [start=0])，旧版本为<strong>with_indexed_items</strong>。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># loop_control中index_var用法</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    list_1:</span> <span class="string">[a,</span> <span class="string">b,</span> <span class="string">c]</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; index &#125;&#125;</span>-<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">      loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; list_1|flatten(levels=1) &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">      loop_control:</span></span><br><span class="line"><span class="attr">        index_var:</span> <span class="string">index</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 旧版本</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.0 &#125;&#125;</span>-<span class="template-variable">&#123;&#123; item.1 &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">      with_indexed_items:</span> <span class="string">[a,</span> <span class="string">b,</span> <span class="string">c]</span></span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ok: [env2] =&gt; (item=a) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;0-a&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=b) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;1-b&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=c) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;2-c&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 效果等同于Python的emumerate</span></span><br><span class="line">list_1 = [a, b, c]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> enumerate(list_1):</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+<h3 id="数列循环"><a href="#数列循环" class="headerlink" title="数列循环"></a>数列循环</h3><p>可以理解为Python中的range(start, stop[, step])，旧版本为<strong>with_sequence</strong>。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># range用法，为什么写4+1，因为range(4)不会循环到4</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; 'test_%02x' | format(item) &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">      loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; range(0, 4 + 1, 2)|list &#125;&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 旧版本，为什么写4还能循环到4，源码处理过</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">      with_sequence:</span> <span class="string">start=0</span> <span class="string">end=4</span> <span class="string">stride=2</span> <span class="string">format=test_%02x</span></span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ok: [env2] =&gt; (item=test_00) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;test_00&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=test_02) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;test_02&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=test_04) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;test_04&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 效果等同于Python中的range与format的组合</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">4</span>):</span><br><span class="line">    print(<span class="string">'test_%02x'</span> % i)</span><br></pre></td></tr></table></figure>
+<h3 id="散列循环"><a href="#散列循环" class="headerlink" title="散列循环"></a>散列循环</h3><p>可以理解为接受一个Python经过yaml.load的格式变量，通过字典来调取key或value。旧版本为<strong>with_dicts</strong>。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dictsort用法</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    users:</span></span><br><span class="line"><span class="attr">      root:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">      gaopeng:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">      ansible:</span> <span class="string">ansible</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.0 &#125;&#125;</span>-<span class="template-variable">&#123;&#123; item.1 &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">      loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; users|dictsort &#125;&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># dict2items用法</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    users:</span></span><br><span class="line"><span class="attr">      root:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">      gaopeng:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">      ansible:</span> <span class="string">ansible</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.key &#125;&#125;</span>-<span class="template-variable">&#123;&#123; item.value &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">      loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; users|dict2items &#125;&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 老版本</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    users:</span></span><br><span class="line"><span class="attr">      root:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">      gaopeng:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">      ansible:</span> <span class="string">ansible</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.key &#125;&#125;</span>-<span class="template-variable">&#123;&#123; item.value &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">      with_dicts:</span> <span class="string">"<span class="template-variable">&#123;&#123; users &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ok: [env2] =&gt; (item=[u&apos;ansible&apos;, u&apos;ansible&apos;]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;ansible-ansible&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=[u&apos;gaopeng&apos;, u&apos;root&apos;]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;gaopeng-root&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [env2] =&gt; (item=[u&apos;root&apos;, u&apos;root&apos;]) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;root-root&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>dict2items源码实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> MutableMapping</span><br><span class="line"><span class="keyword">from</span> ansible.errors <span class="keyword">import</span> AnsibleFilterError</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dict_to_list_of_dict_key_value_elements</span><span class="params">(mydict)</span>:</span></span><br><span class="line">    <span class="string">''' takes a dictionary and transforms it into a list of dictionaries,</span></span><br><span class="line"><span class="string">        with each having a 'key' and 'value' keys that correspond to the keys and values of the original '''</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> isinstance(mydict, MutableMapping):</span><br><span class="line">        <span class="keyword">raise</span> AnsibleFilterError(<span class="string">"dict2items requires a dictionary, got %s instead."</span> % type(mydict))</span><br><span class="line"></span><br><span class="line">    ret = []</span><br><span class="line">    <span class="keyword">for</span> key <span class="keyword">in</span> mydict:</span><br><span class="line">        ret.append(&#123;<span class="string">'key'</span>: key, <span class="string">'value'</span>: mydict[key]&#125;)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br></pre></td></tr></table></figure>
+<h3 id="子元素循环"><a href="#子元素循环" class="headerlink" title="子元素循环"></a>子元素循环</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    hosts:</span></span><br><span class="line"><span class="attr">      - hostname:</span> <span class="string">env1</span></span><br><span class="line"><span class="attr">        user:</span></span><br><span class="line"><span class="bullet">          -</span> <span class="string">root</span></span><br><span class="line"><span class="bullet">          -</span> <span class="string">gaopeng</span></span><br><span class="line"><span class="attr">      - hostname:</span> <span class="string">env2</span></span><br><span class="line"><span class="attr">        user:</span></span><br><span class="line"><span class="bullet">          -</span> <span class="string">gaopeng</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">      with_subelements:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">"<span class="template-variable">&#123;&#123; hosts &#125;&#125;</span>"</span><span class="string">y7zxc34v1</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">user</span></span><br></pre></td></tr></table></figure>
+<h2 id="条件"><a href="#条件" class="headerlink" title="条件"></a>条件</h2><p>when，类似于编程中的if。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Ansible/" rel="tag"># Ansible</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/31/Ansible学习笔记-模块/" rel="next" title="Ansible学习笔记-Module">
+                <i class="fa fa-chevron-left"></i> Ansible学习笔记-Module
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/07/Ansible学习笔记-角色/" rel="prev" title="Ansible学习笔记-Roles">
+                Ansible学习笔记-Roles <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/jugg.JPG"
+                alt="高鹏" />
+            
+              <p class="site-author-name" itemprop="name">高鹏</p>
+              <p class="site-description motion-element" itemprop="description">有人的地方就有江湖</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://processon.com/" title="在线画图" target="_blank">在线画图</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://regex101.com/" title="正则表达式" target="_blank">正则表达式</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Playbook笔记"><span class="nav-number">1.</span> <span class="nav-text">Playbook笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Playbook命令用法"><span class="nav-number">1.1.</span> <span class="nav-text">Playbook命令用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#权限"><span class="nav-number">1.2.</span> <span class="nav-text">权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#remote-user"><span class="nav-number">1.2.1.</span> <span class="nav-text">remote_user</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#become、become-method"><span class="nav-number">1.2.2.</span> <span class="nav-text">become、become_method</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通知"><span class="nav-number">1.3.</span> <span class="nav-text">通知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签"><span class="nav-number">1.4.</span> <span class="nav-text">标签</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#特殊标签"><span class="nav-number">1.4.1.</span> <span class="nav-text">特殊标签</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量"><span class="nav-number">1.5.</span> <span class="nav-text">变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用户自定义变量"><span class="nav-number">1.5.1.</span> <span class="nav-text">用户自定义变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Facts变量"><span class="nav-number">1.5.2.</span> <span class="nav-text">Facts变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册变量"><span class="nav-number">1.5.3.</span> <span class="nav-text">注册变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命令行变量"><span class="nav-number">1.5.4.</span> <span class="nav-text">命令行变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变量优先级"><span class="nav-number">1.5.5.</span> <span class="nav-text">变量优先级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#循环"><span class="nav-number">1.6.</span> <span class="nav-text">循环</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标准循环"><span class="nav-number">1.6.1.</span> <span class="nav-text">标准循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#嵌套循环"><span class="nav-number">1.6.2.</span> <span class="nav-text">嵌套循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#并行循环"><span class="nav-number">1.6.3.</span> <span class="nav-text">并行循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#展开循环"><span class="nav-number">1.6.4.</span> <span class="nav-text">展开循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引循环"><span class="nav-number">1.6.5.</span> <span class="nav-text">索引循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数列循环"><span class="nav-number">1.6.6.</span> <span class="nav-text">数列循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#散列循环"><span class="nav-number">1.6.7.</span> <span class="nav-text">散列循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#子元素循环"><span class="nav-number">1.6.8.</span> <span class="nav-text">子元素循环</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#条件"><span class="nav-number">1.7.</span> <span class="nav-text">条件</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">高鹏</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

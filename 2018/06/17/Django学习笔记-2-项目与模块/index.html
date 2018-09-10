@@ -87,17 +87,17 @@
 <meta property="og:site_name" content="剑十三">
 <meta property="og:description" content="通过这个教程，我们将带着你创建一个基本的投票应用程序。 它将由两部分组成：  一个让人们查看和投票的公共站点。 一个让你能添加、修改和删除投票的管理站点。  1. 项目 1.1 Django创建项目的结构在使用django开始创建并开发项目之前，我们先简单了解一下Django对于项目的管理结构。 Django之所以可以方便快捷的开发大型WEB应用，最大的特点是它面向对象开发的基础上的模块化开发，将">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1528530202319.png">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1528530507868.png">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1528479335695.png">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1528479598493.png">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1528534354837.png">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1528536820562.png">
-<meta property="og:updated_time" content="2018-07-12T16:32:57.080Z">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1528530202319.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1528530507868.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1528479335695.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1528479598493.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1528534354837.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1528536820562.png">
+<meta property="og:updated_time" content="2018-08-09T06:38:48.700Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Django学习笔记 - 2 项目与模块">
 <meta name="twitter:description" content="通过这个教程，我们将带着你创建一个基本的投票应用程序。 它将由两部分组成：  一个让人们查看和投票的公共站点。 一个让你能添加、修改和删除投票的管理站点。  1. 项目 1.1 Django创建项目的结构在使用django开始创建并开发项目之前，我们先简单了解一下Django对于项目的管理结构。 Django之所以可以方便快捷的开发大型WEB应用，最大的特点是它面向对象开发的基础上的模块化开发，将">
-<meta name="twitter:image" content="https://github.com/gao-peng/images/raw/master/1528530202319.png">
+<meta name="twitter:image" content="https://github.com/gaoniao/images/raw/master/1528530202319.png">
 
 
 
@@ -393,10 +393,10 @@
 <h3 id="1-1-Django创建项目的结构"><a href="#1-1-Django创建项目的结构" class="headerlink" title="1.1 Django创建项目的结构"></a>1.1 Django创建项目的结构</h3><p>在使用django开始创建并开发项目之前，我们先简单了解一下Django对于项目的管理结构。</p>
 <p>Django之所以可以方便快捷的开发大型WEB应用，最大的特点是它面向对象开发的基础上的模块化开发，将项目中需要的各个功能可以封装成或大或小的模块，这些模块在项目中是可插拔时的，非常有利于项目的更新和扩展 。</p>
 <p><strong>所以，Django框架在使用时，首先常见一个项目，然后在项目的基础上，创建各个应用的模块，将模块引入到我们的项目中进行使用</strong>。</p>
-<p><img src="https://github.com/gao-peng/images/raw/master/1528530202319.png" alt="1528530202319"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1528530202319.png" alt="1528530202319"></p>
 <h3 id="1-2-Django创建项目"><a href="#1-2-Django创建项目" class="headerlink" title="1.2 Django创建项目"></a>1.2 Django创建项目</h3><p>首先，我们需要确认要开发Django项目的文件夹，并切换到此目录下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> 	vote_poll\</span><br></pre></td></tr></table></figure>
-<p><img src="https://github.com/gao-peng/images/raw/master/1528530507868.png" alt="1528530507868"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1528530507868.png" alt="1528530507868"></p>
 <p>然后启动一个新项目，执行下面的命令来创建一个新的 Django 项目：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">django-admin.exe startproject mysite</span><br></pre></td></tr></table></figure>
 <p>命令行工具<strong>django-admin</strong>会在安装Django的时候一起自动安装好。</p>
@@ -415,8 +415,8 @@
 </ul>
 <h3 id="1-3-运行及访问Django项目"><a href="#1-3-运行及访问Django项目" class="headerlink" title="1.3 运行及访问Django项目"></a>1.3 运行及访问Django项目</h3><p>django自带了一个简单的网络服务器。在开发过程中非常方便，所以我们无需安装任何其他软件即可在本地运行项目。我们可以通过执行命令来测试一下它： </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py runserver</span><br></pre></td></tr></table></figure>
-<p><img src="https://github.com/gao-peng/images/raw/master/1528479335695.png" alt="1528479335695"></p>
-<p><img src="https://github.com/gao-peng/images/raw/master/1528479598493.png" alt="1528479598493"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1528479335695.png" alt="1528479335695"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1528479598493.png" alt="1528479598493"></p>
 <blockquote>
 <p><strong>更换端口</strong></p>
 <p>默认情况下，<code>runserver</code> 命令会将服务器设置为监听本机内部 IP 的 8000 端口。</p>
@@ -463,7 +463,7 @@
 <p>你现在把 <strong>index</strong> 视图添加进了 URLconf。可以验证是否正常工作，运行下面的命令: </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py runserver</span><br></pre></td></tr></table></figure>
 <p>用你的浏览器访问 <a href="http://localhost:8000/polls/" target="_blank" rel="noopener">http://localhost:8000/polls/</a>，你应该能够看见 “<em>Hello, world. You’re at the polls index.</em>“ ，这是你在 <strong>index</strong>视图中定义的。 </p>
-<p><img src="https://github.com/gao-peng/images/raw/master/1528534354837.png" alt="1528534354837"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1528534354837.png" alt="1528534354837"></p>
 <blockquote>
 <p>函数 <a href="https://docs.djangoproject.com/zh-hans/2.0/ref/urls/#django.urls.path" target="_blank" rel="noopener"><code>path()</code></a> 具有四个参数，两个必须参数：<code>route</code> 和 <code>view</code>，两个可选参数：<code>kwargs</code> 和 <code>name</code>。现在，是时候来研究这些参数的含义了。</p>
 <p><strong><a href="https://docs.djangoproject.com/zh-hans/2.0/ref/urls/#django.urls.path" target="_blank" rel="noopener"><code>path()</code></a> 参数： <code>route</code></strong></p>
@@ -478,7 +478,7 @@
 </blockquote>
 <blockquote>
 <p>在上述配置中我们通过urlpatterns来关联映射关系，整体关系如下图所示： </p>
-<p><img src="https://github.com/gao-peng/images/raw/master/1528536820562.png" alt="1528536820562"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1528536820562.png" alt="1528536820562"></p>
 <ol>
 <li>客户端发起请求：<code>http://localhost:8000/polls</code> </li>
 <li>项目接收到用户请求，url地址-&gt; <code>polls/</code> </li>
@@ -613,7 +613,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -624,7 +624,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -635,7 +635,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

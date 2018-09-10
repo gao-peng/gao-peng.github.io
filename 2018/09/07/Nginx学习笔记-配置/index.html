@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux,Nginx," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Nginx配置Nginx 基本配置格式基本的Nginx配置文件由若干个部分组成，每一个部分都是通过下列方法定义的。 123&amp;lt;section&amp;gt; &amp;#123;    &amp;lt;directive&amp;gt; &amp;lt;parameters&amp;gt;;&amp;#125; 需要注意的是，每一个指定行都由分号结束，这标记着一行的结束。 大括号实际上表示一个新配置的上下文（context），但是在大多数情况下，我">
+<meta name="keywords" content="Linux,Nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx学习笔记-配置">
+<meta property="og:url" content="http://yoursite.com/2018/09/07/Nginx学习笔记-配置/index.html">
+<meta property="og:site_name" content="剑十三">
+<meta property="og:description" content="Nginx配置Nginx 基本配置格式基本的Nginx配置文件由若干个部分组成，每一个部分都是通过下列方法定义的。 123&amp;lt;section&amp;gt; &amp;#123;    &amp;lt;directive&amp;gt; &amp;lt;parameters&amp;gt;;&amp;#125; 需要注意的是，每一个指定行都由分号结束，这标记着一行的结束。 大括号实际上表示一个新配置的上下文（context），但是在大多数情况下，我">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-10T12:27:46.243Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nginx学习笔记-配置">
+<meta name="twitter:description" content="Nginx配置Nginx 基本配置格式基本的Nginx配置文件由若干个部分组成，每一个部分都是通过下列方法定义的。 123&amp;lt;section&amp;gt; &amp;#123;    &amp;lt;directive&amp;gt; &amp;lt;parameters&amp;gt;;&amp;#125; 需要注意的是，每一个指定行都由分号结束，这标记着一行的结束。 大括号实际上表示一个新配置的上下文（context），但是在大多数情况下，我">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/07/Nginx学习笔记-配置/"/>
+
+
+
+
+
+  <title>Nginx学习笔记-配置 | 剑十三</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑十三</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">剑未配妥，身已江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/07/Nginx学习笔记-配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="高鹏">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/jugg.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑十三">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Nginx学习笔记-配置</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-07T21:18:48+08:00">
+                2018-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">Nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Nginx配置"><a href="#Nginx配置" class="headerlink" title="Nginx配置"></a>Nginx配置</h1><h2 id="Nginx-基本配置格式"><a href="#Nginx-基本配置格式" class="headerlink" title="Nginx 基本配置格式"></a>Nginx 基本配置格式</h2><p>基本的Nginx配置文件由若干个部分组成，每一个部分都是通过下列方法定义的。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;section&gt; &#123;</span><br><span class="line">    &lt;directive&gt; &lt;parameters&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，每一个指定行都由<strong>分号</strong>结束，这标记着一行的结束。</p>
+<p><strong>大括号</strong>实际上表示一个新配置的上下文（context），但是在大多数情况下，我们把他们作为“节、部分（section）”来读。</p>
+<h2 id="Nginx-全局配置参数"><a href="#Nginx-全局配置参数" class="headerlink" title="Nginx 全局配置参数"></a>Nginx 全局配置参数</h2><p>全局配置部分被用于配置对整个server都有效的参数。</p>
+<p>全局部分由两部分组成：<strong>main</strong>和<strong>events部分</strong>。</p>
+<p>全局参数示例：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">user</span>  root;</span><br><span class="line"><span class="attribute">worker_processes</span>  <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="attribute">error_log</span>  /var/log/nginx/error.log;</span><br><span class="line"><span class="comment">#error_log  logs/error.log  notice;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  info;</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">pid</span>        /run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">worker_connections</span>  <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>全局配置重要的配置指令：</p>
+<p><strong>load_module</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">load_module</span> <span class="string">file;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">—</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<p>加载动态模块。</p>
+<p><strong>User</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">user</span> <span class="string">user</span> <span class="string">[group];</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">user</span> <span class="string">nobody</span> <span class="string">nobody;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<p>使用这个参数来配置worker进程的用户和组。<br>如果忽略group，那么group的名字等于该参数指定用户的用户组。</p>
+<p><strong>worker_processes</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">worker_processes</span> <span class="string">number</span> <span class="string">| auto;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">worker_processes</span> <span class="number">1</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<p>指定worker进程启动的数量。<br>这些进程用于处理客户的所有连接。<br>选择 一个正确的数量取决于服务器环境、磁盘子系统和网络基础设施。<br> 一个好的经验法则是设置该参数的值与 CPU 绑定的负载处理器核心的数量相同，并用 1.5～2 之间的数乘以这个数作为I/O密集型负载。</p>
+<p><strong>worker_priority</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">worker_priority</span> <span class="string">number;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">worker_priority</span> <span class="number">0</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<p>指定工作进程的调度优先级，值越小优先级越大。<br>允许范围在-20到20之间变化。</p>
+<p><strong>worker_rlimit_core</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">worker_rlimit_core</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">—</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<p>限制工作进程核心文件（rlimit core）最大大小。</p>
+<p><strong>pid</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">pid</span> <span class="string">file;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">pid</span> <span class="string">logs/nginx.pid;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<p>设置记录主进程ID的文件，这个配置将会覆盖编译时的默认配置。</p>
+<p><strong>use</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">use</span> <span class="string">method;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">—</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">events</span></span><br></pre></td></tr></table></figure>
+<p>该指令用于指示使用什么样的连接方法，这个配置将会覆盖编译时的默认配置。<br>如果配置该指令，那么需要一个events区段。通常不需要覆盖，除非是编译时的默认值随着时间的推移产生错误时才需要被覆盖设置。</p>
+<p><strong>worker_connections</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">worker_connections</span> <span class="string">number;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">worker_connections</span> <span class="number">512</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">events</span></span><br></pre></td></tr></table></figure>
+<p>该指令配置一个工作进程能够接受并发连接的最大数。<br>这个连接包括客户连接和向上游服务器的连接，但不限于此。<br>这对于反向代理服务器尤为重要，为了达到这个并发性连接数量，需要在操作系统层面进行一些额外调整。</p>
+<p><strong>daemon</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">daemon</span> <span class="string">on</span> <span class="string">| off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">daemon</span> <span class="string">on;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<p>守护进程是可以脱离终端并且在后台运行的进程。他脱离是为了避免进程执行过程中的信息在终端打印出来，这样一来，进程也不会被任何终端所产生的信息打断。<br>通常为了调试可以关闭。</p>
+<p><strong>error_log</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">error_log</span> <span class="string">file</span> <span class="string">[level];</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">error_log</span> <span class="string">logs/error.log</span> <span class="string">error;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">main,</span> <span class="string">http,</span> <span class="string">mail,</span> <span class="string">stream,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>所有错误写入的文件。<br>如果在其他区段中没有设置其他的error_log，那么这个日志文件将会记录所有的错误。<br>该指定的第二个参数指定了被记录错误的级别（debug、info、notice、warn、error、crit、alert、emerg）。<br>注意，debug级别的错误只有在编译时配置了–with-debug选项才可以使用。</p>
+<p><strong>debug_connection</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">debug_connection</span> <span class="string">address</span> <span class="string">| CIDR | unix:;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">—</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">events</span></span><br></pre></td></tr></table></figure>
+<p>为选定的客户端连接启用调试日志模式。其他连接将使用error_log指令设置的日志记录级别 。<br>试连接由IPv4或IPv6地址或网络指定。也可以使用主机名指定连接。对于使用UNIX域套接字的连接，调试日志由“ unix:”参数启用。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">debug_connection</span> <span class="number">127.0.0.1</span>;</span><br><span class="line">    <span class="attribute">debug_connection</span> localhost;</span><br><span class="line">    <span class="attribute">debug_connection</span> <span class="number">192.0.2.0</span>/<span class="number">24</span>;</span><br><span class="line">    <span class="attribute">debug_connection</span> ::<span class="number">1</span>;</span><br><span class="line">    <span class="attribute">debug_connection</span> <span class="number">2001</span>:0db8::/<span class="number">32</span>;</span><br><span class="line">    <span class="attribute">debug_connection</span> unix:;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>debug_points</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">debug_points</span> <span class="string">abort</span> <span class="string">| stop;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">—</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<p>这个配置用来帮助用户调试Nginx，他接收2个参数：stop和abort。<br>Nginx在一些关键的错误逻辑中设置了调试点。如果设置为stop，那么Nginx的代码执行到这些调试点时，会发出SIGSTOP信号。如果abort，则会产生一个coredump文件。<br>通常不会用这个配置项。</p>
+<p><strong>working_directory</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">working_directory</span> <span class="string">directory;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">—</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<p>指定工作进程的当前工作目录，应确保工作进程具有指定目录的写入权限。</p>
+<h2 id="Nginx-使用include文件"><a href="#Nginx-使用include文件" class="headerlink" title="Nginx 使用include文件"></a>Nginx 使用include文件</h2><p>在Nginx配置文件中，include文件可以在任何地方，以便增强配置文件的可读性，并且能够使得部分配置文件重新使用。</p>
+<p>使用include文件，要确保被包含的文件自身有正确的Nginx语法，即配置指令和块（block），然后指定这些文件的路径。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在路径中出现通配符，表示可以配置多个文件。</span></span><br><span class="line"><span class="attribute">include</span>  /etc/nginx/conf.d/<span class="regexp">*.conf</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="Nginx-HTTP的server部分"><a href="#Nginx-HTTP的server部分" class="headerlink" title="Nginx HTTP的server部分"></a>Nginx HTTP的server部分</h2><h3 id="客户端相关指令"><a href="#客户端相关指令" class="headerlink" title="客户端相关指令"></a>客户端相关指令</h3><p><strong>chunked_transfer_encoding</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">chunked_transfer_encoding</span> <span class="string">on</span> <span class="string">| off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">chunked_transfer_encoding</span> <span class="string">on;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>在发送给客户端的响应中，该指令允许禁用http/1.1标准的块传输编码。</p>
+<p><strong>client_body_buffer_size</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">client_body_buffer_size</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">client_body_buffer_size</span> <span class="number">8</span><span class="string">k|16k;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>为了阻止临时文件写到磁盘，可以通过该指令为客户端请求体设置缓存大小。<br>如果请求主体大于缓冲区，则整个主体或部分写入临时文件。<br>默认的缓存大小为两个内存页面。32位系统为8k，64位系统为16k。</p>
+<p><strong>client_body_in_file_only</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">client_body_in_file_only</span> <span class="string">on</span> <span class="string">| clean | off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">client_body_in_file_only</span> <span class="string">off;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>用于调试或者进一步处理客户端请求体。<br>该指令设置为“no”时能够将客户端请求体强制写入到磁盘文件；设置为“clean”时会删除请求处理后留下的临时文件。</p>
+<p><strong>client_body_in_single_buffer</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">client_body_in_file_only</span> <span class="string">on</span> <span class="string">| clean | off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">client_body_in_file_only</span> <span class="string">off;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>为了减少复制的操作，使用该指令强制Nginx将整个客户端请求体保存在单个缓存区中。<br>使用$request_body 变量时，建议使用该指令 ，以节省所涉及的复制操作数。</p>
+<p><strong>client_body_temp_path</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">client_body_temp_path</span> <span class="string">path</span> <span class="string">[level1</span> <span class="string">[level2</span> <span class="string">[level3]]];</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">client_body_temp_path</span> <span class="string">client_body_temp;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>指定存储客户端请求主体的临时文件的目录。在指定目录下最多可以使用三级子目录层次结构。<br>例如在以下配置中：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">client_body_temp_path</span> /spool/nginx/client_temp <span class="number">1</span> <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<p>临时文件的路径为如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/spool/nginx/client_temp/7/45/00000123457</span><br></pre></td></tr></table></figure>
+<p><strong>client_body_timeout</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">client_body_timeout</span> <span class="string">time;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">client_body_timeout</span> <span class="number">60</span><span class="string">s;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>指定读取客户端请求正文的超时时间。超时仅设置为两个连续读取操作之间的时间段，而不是整个请求主体的传输。<br>如果客户端在此时间内未传输任何内容，请求将以408（请求超时）错误终止。</p>
+<p><strong>client_header_buffer_size</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">client_header_buffer_size</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">client_header_buffer_size</span> <span class="number">1</span><span class="string">k;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server</span></span><br></pre></td></tr></table></figure>
+<p>为客户端请求头指定一个缓存大小，当请求头大于1kb时会用到这个设置。</p>
+<p><strong>client_header_timeout</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">client_header_timeout</span> <span class="string">time;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">client_header_timeout</span> <span class="number">60</span><span class="string">s;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server</span></span><br></pre></td></tr></table></figure>
+<p>读取整个客户端头的超时时间。<br>如果客户端在此时间内未传输整个标头，请求将以408（请求超时）错误终止。</p>
+<p><strong>client_max_body_size</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">client_max_body_size</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">client_max_body_size</span> <span class="number">1</span><span class="string">m;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>设置客户端请求正文的最大大小，在“Content-Length”请求头字段中指定。<br>如果请求中的大小超过配置的值，则会将413（请求实体太大）错误返回给客户端。<br>设置size为“0”将禁用检查客户端请求正文大小。</p>
+<p><strong>keepalive_disable</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">keepalive_disable</span> <span class="string">none</span> <span class="string">| browser ...;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">keepalive_disable</span> <span class="string">msie6;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>对某些类型的客户端禁用keep-alive请求功能。</p>
+<p><strong>keepalive_requests</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">keepalive_requests</span> <span class="string">number;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">keepalive_requests</span> <span class="number">100</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>指定在一个keep-alive连接关闭之前最多可以接受多少个请求。</p>
+<p><strong>keepalive_timeout</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">keepalive_timeout</span> <span class="string">timeout</span> <span class="string">[header_timeout];</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">keepalive_timeout</span> <span class="number">75</span><span class="string">s;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>指定keep-alive连接超时时间，即活动连接能够持续多久。<br>设置为“0”时禁用keep-alive连接。<br>第二个参数用于在响应头中设置“keepalive”头。</p>
+<p><strong>msie_padding</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">msie_padding</span> <span class="string">on</span> <span class="string">| off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">msie_padding</span> <span class="string">on;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>为了填充响应的大小至512字节。<br>对于MSIE客户端，大于400的状态码会被添加注释以便满足512字节，通过启用该指令可以阻止这种行为。</p>
+<p><strong>msie_refresh</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">msie_refresh</span> <span class="string">on</span> <span class="string">| off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">msie_refresh</span> <span class="string">off;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>对于MSIE客户端，该指令可启用发送一个refresh头，而不是redirect。</p>
+<h3 id="文件I-O相关指令"><a href="#文件I-O相关指令" class="headerlink" title="文件I/O相关指令"></a>文件I/O相关指令</h3><p><strong>aio</strong>（异步I/O）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">aio</span> <span class="string">on</span> <span class="string">| off | threads[=pool];</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">aio</span> <span class="string">off;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>该指令启用异步文件I/O。<br>该指令对于现代版本的FreeBSD和所有的Linux发行版都有效。<br>启用aio时会自动启用directio，小于directio定义的大小的文件则采用sendfile进行发送，超过或等于directio定义的大小的文件,将采用aio线程池进行发送。也就是说aio和directio适合大文件下载，因为大文件不适合进入操作系统的buffers/cache，这样会浪费内存，而且Linux AIO(异步磁盘IO)也要求使用directio的形式。</p>
+<p>例如：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启用FreeBSD和Linux上使用异步文件I/O(AIO)。</span></span><br><span class="line"><span class="attribute">location</span> /video/ &#123;</span><br><span class="line">    <span class="attribute">aio</span>            <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">output_buffers</span> <span class="number">1</span> <span class="number">64k</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在Linux上，可以从内核版本2.6.22开始使用AIO。此外，需要启用 directio，否则读取将被阻止。</span></span><br><span class="line"><span class="attribute">location</span> /video/ &#123;</span><br><span class="line">    <span class="attribute">aio</span>            <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">directio</span>       <span class="number">512</span>;</span><br><span class="line">    <span class="attribute">output_buffers</span> <span class="number">1</span> <span class="number">128k</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在Linux上， directio 只能用于读取在512字节边界（或XFS为4K）上对齐的块。</span></span><br><span class="line"><span class="comment"># 文件的未对齐端以阻塞模式读取，结尾读取未对齐数据将被阻塞。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当在Linux上启用AIO和sendfile时，AIO用于大于或等于directio指令中指定大小的文件。</span></span><br><span class="line"><span class="comment"># 而sendfile用于小于directio指令中指定大小的文件或禁用directio时。</span></span><br><span class="line"><span class="attribute">location</span> /video/ &#123;</span><br><span class="line">    <span class="attribute">sendfile</span>       <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">aio</span>            <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">directio</span>       <span class="number">8m</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以使用多线程读取和发送文件，而不会阻止工作进程。</span></span><br><span class="line"><span class="attribute">location</span> /video/ &#123;</span><br><span class="line">    <span class="attribute">sendfile</span>       <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">aio</span>            threads;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 还可以指定读取和发送文件操作的线程池。</span></span><br><span class="line"><span class="comment"># 如果省略池名称，则使用名为"default"的池。</span></span><br><span class="line"><span class="comment"># 池的名称可以使用变量设置。</span></span><br><span class="line"><span class="comment"># 多线程支持仅在Linux平台上可用，并且只能与处理请求的epoll，kqueue或eventport方法一起使用。</span></span><br><span class="line"><span class="attribute">aio</span> threads=pool<span class="variable">$disk</span>;</span><br><span class="line"></span><br><span class="line"><span class="attribute">thread_pool</span> io_pool threads=<span class="number">16</span>;</span><br><span class="line">  http&#123;</span><br><span class="line">    ........</span><br><span class="line">    <span class="attribute">location</span> /data&#123;</span><br><span class="line">    <span class="attribute">sendfile</span>    <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">aio</span>        threads=io_pool;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>aio_write</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">aio_write</span> <span class="string">on</span> <span class="string">| off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">aio_write</span> <span class="string">off;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>如果启用了aio，则该指定指定是否写入文件。<br>目前，这种方法只在使用aio线程时起作用，并且仅限于使用从代理服务器接收到的数据来编写临时文件。</p>
+<p><strong>directio</strong>（直接I/O）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">directio</span> <span class="string">size</span> <span class="string">| off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">directio</span> <span class="string">off;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>操作系统内核通常尝试优化和缓存任何读/写请求。 由于数据在内核中缓存，对同一位置的任何后续读取请求将更快，因为不需要再从磁盘读取信息。<br>直接I/O是文件系统的一个功能，其从应用程序到磁盘直接读取和写入，从而绕过所有操作系统缓存。 这使得更好地利用CPU周期和提高缓存效率。<br>在Linux系统下，使用aio时需要要使用该指令。</p>
+<p><strong>directio_alignment</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">directio_alignment</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">directio_alignment</span> <span class="number">512</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>指定directio的对其方式。<br>在大多数情况下，512字节对其就足够了。但是在Linux使用XFS文件系统时，需要将其增加到4K。</p>
+<p><strong>open_file_cache</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">open_file_cache</span> <span class="string">off;</span></span><br><span class="line">				<span class="string">open_file_cache</span> <span class="string">max=N</span> <span class="string">[inactive=time];</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">open_file_cache</span> <span class="string">off;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>该指令用于启用缓存静态文件的元信息。<br>可以缓存信息有：</p>
+<ul>
+<li><p>文件的描述符（fd）、文件大小（size）、最后修改时间（last modified time）。</p>
+</li>
+<li><p>目录存在的信息（path）。</p>
+</li>
+<li><p>文件查找错误，例如“找不到文件”、“没有读取权限“等。</p>
+<blockquote>
+<p>应该通过<a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#open_file_cache_errors" target="_blank" rel="noopener">open_file_cache_errors</a> 指令单独启用文件查找错误 。</p>
+</blockquote>
+</li>
+</ul>
+<p>该指令具有以下参数：</p>
+<ul>
+<li>max：设置缓存中的最大元素数。 在缓存溢出时，删除最近最少使用（LRU）的元素。</li>
+<li>inactive：定义一个时间，如果在此期间未访问该元素，则从该缓存中删除该元素; 默认情况下，它是60秒。</li>
+<li>off：禁用缓存。</li>
+</ul>
+<p>例如：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">open_file_cache</span>      		 max=<span class="number">1000</span> inactive=<span class="number">20s</span>;</span><br><span class="line"><span class="attribute">open_file_cache_valid</span>    <span class="number">30s</span>;</span><br><span class="line"><span class="attribute">open_file_cache_min_uses</span> <span class="number">2</span>;</span><br><span class="line"><span class="attribute">open_file_cache_errors</span>   <span class="literal">on</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>open_file_cache_errors</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">open_file_cache_errors</span> <span class="string">on</span> <span class="string">| off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">open_file_cache_errors</span> <span class="string">off;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>通过open_file_cache启用或禁用文件查找错误的缓存 。</p>
+<p><strong>open_file_cache_min_uses</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">open_file_cache_min_uses</span> <span class="string">number;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">open_file_cache_min_uses</span> <span class="number">1</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>open_file_cache指令中inactive参数时间内文件的最少使用次数。<br>如果在设置的inactive时间少于该指令设置的使用次数，则在缓存内删除。<br>如果超过这个数字，文件更改信息一直是在缓存中打开的。<br>例如：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果在60s内某文件被访问的次数低于8次，那就将它从缓存中删除。</span></span><br><span class="line"><span class="attribute">open_file_cache</span> max=<span class="number">64</span> inactive=<span class="number">60s</span>;</span><br><span class="line"><span class="attribute">open_file_cache_min_uses</span> <span class="number">8</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>open_file_cache_valid</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">open_file_cache_valid</span> <span class="string">time;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">open_file_cache_valid</span> <span class="number">60</span><span class="string">s;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>验证缓存项有效性的时间间隔。如果缓存中的文件元信息不是最新的，则更新它。</p>
+<p><strong>postpone_output</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">postpone_output</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">postpone_output</span> <span class="number">1460</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>设置从磁盘读取缓冲区响应的数量和大小。<br>如果可能，客户端数据传输将被延迟，直到达到此值。</p>
+<p><strong>read_ahead</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">read_ahead</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">read_ahead</span> <span class="number">0</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>设置使用文件时内核的预读取量。<br>在Linux上，使用 posix_fadvise(0, 0, 0, POSIX_FADV_SEQUENTIAL) 系统调用，因此size忽略该参数。</p>
+<p><strong>sendfile</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">sendfile</span> <span class="string">on</span> <span class="string">| off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">sendfile</span> <span class="string">off;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location,</span> <span class="string">if</span> <span class="string">in</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>当应用程序传输文件时，内核首先缓冲数据，然后将数据发送到应用程序缓冲区。 应用程序反过来将数据发送到目的地。<br>sendfile方法是一种改进的数据传输方法，其中数据在操作系统内核空间内的文件描述符之间复制，而不将数据传输到应用程序缓冲区。 这使操作系统资源的利用率提高。</p>
+<p><strong>sendfile_max_chunk</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">sendfile_max_chunk</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">sendfile_max_chunk</span> <span class="number">0</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>设置为非“0”值时，限制单个senfile()调用中传输的数据量。<br>该指令令可以减少阻塞调用sendfile()所花费的最长时间，因为NGINX不会尝试一次将整个文件发送出去，而是每次发送大小为size的块数据。</p>
+<h3 id="HASH相关指令"><a href="#HASH相关指令" class="headerlink" title="HASH相关指令"></a>HASH相关指令</h3><p><strong>server_names_hash_max_size</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">server_names_hash_bucket_size</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">server_names_hash_bucket_size</span> <span class="number">32</span><span class="string">|64|128;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http</span></span><br></pre></td></tr></table></figure>
+<p>设置服务器名称散列表的“桶”大小。默认值取决于处理器缓存行的大小。</p>
+<p><strong>server_tokens </strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">server_names_hash_max_size</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">server_names_hash_max_size</span> <span class="number">512</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http</span></span><br></pre></td></tr></table></figure>
+<p>设置服务器名称散列表的最大大小。</p>
+<p><strong>types_hash_bucket_size</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">types_hash_bucket_size</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">types_hash_bucket_size</span> <span class="number">64</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>设置类型散列表的“桶”大小。</p>
+<p><strong>types_hash_max_size</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">types_hash_max_size</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">types_hash_max_size</span> <span class="number">1024</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>设置类型散列表的最大大小。</p>
+<p><strong>variables_hash_bucket_size</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">variables_hash_bucket_size</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">variables_hash_bucket_size</span> <span class="number">64</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http</span></span><br></pre></td></tr></table></figure>
+<p>设置变量散列表的“桶”大小。</p>
+<p><strong>variables_hash_max_size</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">variables_hash_max_size</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">variables_hash_max_size</span> <span class="number">1024</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http</span></span><br></pre></td></tr></table></figure>
+<p>设置变量散列表的最大大小。</p>
+<h3 id="Socketb相关指令"><a href="#Socketb相关指令" class="headerlink" title="Socketb相关指令"></a>Socketb相关指令</h3><p><strong>lingering_close</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">lingering_close</span> <span class="string">off</span> <span class="string">| on | always;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">lingering_close</span> <span class="string">on;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>控制nginx如何保持客户端连接。</p>
+<ul>
+<li>on：nginx 在完全关闭连接之前等待并处理来自客户端的其他数据。<br>先关闭tcp连接的写再关闭连接的读。直接执行关闭若此时nginx的tcp的write_buffer里有数据没有发送到客户端而read_buffer有数据则调用close()使得nginx直接返回客户端RST响应，丢弃了write_buffer里的数据。<br>若write_buffer里存储的为错误信息，则客户端未收到错误信息连接已经被服务端rst了，则客户端会认为服务端太不讲道理了，不告知错误信息就直接关闭连接了。</li>
+<li>always：nginx无条件地等待并处理其他客户端数据。</li>
+<li>off：立即关闭连接，此行为会破坏协议，不应在正常情况下使用。</li>
+</ul>
+<p><strong>lingering_time</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">lingering_time</span> <span class="string">time;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">lingering_time</span> <span class="number">30</span><span class="string">s;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>指定nginx处理（读取和忽略）来自客户端的其他数据的最长时间。之后，即使有更多数据，连接也将关闭。</p>
+<p><strong>lingering_timeout</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">lingering_timeout</span> <span class="string">time;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">lingering_timeout</span> <span class="number">5</span><span class="string">s;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>指定更多客户端数据到达的最长等待时间。如果在此期间未收到数据，则关闭连接。<br>否则，将读取并忽略已等待的时间，并且nginx会再次开始等待更多数据。重复“wait-read-ignore”循环，但不会超过lingering_time指令指定的循环 。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">reset_timedout_connection</span> <span class="string">on</span> <span class="string">| off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">reset_timedout_connection</span> <span class="string">off;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>开启此指令之后，超时的连接将会被立即关闭，释放相关的内存。<br>默认的状态是FIN_WAIT1，这种状态将会一直保持连接。</p>
+<p><strong>send_lowat</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">send_lowat</span> <span class="string">size;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">send_lowat</span> <span class="number">0</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>如果该指令设置为非零值，nginx将尝试通过使用kqueue方法的NOTE_LOWAT标志或套接字选项来最小化客户端套接字上的发送操作数。<br>在Linux，Solaris和Windows上忽略此指令。</p>
+<p><strong>send_timeout</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">send_timeout</span> <span class="string">time;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">send_timeout</span> <span class="number">60</span><span class="string">s;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>该指令设置两次成功的客户端接收响应的写操作之间的超时时间。仅在两次连续写操作之间设置超时时间，而不是整个响应的传输。如果客户端在此时间内未收到任何内容，则会关闭连接。</p>
+<p><strong>tcp_nodelay</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">tcp_nodelay</span> <span class="string">on</span> <span class="string">| off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">tcp_nodelay</span> <span class="string">on;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>启用或禁用TCP_NODELAY选项，用于keep-alive连接。<br>禁用Nagle算法，即数据包立即发送出去。</p>
+<blockquote>
+<p>在网络拥塞控制领域，有一个非常有名的算法叫做Nagle算法（Nagle algorithm），这是使用它的发明人John Nagle的名字来命名的，John Nagle在1984年首次用这个算法来尝试解决福特汽车公司的网络拥塞问题（RFC 896），该问题的具体描述是：如果我们的应用程序一次产生1个字节的数据，而这个1个字节数据又以网络数据包的形式发送到远端服务器，那么就很容易导致网络由于太多的数据包而过载。比如，当用户使用Telnet连接到远程服务器时，每一次击键操作就会产生1个字节数据，进而发送出去一个数据包，所以，在典型情况下，传送一个只拥有1个字节有效数据的数据包，却要发费40个字节长包头（即ip头20字节+tcp头20字节）的额外开销，这种有效载荷（payload）利用率极其低下的情况被统称之为愚蠢窗口症候群（Silly Window Syndrome）。可以看到，这种情况对于轻负载的网络来说，可能还可以接受，但是对于重负载的网络而言，就极有可能承载不了而轻易的发生拥塞瘫痪。</p>
+</blockquote>
+<p><strong>tcp_nopush</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span>	<span class="string">tcp_nopush</span> <span class="string">on</span> <span class="string">| off;</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">tcp_nopush</span> <span class="string">off;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">http,</span> <span class="string">server,</span> <span class="string">location</span></span><br></pre></td></tr></table></figure>
+<p>仅依赖于senfile的使用。<br>它能够使得Nginx在一个数据包中尝试发送响应头以及在数据包中发送一个完整的文件。<br>tcp_nopush为on时会调用tcp_cork方法，结果就是数据包不会马上传送出去，等到数据包最大时，一次性的传输出去，这样有助于解决网络堵塞。</p>
+<h3 id="虚拟服务器相关指令"><a href="#虚拟服务器相关指令" class="headerlink" title="虚拟服务器相关指令"></a>虚拟服务器相关指令</h3><p>任何由关键字server开始的部分都被称作“虚拟服务器”部分。它描述的是一组根据不同的server_name指令逻辑分割的资源，这些虚拟服务器响应 HTTP 请求，因此它们都包含在http部分中 。</p>
+<p>一个虚拟服务器由listen和server_name指令组合定义。</p>
+<h4 id="Listen指令"><a href="#Listen指令" class="headerlink" title="Listen指令"></a>Listen指令</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span> <span class="string">listen</span> <span class="string">address[:port]</span> <span class="string">[default_server]</span> <span class="string">[ssl]</span> <span class="string">[http2</span> <span class="string">| spdy] [proxy_protocol] </span></span><br><span class="line"><span class="string">				[setfib=number] [fastopen=number] [backlog=number] [rcvbuf=size] [sndbuf=size] </span></span><br><span class="line"><span class="string">				[accept_filter=filter] [deferred] [bind] [ipv6only=on|off] [reuseport] </span></span><br><span class="line"><span class="string">				[so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];</span></span><br><span class="line"><span class="string">				</span></span><br><span class="line"><span class="string">				listen port [default_server] [ssl] [http2 | spdy] [proxy_protocol] </span></span><br><span class="line"><span class="string">				[setfib=number] [fastopen=number] [backlog=number] [rcvbuf=size] [sndbuf=size] </span></span><br><span class="line"><span class="string">				[accept_filter=filter] [deferred] [bind] [ipv6only=on|off] [reuseport] </span></span><br><span class="line"><span class="string">				[so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];</span></span><br><span class="line"><span class="string">				</span></span><br><span class="line"><span class="string">				listen unix:path [default_server] [ssl] [http2 | spdy] [proxy_protocol] </span></span><br><span class="line"><span class="string">				[backlog=number] [rcvbuf=size] [sndbuf=size] [accept_filter=filter] </span></span><br><span class="line"><span class="string">				[deferred] [bind] </span></span><br><span class="line"><span class="string">				[so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];</span></span><br><span class="line"><span class="string">				</span></span><br><span class="line"><span class="string"></span><span class="attr">Default:</span> <span class="string">listen</span> <span class="string">*:80</span> <span class="string">| *:8000;</span></span><br><span class="line"><span class="string"></span><span class="attr">Context:</span> <span class="string">server</span></span><br></pre></td></tr></table></figure>
+<p>参数注解：</p>
+<p><strong>default_server</strong><br>该参数定义这样一个组合：address:port 默认的请求被绑定在此。</p>
+<p><strong>setfib</strong><br>该参数为套接字监听设置响应的FIB。<br>该参数仅支持FreeBSD，不支持UNIX域套接字。</p>
+<p><strong>backlog</strong><br>该参数在listen()的调用中设置backlog参数调用。<br>该参数在FreeBSD系统中默认值为-1，在其他系统中为511。</p>
+<p><strong>rcvbuf</strong><br>在套接字监听中，该参数设置SO_RCVBUG参数。</p>
+<p><strong>sndbuf</strong><br>在套接字监听中，该参数设置SO_SNDBUF参数。</p>
+<p><strong>accept_filter</strong><br>该参数设置接受的过滤器：dataready或者httpready。<br>该参数仅支持FreeBSD。</p>
+<p><strong>deferred</strong><br>该参数使用延迟的accept()调用设置TCP_DEFER_ACCEPT选项。<br>该参数仅支持Linux。</p>
+<p><strong>bind</strong><br>该参数为address:port套接字对打开一个单独的bind()调用。<br>如果任何其他特定套接字参数被使用，name一个单独的bind()将会被隐式的调用。</p>
+<p><strong>ipv6only</strong><br>该参数设置IPV6_V6ONLY参数的值。<br>该参数只能在一个全新的开始设置，不支持UNIX域套接字。</p>
+<p><strong>ssl</strong><br>该参数表明该端口仅接受HTTPS的连接。<br>该参数允许更紧凑的配置。</p>
+<p><strong>http2</strong><br>该参数配置端口接受HTTP/2连接。通常ssl应该指定该参数，但是也可以将nginx配置为接受没有SSL的HTTP/2连接。</p>
+<p><strong>spdy</strong><br>该参数允许接受 SPDY这个端口上的连接。通常ssl也应该指定该参数，但是也可以将nginx配置为接受不带SSL的SPDY连接。</p>
+<p><strong>proxy_protocol</strong><br>该参数允许指定在这个端口上接受的所有连接都应该使用代理协议。<br>该参数从版本1.13.11起支持PROXY协议版本2。</p>
+<p><strong>so_keepalive</strong><br>该参数为TCP监听套接字配置keepalive。</p>
+<h4 id="server-name指令"><a href="#server-name指令" class="headerlink" title="server_name指令"></a>server_name指令</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Syntax:</span> <span class="string">server_name</span> <span class="string">name</span> <span class="string">...;</span></span><br><span class="line"><span class="attr">Default:</span> <span class="string">server_name</span> <span class="string">""</span><span class="string">;</span></span><br><span class="line"><span class="attr">Context:</span> <span class="string">server</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/Nginx/" rel="tag"># Nginx</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/04/GlusterFS学习笔记-错误记录/" rel="next" title="GlusterFS学习笔记-错误记录">
+                <i class="fa fa-chevron-left"></i> GlusterFS学习笔记-错误记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/09/Nginx学习笔记-TCP_NODELAY和TCP_NOPUSH的解释/" rel="prev" title="Nginx学习笔记-TCP_NODELAY和TCP_NOPUSH的解释">
+                Nginx学习笔记-TCP_NODELAY和TCP_NOPUSH的解释 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/jugg.JPG"
+                alt="高鹏" />
+            
+              <p class="site-author-name" itemprop="name">高鹏</p>
+              <p class="site-description motion-element" itemprop="description">有人的地方就有江湖</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://processon.com/" title="在线画图" target="_blank">在线画图</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://regex101.com/" title="正则表达式" target="_blank">正则表达式</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx配置"><span class="nav-number">1.</span> <span class="nav-text">Nginx配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-基本配置格式"><span class="nav-number">1.1.</span> <span class="nav-text">Nginx 基本配置格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-全局配置参数"><span class="nav-number">1.2.</span> <span class="nav-text">Nginx 全局配置参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-使用include文件"><span class="nav-number">1.3.</span> <span class="nav-text">Nginx 使用include文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-HTTP的server部分"><span class="nav-number">1.4.</span> <span class="nav-text">Nginx HTTP的server部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端相关指令"><span class="nav-number">1.4.1.</span> <span class="nav-text">客户端相关指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件I-O相关指令"><span class="nav-number">1.4.2.</span> <span class="nav-text">文件I/O相关指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HASH相关指令"><span class="nav-number">1.4.3.</span> <span class="nav-text">HASH相关指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socketb相关指令"><span class="nav-number">1.4.4.</span> <span class="nav-text">Socketb相关指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟服务器相关指令"><span class="nav-number">1.4.5.</span> <span class="nav-text">虚拟服务器相关指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Listen指令"><span class="nav-number">1.4.5.1.</span> <span class="nav-text">Listen指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#server-name指令"><span class="nav-number">1.4.5.2.</span> <span class="nav-text">server_name指令</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">高鹏</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

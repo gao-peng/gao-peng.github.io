@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="FirewallD笔记理解配置，理解区域、知道如何配置规则。 🌐readhat官网文档 :globe_with_meridians:firewalld官网文档 概念firewalld自身并不具备防火墙的功能，而是和iptables一样需要通过内核的netfilter来实现，也就是说 firewalld和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的netfilt">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux学习笔记-FirewallD">
+<meta property="og:url" content="http://yoursite.com/2018/08/09/Linux学习笔记-FirewallD/index.html">
+<meta property="og:site_name" content="剑十三">
+<meta property="og:description" content="FirewallD笔记理解配置，理解区域、知道如何配置规则。 🌐readhat官网文档 :globe_with_meridians:firewalld官网文档 概念firewalld自身并不具备防火墙的功能，而是和iptables一样需要通过内核的netfilter来实现，也就是说 firewalld和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的netfilt">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="e:/git/images/1533803100858.png">
+<meta property="og:image" content="e:/git/images/1533808993970.png">
+<meta property="og:updated_time" content="2018-08-10T11:04:02.824Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux学习笔记-FirewallD">
+<meta name="twitter:description" content="FirewallD笔记理解配置，理解区域、知道如何配置规则。 🌐readhat官网文档 :globe_with_meridians:firewalld官网文档 概念firewalld自身并不具备防火墙的功能，而是和iptables一样需要通过内核的netfilter来实现，也就是说 firewalld和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的netfilt">
+<meta name="twitter:image" content="e:/git/images/1533803100858.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/09/Linux学习笔记-FirewallD/"/>
+
+
+
+
+
+  <title>Linux学习笔记-FirewallD | 剑十三</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑十三</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">剑未配妥，身已江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/09/Linux学习笔记-FirewallD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="高鹏">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/jugg.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑十三">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux学习笔记-FirewallD</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-09T15:32:26+08:00">
+                2018-08-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="FirewallD笔记"><a href="#FirewallD笔记" class="headerlink" title="FirewallD笔记"></a>FirewallD笔记</h1><p>理解配置，理解区域、知道如何配置规则。</p>
+<p>🌐<a href="https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_linux/7/html/security_guide/sec-using_firewalls#sec-Introduction_to_firewalld" target="_blank" rel="noopener">readhat官网文档</a></p>
+<p>:globe_with_meridians:<a href="https://firewalld.org/documentation/" target="_blank" rel="noopener">firewalld官网文档</a></p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><strong>firewalld</strong>自身并不具备防火墙的功能，而是和iptables一样需要通过内核的<strong>netfilter</strong>来实现，也就是说</p>
+<p><strong>firewalld</strong>和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的<strong>netfilter</strong>，只不过firewalld和iptables的结 构以及使用方法不一样罢了。 </p>
+<p><img src="E:\git\images\1533803100858.png" alt="1533803100858"></p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>firewalld有两层设计：<strong>核心层</strong>和顶部的<strong>D-Bus层</strong>。</p>
+<ul>
+<li><strong>核心层</strong>：核心层负责处理配置和后端，如iptables，ip6tables，ebtables，ipset和模块加载器。 </li>
+<li><strong>D-Bus层</strong>：D-Bus接口是更改和创建防火墙配置的主要方式。 firewalld提供的工具都使用该接口，例如firewall-cmd，firewall-config和firewall-applet。</li>
+</ul>
+<p>firewalld正在运行时可以使用<strong>firewall-offline-cmd</strong>，但不推荐使用它，因为有大概5秒钟的延迟。</p>
+<p><img src="E:\git\images\1533808993970.png" alt="1533808993970"></p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="配置目录"><a href="#配置目录" class="headerlink" title="配置目录"></a>配置目录</h3><p>firewalld支持两个<strong>配置目录</strong>：</p>
+<ul>
+<li><p><strong>/etc/firewalld/</strong> ：用户配置文件目录</p>
+</li>
+<li><p><strong>/usr/lib/firewalld</strong>：系统配置文件目录，即默认配置文件目录</p>
+</li>
+</ul>
+<p>使用时，当需要一个文件时，firewalld会首先到第一个目录进行查找，如果可以找到，那么就直接使用，否则会继续到第二个目录中查找。</p>
+<p>这么做的好处：</p>
+<ol>
+<li><strong>/usr/lib/firewalld</strong>存放的是firewalld提供的通用配置文件，如果想修改配置，可以直接拷贝一份到<strong>/etc/firewalld/</strong>，再进行修改，节省编写配置的时间。</li>
+<li>如果想恢复默认配置，只需删除<strong>/etc/firewalld/</strong>目录下的配置文件即可。</li>
+</ol>
+<h3 id="配置状态"><a href="#配置状态" class="headerlink" title="配置状态"></a>配置状态</h3><p> <strong>配置状态</strong>分为两种：</p>
+<ul>
+<li><strong>运行时配置</strong>：运行时配置是实际有效配置，并应用于内核防火墙。在firewalld服务启用时，永久配置将成为运行时配置。但运行时配置的更改不会自动保存到永久配置中。</li>
+<li><strong>永久配置</strong>：永久配置存储在配置文件中，并将在每次服务启动、重启、重载时成为新的运行时配置。</li>
+</ul>
+<p>将<strong>运行时配置</strong>更改为<strong>永久配置</strong>的命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --runtime-to-permanent</span><br></pre></td></tr></table></figure>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>这里说的配置文件仅仅是说<strong>firewalld.conf</strong>。</p>
+<p><strong>firewalld.conf</strong>是<strong>/etc/firewalld</strong>目录下提供firewalld的基本配置，如果<strong>/etc/firewalld</strong>目录下不存在该文件，将使用firewalld内部默认值。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认区域</span></span><br><span class="line"><span class="comment"># 默认： public</span></span><br><span class="line"><span class="attr">DefaultZone</span>=public</span><br><span class="line"></span><br><span class="line"><span class="comment"># 标记的最小值，linux内核会对每个进入的数据包都进行标记，目的是为了对它们进行区分。</span></span><br><span class="line"><span class="comment"># 默认：100</span></span><br><span class="line"><span class="attr">MinimalMark</span>=<span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出firewalld后是否清除防火墙规则</span></span><br><span class="line"><span class="comment"># 默认：yes</span></span><br><span class="line"><span class="attr">CleanupOnExit</span>=<span class="literal">yes</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否锁定firewalld D-BUS接口，当Lockdown为yes时可以通过lockdown-whitelist.xml文件来限制都有哪些程序可以通过D-BUS接口对firewalld进行操作</span></span><br><span class="line"><span class="comment"># 默认：no（没有限制）</span></span><br><span class="line"><span class="attr">Lockdown</span>=<span class="literal">no</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 判断所接受到的包是否是伪造的，检查方式主要是通过路由表中的路由条目实现的，更多详细的信息可以搜索uRPF相关的资料</span></span><br><span class="line"><span class="comment"># 默认：yes</span></span><br><span class="line"><span class="attr">IPv6_rpfilter</span>=<span class="literal">yes</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置为yes时不使用combined-restore调用而是单独调用，增加了应用和启用服务所需的时间，对调试有帮助</span></span><br><span class="line"><span class="comment"># 默认：no</span></span><br><span class="line"><span class="attr">IndividualCalls</span>=<span class="literal">no</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在拒绝之前添加日志记录规则</span></span><br><span class="line"><span class="comment"># 默认：off</span></span><br><span class="line"><span class="comment"># 可选：all unicast broadcast multicast</span></span><br><span class="line"><span class="attr">LogDenied</span>=<span class="literal">off</span></span><br></pre></td></tr></table></figure>
+<h2 id="区域"><a href="#区域" class="headerlink" title="区域"></a>区域</h2><p>通过将网络划分成不同的<strong>区域</strong>，制定出不同<strong>区域</strong>之间的<strong>访问控制策略</strong>来控制不同<strong>程序</strong>区域间传送的<strong>数据流</strong>。 </p>
+<p>firewalld默认有9个<strong>Zone</strong>：</p>
+<ul>
+<li><strong>drop</strong>（丢弃区域）：任何接收的网络数据包都被丢弃，没有任何回复，只能传出网络连接。</li>
+<li><strong>block</strong>（限制区域）：任何接受的网络连接都被IPv4的icmp-host-prohibited信息和IPv6的icmp6-adm-prohibited信息所拒绝。 </li>
+<li><strong>piblic</strong>（公共区域）：在公共区域内使用，不能相信网络内其他计算机不会对你造成危害，只能接受经过选取的连接。</li>
+<li><strong>external</strong>（外部区域）：不能信任来自网络的其他计算机，不能相信它们不会对你造成伤害，只能接受经过选取的连接。</li>
+<li><strong>dmz</strong>（隔离区域）： 隔离区域也称为非军事区域，内外网络之间增加的一层网络，起到缓冲作用。对于隔离区域，只能接受经过选取的连接。</li>
+<li><strong>work</strong>（工作区域）：用于工作区，你可以基本信任网络内的其他电脑不会对你造成危害，仅仅接收经过选择的连接。 </li>
+<li><strong>home</strong>（家庭区域）：用于内部网络，你可以基本上信任网络内其他电脑不会对你造成危害，仅仅接收经过选择的连接。 </li>
+<li><strong>internal</strong>（内部区域）：用于内部网络，你可以基本上信任网络内其他电脑不会对你造成危害，仅仅接收经过选择的连接。 </li>
+<li><strong>trusted</strong>（信任区域）：可接受所有的网络连接。  </li>
+</ul>
+<h4 id="tag"><a href="#tag" class="headerlink" title="tag"></a>tag</h4><p>zone规则中首先最重要的是target的设置，可以取四个值：<strong>default</strong>、<strong>ACCEPT</strong>、<strong>%%REJECT%%</strong>、<strong>DROP</strong>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看指定Zone的target</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=work --get-target --permanent</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 更改指定Zone的target</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=work --<span class="built_in">set</span>-target=ACCEPT --permanent</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>–permanent</p>
+<p>表示是否将修改后的规则保存下来，如果不加这个参数，那么所做的修改当时会立即生效，但是在firewalld重启之后就会丢失，而加上这个参数后所做的修改就会永久保存下来，不过这时的修改不会立即生效而是需要reload后才可以生效。其实这个也非常容易理解，当不加<code>--permanent</code>修改规则时<code>firewalld</code>会实际修改运行时的规则，而如果加了这个参数<code>firewalld</code>其实是去修改的xml配置文件，和我们直接编辑xml文件一样，所以就需要reload才可以生效。 </p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">zone</span> <span class="attr">target</span>=<span class="string">"ACCEPT"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">short</span>&gt;</span>Work<span class="tag">&lt;/<span class="name">short</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span>For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">service</span> <span class="attr">name</span>=<span class="string">"ssh"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">service</span> <span class="attr">name</span>=<span class="string">"dhcpv6-client"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">zone</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h2><p>服务就是对<strong>端口</strong>、<strong>协议</strong>和<strong>目的地址</strong>的封装。</p>
+<p>这样做的好处：</p>
+<ol>
+<li>通过服务名字来管理规则更加人性化</li>
+<li>通过服务来组织端口分组的模式更加高效，如果一个服务使用了若干个网络端口，则服务的配置文件就相当于提供了到这些端口的规则管理的批量操作快捷方式 </li>
+</ol>
+<p>service配置文件的命名规则是&lt;服务名&gt;.xml。</p>
+<p>默认保存在<strong>/usr/lib/firewalld/services/</strong>目录下，常见的服务其中都可以找到，如果我们想修改某个服务的配置，那么可以复制一份到<strong>/etc/firewalld/services/</strong>目录下然后进行修改就可以了。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">service</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">short</span>&gt;</span>MySQL<span class="tag">&lt;/<span class="name">short</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span>MySQL Database Server<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">port</span> <span class="attr">protocol</span>=<span class="string">"tcp"</span> <span class="attr">port</span>=<span class="string">"3306"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">service</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>个人觉得，firewalld中的service与iptables的自定义链有些类似，都是用来分类、方便管理针对的某些服务的。</p>
+</blockquote>
+<h2 id="ipset"><a href="#ipset" class="headerlink" title="ipset"></a>ipset</h2><p>创建匹配整个地址的集合。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line">  <span class="tag">&lt;<span class="name">ipset</span> <span class="attr">type</span>=<span class="string">"hash:net"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">short</span>&gt;</span>white-list<span class="tag">&lt;/<span class="name">short</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">entry</span>&gt;</span>192.168.198.21<span class="tag">&lt;/<span class="name">entry</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">entry</span>&gt;</span>192.168.198.22<span class="tag">&lt;/<span class="name">entry</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">entry</span>&gt;</span>192.168.198.23<span class="tag">&lt;/<span class="name">entry</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">entry</span>&gt;</span>192.168.199.0/24<span class="tag">&lt;/<span class="name">entry</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;/<span class="name">ipset</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">ipset</span> <span class="attr">type</span>=<span class="string">"hash:mac"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">short</span>&gt;</span>mac-list<span class="tag">&lt;/<span class="name">short</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">entry</span>&gt;</span>00:11:22:33:44:55<span class="tag">&lt;/<span class="name">entry</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ipset</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>更多支持的类型查看</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipset --help</span><br></pre></td></tr></table></figure>
+<h2 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h2><h3 id="过滤规则"><a href="#过滤规则" class="headerlink" title="过滤规则"></a>过滤规则</h3><ul>
+<li><strong>source</strong>：根据源地址过滤</li>
+<li><strong>interface</strong>：根据网卡过滤</li>
+<li><strong>service</strong>：根据服务名过滤</li>
+<li><strong>port</strong>：根据端口过滤</li>
+<li><strong>icmp-block</strong>：icmp 报文过滤，按照 icmp 类型配置</li>
+<li><strong>masquerade</strong>：ip 地址伪装</li>
+<li><strong>forward-port</strong>：端口转发</li>
+<li><strong>rule</strong>：自定义规则</li>
+</ul>
+<h3 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h3><p>过滤规则的优先级遵循如下顺序：</p>
+<ol>
+<li><strong>source</strong></li>
+<li><strong>interface</strong> </li>
+<li><strong>firewalld.conf中配置的默认zone</strong> </li>
+</ol>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><h3 id="查看规则"><a href="#查看规则" class="headerlink" title="查看规则"></a>查看规则</h3><ol>
+<li><p>查看运行状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --state</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看已被激活的Zone信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --get-active-zones</span></span><br><span class="line">public</span><br><span class="line">  interfaces: ens33</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看指定接口的Zone信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --get-zone-of-interface=ens33</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看指定Zone的接口</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --list-interfaces</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看指定Zone的所有信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --list-all</span></span><br><span class="line">public (active)</span><br><span class="line">  target: default</span><br><span class="line">  icmp-block-inversion: no</span><br><span class="line">  interfaces: ens33</span><br><span class="line">  sources: </span><br><span class="line">  services: ssh dhcpv6-client</span><br><span class="line">  ports: </span><br><span class="line">  protocols: </span><br><span class="line">  masquerade: no</span><br><span class="line">  forward-ports: </span><br><span class="line">  source-ports: </span><br><span class="line">  icmp-blocks: </span><br><span class="line">  rich rules:</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询指定Zone被放行的服务（即运行时状态）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --list-services</span></span><br><span class="line">ssh dhcpv6-client</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询指定Zone永久放行的服务（即永久状态）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --list-services --permanent</span></span><br><span class="line">ssh dhcpv6-client</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="配置规则"><a href="#配置规则" class="headerlink" title="配置规则"></a>配置规则</h3><h4 id="source"><a href="#source" class="headerlink" title="source"></a>source</h4><h4 id="interface"><a href="#interface" class="headerlink" title="interface"></a>interface</h4><h4 id="service"><a href="#service" class="headerlink" title="service"></a>service</h4><p>对服务进行操作。</p>
+<p>服务就是对<strong>端口</strong>、<strong>协议</strong>和<strong>目的地址</strong>的封装。</p>
+<p>详细定义一个服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">cd</span> /etc/firewalld/services/</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> cp /usr/lib/firewalld/services/mysql.xml .</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> vim mysql.xml</span></span><br></pre></td></tr></table></figure>
+<p>加<code>--permanent</code>相关操作是对文件进行操作，不加<code>--permanent</code>对当前运行状态配置进行操作。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 配置文件中指定服务 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">zone</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">service</span> <span class="attr">name</span>=<span class="string">"string"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">zone</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看public区域永久放行的服务</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --list-services --permanent</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加一个放行服务</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --add-service=mysql</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加一个放行服务，设置超时时间为600s，注意--timeout无法与--permanent一起使用，即无法写入指定zone文件</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --add-service=vnc-server --timeout=600</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 移除放行服务</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --remove-service=mysql --permanent</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 根据某个是否放行返回一个布尔值</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --query-service=mysql</span></span><br></pre></td></tr></table></figure>
+<h4 id="port"><a href="#port" class="headerlink" title="port"></a>port</h4><p>对端口进行操作。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 配置文件中指定端口号 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">zone</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">port</span> <span class="attr">port</span>=<span class="string">"portid[-portid]"</span> <span class="attr">protocol</span>=<span class="string">"tcp|udp"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">zone</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看指定public区域放行的端口号</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --list-ports</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加一个放行端口</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --add-port=47017/tcp</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加一个放行端口，设置超时时间为600s</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --add-port=22/tcp --timeout=600s</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 移除放行端口</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> firewall-cmd --zone=public --remove-port=22/tcp</span></span><br></pre></td></tr></table></figure>
+<h4 id="icmp-block"><a href="#icmp-block" class="headerlink" title="icmp-block"></a>icmp-block</h4><h4 id="masquerade"><a href="#masquerade" class="headerlink" title="masquerade"></a>masquerade</h4><h4 id="forward-port"><a href="#forward-port" class="headerlink" title="forward-port"></a>forward-port</h4><h4 id="rule"><a href="#rule" class="headerlink" title="rule"></a>rule</h4>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/09/Linux学习笔记-Iptables/" rel="next" title="Linux学习笔记-SSH">
+                <i class="fa fa-chevron-left"></i> Linux学习笔记-SSH
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/16/Ansible学习笔记-自定义模块/" rel="prev" title="Ansible学习笔记-Roles">
+                Ansible学习笔记-Roles <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/jugg.JPG"
+                alt="高鹏" />
+            
+              <p class="site-author-name" itemprop="name">高鹏</p>
+              <p class="site-description motion-element" itemprop="description">有人的地方就有江湖</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://processon.com/" title="在线画图" target="_blank">在线画图</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://regex101.com/" title="正则表达式" target="_blank">正则表达式</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#FirewallD笔记"><span class="nav-number">1.</span> <span class="nav-text">FirewallD笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">1.2.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">1.3.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置目录"><span class="nav-number">1.3.1.</span> <span class="nav-text">配置目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置状态"><span class="nav-number">1.3.2.</span> <span class="nav-text">配置状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件"><span class="nav-number">1.3.3.</span> <span class="nav-text">配置文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#区域"><span class="nav-number">1.4.</span> <span class="nav-text">区域</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#tag"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">tag</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务"><span class="nav-number">1.5.</span> <span class="nav-text">服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ipset"><span class="nav-number">1.6.</span> <span class="nav-text">ipset</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#规则"><span class="nav-number">1.7.</span> <span class="nav-text">规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#过滤规则"><span class="nav-number">1.7.1.</span> <span class="nav-text">过滤规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优先级"><span class="nav-number">1.7.2.</span> <span class="nav-text">优先级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命令"><span class="nav-number">1.8.</span> <span class="nav-text">命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看规则"><span class="nav-number">1.8.1.</span> <span class="nav-text">查看规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置规则"><span class="nav-number">1.8.2.</span> <span class="nav-text">配置规则</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#source"><span class="nav-number">1.8.2.1.</span> <span class="nav-text">source</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#interface"><span class="nav-number">1.8.2.2.</span> <span class="nav-text">interface</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#service"><span class="nav-number">1.8.2.3.</span> <span class="nav-text">service</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#port"><span class="nav-number">1.8.2.4.</span> <span class="nav-text">port</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#icmp-block"><span class="nav-number">1.8.2.5.</span> <span class="nav-text">icmp-block</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#masquerade"><span class="nav-number">1.8.2.6.</span> <span class="nav-text">masquerade</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#forward-port"><span class="nav-number">1.8.2.7.</span> <span class="nav-text">forward-port</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rule"><span class="nav-number">1.8.2.8.</span> <span class="nav-text">rule</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">高鹏</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

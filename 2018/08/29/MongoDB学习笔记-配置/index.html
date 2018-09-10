@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux,MongoDB," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="MongoDB配置文件解析:globe_with_meridians:MongoDB Configuration File Options systemLog （系统日志）系统日志相关选项： 123456789101112131415systemLog:   verbosity: &amp;lt;int&amp;gt;   quiet: &amp;lt;boolean&amp;gt;   traceAllExceptions:">
+<meta name="keywords" content="Linux,MongoDB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoDB学习笔记-配置">
+<meta property="og:url" content="http://yoursite.com/2018/08/29/MongoDB学习笔记-配置/index.html">
+<meta property="og:site_name" content="剑十三">
+<meta property="og:description" content="MongoDB配置文件解析:globe_with_meridians:MongoDB Configuration File Options systemLog （系统日志）系统日志相关选项： 123456789101112131415systemLog:   verbosity: &amp;lt;int&amp;gt;   quiet: &amp;lt;boolean&amp;gt;   traceAllExceptions:">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-29T10:48:21.331Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MongoDB学习笔记-配置">
+<meta name="twitter:description" content="MongoDB配置文件解析:globe_with_meridians:MongoDB Configuration File Options systemLog （系统日志）系统日志相关选项： 123456789101112131415systemLog:   verbosity: &amp;lt;int&amp;gt;   quiet: &amp;lt;boolean&amp;gt;   traceAllExceptions:">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/29/MongoDB学习笔记-配置/"/>
+
+
+
+
+
+  <title>MongoDB学习笔记-配置 | 剑十三</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑十三</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">剑未配妥，身已江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/29/MongoDB学习笔记-配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="高鹏">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/jugg.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑十三">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MongoDB学习笔记-配置</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-29T16:37:48+08:00">
+                2018-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MongoDB/" itemprop="url" rel="index">
+                    <span itemprop="name">MongoDB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="MongoDB配置文件解析"><a href="#MongoDB配置文件解析" class="headerlink" title="MongoDB配置文件解析"></a>MongoDB配置文件解析</h1><p>:globe_with_meridians:<a href="https://docs.mongodb.com/v3.6/reference/configuration-options/" target="_blank" rel="noopener">MongoDB Configuration File Options</a></p>
+<h2 id="systemLog-（系统日志）"><a href="#systemLog-（系统日志）" class="headerlink" title="systemLog （系统日志）"></a>systemLog （系统日志）</h2><p>系统日志相关选项：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">systemLog:</span></span><br><span class="line"><span class="attr">   verbosity:</span> <span class="string">&lt;int&gt;</span></span><br><span class="line"><span class="attr">   quiet:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">   traceAllExceptions:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">   syslogFacility:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">   path:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">   logAppend:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">   logRotate:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">   destination:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">   timeStampFormat:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">   component:</span></span><br><span class="line"><span class="attr">      accessControl:</span></span><br><span class="line"><span class="attr">         verbosity:</span> <span class="string">&lt;int&gt;</span></span><br><span class="line"><span class="attr">      command:</span></span><br><span class="line"><span class="attr">         verbosity:</span> <span class="string">&lt;int&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="systemLog-verbosity"><a href="#systemLog-verbosity" class="headerlink" title="systemLog.verbosity"></a>systemLog.verbosity</h3><p>默认：0</p>
+<p>日志冗长级别。</p>
+<p>详细程度可以是0到5：</p>
+<ul>
+<li><strong>0</strong>：MongoDB的默认日志详细级别，包括Informational消息。</li>
+<li><strong>1到5</strong>：增加详细级别，都包括Debug信息。</li>
+</ul>
+<blockquote>
+<p>日志级别：<a href="https://docs.mongodb.com/v3.6/reference/log-messages/#log-severity-levels" target="_blank" rel="noopener">Log Messages</a></p>
+</blockquote>
+<h3 id="systemLog-quiet"><a href="#systemLog-quiet" class="headerlink" title="systemLog.quiet"></a>systemLog.quiet</h3><p>运行mongos或者mongod是否处于静默模式，用来限制输出信息。</p>
+<p>生产环境不建议使用。</p>
+<h3 id="systemLog-traceAllExceptions"><a href="#systemLog-traceAllExceptions" class="headerlink" title="systemLog.traceAllExceptions"></a>systemLog.traceAllExceptions</h3><p>打印详细信息以进行调试，用来支持相关故障排除的其他日志记录。</p>
+<h3 id="systemLog-syslogFacility"><a href="#systemLog-syslogFacility" class="headerlink" title="systemLog.syslogFacility"></a>systemLog.syslogFacility</h3><p>默认：user</p>
+<p>将消息记录到syslog时使用的设备级别。指定的值必须被操作系统的syslog所支持。</p>
+<p>要使用此选项，必须设置<code>systemLog.destination</code>为<code>syslog</code>。</p>
+<h3 id="systemLog-path"><a href="#systemLog-path" class="headerlink" title="systemLog.path"></a>systemLog.path</h3><p>日志文件路径。</p>
+<h3 id="systemLog-logAppend"><a href="#systemLog-logAppend" class="headerlink" title="systemLog.logAppend"></a>systemLog.logAppend</h3><p>默认：False</p>
+<ul>
+<li><p><strong>True</strong>：当实例重新启动时，将日志添加到现有日志文件的末尾。</p>
+</li>
+<li><p><strong>False</strong>：当实例重新启动时，将备份现有日志并创建新文件来记录日志。</p>
+</li>
+</ul>
+<h3 id="systemLog-logRotate"><a href="#systemLog-logRotate" class="headerlink" title="systemLog.logRotate"></a>systemLog.logRotate</h3><p>默认：rename</p>
+<p>使用日志分割时的行为：</p>
+<ul>
+<li><strong>rename</strong>：重命名日志文件。</li>
+<li><strong>reopen</strong>：按照Linux/Unix日志轮换行为关闭并重新打开日志文件。如果指定reopen，则还必须设置<code>systemLog.logAppend</code>为<code>true</code>。</li>
+</ul>
+<h3 id="systemLog-destination"><a href="#systemLog-destination" class="headerlink" title="systemLog.destination"></a>systemLog.destination</h3><p>指定日志类型。</p>
+<ul>
+<li><p><strong>file</strong>：日志为一个文件，如果指定<code>file</code>，则还必须指定<code>systemLog.path</code>。</p>
+</li>
+<li><p><strong>syslog</strong>：记录到系统日志。</p>
+</li>
+<li><strong>未指定</strong>：所有日志输出为标准输出。</li>
+</ul>
+<h3 id="systemLog-timeStampFormat"><a href="#systemLog-timeStampFormat" class="headerlink" title="systemLog.timeStampFormat"></a>systemLog.timeStampFormat</h3><p>默认：iso8601-local</p>
+<p>日志消息中时间戳的时间格式。指定以下值之一：</p>
+<ul>
+<li><p><strong>ctime</strong>：将时间戳显示为<code>Wed Dec 31 18:17:54.811</code>。</p>
+</li>
+<li><p><strong>iso8601-utc</strong>：以ISO-8601格式显示协调世界时（UTC）的时间戳。例如，在大纪元开始的纽约：<code>1970-01-01T00:00:00.000Z</code>。</p>
+</li>
+<li><strong>iso8601-local</strong>：以ISO-8601格式显示本地时间的时间戳。例如，在大纪元开始的纽约： <code>1969-12-31T19:00:00.000-0500</code>。</li>
+</ul>
+<h3 id="systemLog-component"><a href="#systemLog-component" class="headerlink" title="systemLog.component"></a>systemLog.component</h3><p>相关组件的日志级别。</p>
+<h2 id="processManagement-（进程管理）"><a href="#processManagement-（进程管理）" class="headerlink" title="processManagement （进程管理）"></a>processManagement （进程管理）</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">processManagement:</span></span><br><span class="line"><span class="attr">   fork:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">   pidFilePath:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">   timeZoneInfo:</span> <span class="string">&lt;string&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="processManagement-fork"><a href="#processManagement-fork" class="headerlink" title="processManagement.fork"></a>processManagement.fork</h3><p>默认：False</p>
+<ul>
+<li><strong>True</strong>：以守护进程运行mongos或mongod。</li>
+<li><strong>False</strong>：不以守护进程运行mongos或mongod。</li>
+</ul>
+<h3 id="processManagement-pidFilePath"><a href="#processManagement-pidFilePath" class="headerlink" title="processManagement.pidFilePath"></a>processManagement.pidFilePath</h3><p>Pid文件路径。配合<code>processManagement.fork</code>为<code>True</code>一起使用。</p>
+<p>如果不指定，将不会创建PID文件。 </p>
+<h3 id="processManagement-timeZoneInfo"><a href="#processManagement-timeZoneInfo" class="headerlink" title="processManagement.timeZoneInfo"></a>processManagement.timeZoneInfo</h3><p>Linux和MacOS系统默认：/usr/share/zoneinfo</p>
+<p>时区数据库的完整路径。如果未提供此选项，则MongoDB将使用其内置时区数据库。</p>
+<h2 id="net-（网络）"><a href="#net-（网络）" class="headerlink" title="net （网络）"></a>net （网络）</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">net:</span></span><br><span class="line"><span class="attr">   port:</span> <span class="string">&lt;int&gt;</span></span><br><span class="line"><span class="attr">   bindIp:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">   bindIpAll:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">   maxIncomingConnections:</span> <span class="string">&lt;int&gt;</span></span><br><span class="line"><span class="attr">   wireObjectCheck:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">   ipv6:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">   unixDomainSocket:</span></span><br><span class="line"><span class="attr">      enabled:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">      pathPrefix:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      filePermissions:</span> <span class="string">&lt;int&gt;</span></span><br><span class="line"><span class="attr">   ssl:</span></span><br><span class="line"><span class="attr">      sslOnNormalPorts:</span> <span class="string">&lt;boolean&gt;</span>  <span class="comment"># deprecated since 2.6</span></span><br><span class="line"><span class="attr">      mode:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      PEMKeyFile:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      PEMKeyPassword:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      clusterFile:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      clusterPassword:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      CAFile:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      CRLFile:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      allowConnectionsWithoutCertificates:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">      allowInvalidCertificates:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">      allowInvalidHostnames:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">      disabledProtocols:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      FIPSMode:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">   compression:</span></span><br><span class="line"><span class="attr">      compressors:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">   transportLayer:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">   serviceExecutor:</span> <span class="string">&lt;string&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="net-port"><a href="#net-port" class="headerlink" title="net.port"></a>net.port</h3><p>默认：27017</p>
+<p>端口号。</p>
+<h3 id="net-bindIp"><a href="#net-bindIp" class="headerlink" title="net.bindIp"></a>net.bindIp</h3><p>默认：localhost</p>
+<p>绑定网络接口。要绑定到多个地址，请输入逗号分隔值列表。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">bindIp:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="string">,/tmp/mongod.sock</span></span><br></pre></td></tr></table></figure>
+<h3 id="net-bindIpAll"><a href="#net-bindIpAll" class="headerlink" title="net.bindIpAll"></a>net.bindIpAll</h3><p>默认：False</p>
+<ul>
+<li><p>True：绑定到所有的IP地址。</p>
+<p>等同于<code>bindIp: 0.0.0.0,::</code></p>
+</li>
+</ul>
+<blockquote>
+<p>注意：</p>
+<p><strong>net.bindIp</strong>和<strong>net.bindIpAll</strong>是相互排斥的。也就是说，可以指定其中一个，但不能同时指定两者。</p>
+</blockquote>
+<h3 id="net-maxIncomingConnections"><a href="#net-maxIncomingConnections" class="headerlink" title="net.maxIncomingConnections"></a>net.maxIncomingConnections</h3><p>默认：65536</p>
+<p>mongod/mongos进程允许的最大连接数，如果此值超过操作系统配置的连接数阀值，将不会生效(ulimit)；默认值为65536。通常客户端将会使用连接池机制，可以有效的控制每个客户端的链接个数。</p>
+<h3 id="net-wireObjectCheck"><a href="#net-wireObjectCheck" class="headerlink" title="net.wireObjectCheck"></a>net.wireObjectCheck</h3><p>默认：True</p>
+<ul>
+<li><p>True：当客户端写入数据时，mongos/mongod是否检测数据的有效性(BSON)，如果数据格式不良，此insert、update操作将会被拒绝。会稍微影响性能。</p>
+</li>
+<li><p>False：不验证有效性。</p>
+</li>
+</ul>
+<h3 id="net-ipv6"><a href="#net-ipv6" class="headerlink" title="net.ipv6"></a>net.ipv6</h3><p>默认：False</p>
+<p>启用或禁用ipv6支持，此值需要在整个cluster中保持一致。</p>
+<h3 id="net-unixDomainSocket"><a href="#net-unixDomainSocket" class="headerlink" title="net.unixDomainSocket"></a>net.unixDomainSocket</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">net:</span></span><br><span class="line"><span class="attr">   unixDomainSocket:</span></span><br><span class="line"><span class="attr">      enabled:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">      pathPrefix:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      filePermissions:</span> <span class="string">&lt;int&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="net-unixDomainSocket-enabled"><a href="#net-unixDomainSocket-enabled" class="headerlink" title="net.unixDomainSocket.enabled"></a>net.unixDomainSocket.enabled</h4><p>默认：True</p>
+<p>启用或禁用UNIX socket监听。</p>
+<p>出现以下任意一种情况不会启用UNIX domain socket监听：</p>
+<ul>
+<li><code>net.unixDomainSocket.enabled</code>为<code>false</code>。</li>
+<li>启动时添加<code>--nounixsocket</code>。命令行选项优先于配置文件设置。</li>
+<li>net.bindIp 没有设置。</li>
+<li>net.bindIp 没有设置为127.0.0.1。</li>
+</ul>
+<h4 id="net-unixDomainSocket-pathPrefix"><a href="#net-unixDomainSocket-pathPrefix" class="headerlink" title="net.unixDomainSocket.pathPrefix"></a>net.unixDomainSocket.pathPrefix</h4><p>默认：/tmp</p>
+<p>Socket文件路径。</p>
+<h4 id="net-unixDomainSocket-filePermissions"><a href="#net-unixDomainSocket-filePermissions" class="headerlink" title="net.unixDomainSocket.filePermissions"></a>net.unixDomainSocket.filePermissions</h4><p>默认：0700</p>
+<p>Socket文件权限。</p>
+<h3 id="net-ssl"><a href="#net-ssl" class="headerlink" title="net.ssl"></a>net.ssl</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">net:</span></span><br><span class="line"><span class="attr">   ssl:</span></span><br><span class="line"><span class="attr">      sslOnNormalPorts:</span> <span class="string">&lt;boolean&gt;</span>  <span class="comment"># deprecated since 2.6</span></span><br><span class="line"><span class="attr">      mode:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      PEMKeyFile:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      PEMKeyPassword:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      clusterFile:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      clusterPassword:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      CAFile:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      CRLFile:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      allowConnectionsWithoutCertificates:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">      allowInvalidCertificates:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">      allowInvalidHostnames:</span> <span class="string">&lt;boolean&gt;</span></span><br><span class="line"><span class="attr">      disabledProtocols:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">      FIPSMode:</span> <span class="string">&lt;boolean&gt;</span></span><br></pre></td></tr></table></figure>
+<p>配置TLS/SSL参考：</p>
+<p>🌐<a href="https://docs.mongodb.com/v3.6/tutorial/configure-ssl/" target="_blank" rel="noopener">Configure mongod and mongos for TLS/SSL</a></p>
+<p>:globe_with_meridians:<a href="https://docs.mongodb.com/v3.6/tutorial/configure-ssl-clients/" target="_blank" rel="noopener">TLS/SSL Configuration for Clients</a></p>
+<h4 id="net-ssl-sslOnNormalPorts"><a href="#net-ssl-sslOnNormalPorts" class="headerlink" title="net.ssl.sslOnNormalPorts"></a>net.ssl.sslOnNormalPorts</h4><p>从2.6版开始不推荐使用：改为使用<code>net.ssl.mode</code>。</p>
+<h4 id="net-ssl-mode"><a href="#net-ssl-mode" class="headerlink" title="net.ssl.mode"></a>net.ssl.mode</h4><p>启用或禁用用于所有网络连接的TLS/SSL或混合TLS/SSL。</p>
+<ul>
+<li>disabled：服务器不使用TLS/SSL。</li>
+<li>allowSSL：服务器之间的连接不使用TLS/SSL。对于传入连接，服务器接受TLS/SSL和非TLS/非SSL。</li>
+<li>preferSSL：服务器之间的连接使用TLS/SSL。对于传入连接，服务器接受TLS/SSL和非TLS/非SSL。</li>
+<li>requireSSL：服务器仅使用和接受TLS/SSL加密连接。</li>
+</ul>
+<p>从版本3.4开始，如果<code>--sslCAFile</code>或未<code>ssl.CAFile</code>指定且未使用x.509身份验证，则在连接到启用TLS / SSL的服务器时将使用系统范围的CA证书存储。</p>
+<p>如果使用x.509身份验证，<code>--sslCAFile</code>或<code>ssl.CAFile</code> 必须指定。</p>
+<h4 id="net-ssl-PEMKeyFile"><a href="#net-ssl-PEMKeyFile" class="headerlink" title="net.ssl.PEMKeyFile"></a>net.ssl.PEMKeyFile</h4><p>pem文件名。</p>
+<h4 id="net-ssl-PEMKeyPassword"><a href="#net-ssl-PEMKeyPassword" class="headerlink" title="net.ssl.PEMKeyPassword"></a>net.ssl.PEMKeyPassword</h4><p>pem文件密码。</p>
+<h4 id="net-ssl-clusterFile"><a href="#net-ssl-clusterFile" class="headerlink" title="net.ssl.clusterFile"></a>net.ssl.clusterFile</h4><p>cluster文件名。</p>
+<h4 id="net-ssl-clusterPassword"><a href="#net-ssl-clusterPassword" class="headerlink" title="net.ssl.clusterPassword"></a>net.ssl.clusterPassword</h4><p>cluster文件密码。</p>
+<h4 id="net-ssl-CAFile"><a href="#net-ssl-CAFile" class="headerlink" title="net.ssl.CAFile"></a>net.ssl.CAFile</h4><p>CA文件名。</p>
+<h4 id="net-ssl-CRLFile"><a href="#net-ssl-CRLFile" class="headerlink" title="net.ssl.CRLFile"></a>net.ssl.CRLFile</h4><p>CRL文件名。</p>
+<h3 id="net-compression"><a href="#net-compression" class="headerlink" title="net.compression"></a>net.compression</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">net:</span></span><br><span class="line"><span class="attr">   compression:</span></span><br><span class="line"><span class="attr">      compressors:</span> <span class="string">&lt;string&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="net-compression-compressors"><a href="#net-compression-compressors" class="headerlink" title="net.compression.compressors"></a>net.compression.compressors</h4><p>默认：snappy</p>
+<p>网络通信压缩。</p>
+<ul>
+<li>snappy</li>
+<li>zlib</li>
+</ul>
+<p>当双方都启用网络压缩时，将压缩消息。否则，各方之间的消息将被解压缩。</p>
+<h4 id="net-transportLayer"><a href="#net-transportLayer" class="headerlink" title="net.transportLayer"></a>net.transportLayer</h4><p>默认值：asio</p>
+<p>除非MongoDB支持团队要求您更改此设置，否则请勿更改此设置。</p>
+<h4 id="net-serviceExecutor"><a href="#net-serviceExecutor" class="headerlink" title="net.serviceExecutor"></a>net.serviceExecutor</h4><p>mongos/mongod用于执行客户端请求的线程模型。</p>
+<ul>
+<li>synchronous</li>
+<li>adaptive</li>
+</ul>
+<p>其他选项以后再记录。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/MongoDB/" rel="tag"># MongoDB</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/28/MongoDB学习笔记-副本集/" rel="next" title="MongoDB学习笔记-副本集">
+                <i class="fa fa-chevron-left"></i> MongoDB学习笔记-副本集
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/31/GlusterFS学习笔记-部署与管理/" rel="prev" title="GlusterFS学习笔记-部署与管理">
+                GlusterFS学习笔记-部署与管理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/jugg.JPG"
+                alt="高鹏" />
+            
+              <p class="site-author-name" itemprop="name">高鹏</p>
+              <p class="site-description motion-element" itemprop="description">有人的地方就有江湖</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://processon.com/" title="在线画图" target="_blank">在线画图</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://regex101.com/" title="正则表达式" target="_blank">正则表达式</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MongoDB配置文件解析"><span class="nav-number">1.</span> <span class="nav-text">MongoDB配置文件解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#systemLog-（系统日志）"><span class="nav-number">1.1.</span> <span class="nav-text">systemLog （系统日志）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#systemLog-verbosity"><span class="nav-number">1.1.1.</span> <span class="nav-text">systemLog.verbosity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemLog-quiet"><span class="nav-number">1.1.2.</span> <span class="nav-text">systemLog.quiet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemLog-traceAllExceptions"><span class="nav-number">1.1.3.</span> <span class="nav-text">systemLog.traceAllExceptions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemLog-syslogFacility"><span class="nav-number">1.1.4.</span> <span class="nav-text">systemLog.syslogFacility</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemLog-path"><span class="nav-number">1.1.5.</span> <span class="nav-text">systemLog.path</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemLog-logAppend"><span class="nav-number">1.1.6.</span> <span class="nav-text">systemLog.logAppend</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemLog-logRotate"><span class="nav-number">1.1.7.</span> <span class="nav-text">systemLog.logRotate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemLog-destination"><span class="nav-number">1.1.8.</span> <span class="nav-text">systemLog.destination</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemLog-timeStampFormat"><span class="nav-number">1.1.9.</span> <span class="nav-text">systemLog.timeStampFormat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemLog-component"><span class="nav-number">1.1.10.</span> <span class="nav-text">systemLog.component</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#processManagement-（进程管理）"><span class="nav-number">1.2.</span> <span class="nav-text">processManagement （进程管理）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#processManagement-fork"><span class="nav-number">1.2.1.</span> <span class="nav-text">processManagement.fork</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#processManagement-pidFilePath"><span class="nav-number">1.2.2.</span> <span class="nav-text">processManagement.pidFilePath</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#processManagement-timeZoneInfo"><span class="nav-number">1.2.3.</span> <span class="nav-text">processManagement.timeZoneInfo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#net-（网络）"><span class="nav-number">1.3.</span> <span class="nav-text">net （网络）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#net-port"><span class="nav-number">1.3.1.</span> <span class="nav-text">net.port</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-bindIp"><span class="nav-number">1.3.2.</span> <span class="nav-text">net.bindIp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-bindIpAll"><span class="nav-number">1.3.3.</span> <span class="nav-text">net.bindIpAll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-maxIncomingConnections"><span class="nav-number">1.3.4.</span> <span class="nav-text">net.maxIncomingConnections</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-wireObjectCheck"><span class="nav-number">1.3.5.</span> <span class="nav-text">net.wireObjectCheck</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-ipv6"><span class="nav-number">1.3.6.</span> <span class="nav-text">net.ipv6</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-unixDomainSocket"><span class="nav-number">1.3.7.</span> <span class="nav-text">net.unixDomainSocket</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#net-unixDomainSocket-enabled"><span class="nav-number">1.3.7.1.</span> <span class="nav-text">net.unixDomainSocket.enabled</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net-unixDomainSocket-pathPrefix"><span class="nav-number">1.3.7.2.</span> <span class="nav-text">net.unixDomainSocket.pathPrefix</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net-unixDomainSocket-filePermissions"><span class="nav-number">1.3.7.3.</span> <span class="nav-text">net.unixDomainSocket.filePermissions</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-ssl"><span class="nav-number">1.3.8.</span> <span class="nav-text">net.ssl</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#net-ssl-sslOnNormalPorts"><span class="nav-number">1.3.8.1.</span> <span class="nav-text">net.ssl.sslOnNormalPorts</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net-ssl-mode"><span class="nav-number">1.3.8.2.</span> <span class="nav-text">net.ssl.mode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net-ssl-PEMKeyFile"><span class="nav-number">1.3.8.3.</span> <span class="nav-text">net.ssl.PEMKeyFile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net-ssl-PEMKeyPassword"><span class="nav-number">1.3.8.4.</span> <span class="nav-text">net.ssl.PEMKeyPassword</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net-ssl-clusterFile"><span class="nav-number">1.3.8.5.</span> <span class="nav-text">net.ssl.clusterFile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net-ssl-clusterPassword"><span class="nav-number">1.3.8.6.</span> <span class="nav-text">net.ssl.clusterPassword</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net-ssl-CAFile"><span class="nav-number">1.3.8.7.</span> <span class="nav-text">net.ssl.CAFile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net-ssl-CRLFile"><span class="nav-number">1.3.8.8.</span> <span class="nav-text">net.ssl.CRLFile</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-compression"><span class="nav-number">1.3.9.</span> <span class="nav-text">net.compression</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#net-compression-compressors"><span class="nav-number">1.3.9.1.</span> <span class="nav-text">net.compression.compressors</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net-transportLayer"><span class="nav-number">1.3.9.2.</span> <span class="nav-text">net.transportLayer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net-serviceExecutor"><span class="nav-number">1.3.9.3.</span> <span class="nav-text">net.serviceExecutor</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">高鹏</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

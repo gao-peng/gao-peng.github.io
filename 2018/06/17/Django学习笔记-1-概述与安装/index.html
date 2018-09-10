@@ -87,15 +87,15 @@
 <meta property="og:site_name" content="剑十三">
 <meta property="og:description" content="python程序web项目开发，是非常重要的一部分，Python为基础的web项目开发的框架有很多，django无疑是最强大web框架之一，也是我们必须掌握的框架之一 。  框架（framework），就是已经包含了项目结构和部分通用功能的自动化处理工具，主要用于进行项目的快捷和高效开发   Django是一个用 Python 编写的 Web 框架。Web 框架是一种软件，基于web框架可以开发动">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1528477806746.png">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1528478139176.png">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1528478227525.png">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1528478495654.png">
-<meta property="og:updated_time" content="2018-07-12T16:32:49.773Z">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1528477806746.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1528478139176.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1528478227525.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1528478495654.png">
+<meta property="og:updated_time" content="2018-08-09T06:39:05.390Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Django学习笔记 - 1 概述与安装">
 <meta name="twitter:description" content="python程序web项目开发，是非常重要的一部分，Python为基础的web项目开发的框架有很多，django无疑是最强大web框架之一，也是我们必须掌握的框架之一 。  框架（framework），就是已经包含了项目结构和部分通用功能的自动化处理工具，主要用于进行项目的快捷和高效开发   Django是一个用 Python 编写的 Web 框架。Web 框架是一种软件，基于web框架可以开发动">
-<meta name="twitter:image" content="https://github.com/gao-peng/images/raw/master/1528477806746.png">
+<meta name="twitter:image" content="https://github.com/gaoniao/images/raw/master/1528477806746.png">
 
 
 
@@ -419,7 +419,7 @@
 <p>这样想一下：对于你开始的每个Django项目，你首先会为它创建一个虚拟环境。这就像每个Django项目都有一个沙盒。所以你随意运行，安装软件包，卸载软件包而不会破坏任何东西。</p>
 <p>先创建一个vote_poll目录：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir vote_poll</span><br><span class="line"><span class="built_in">cd</span> vote_poll</span><br></pre></td></tr></table></figure>
-<p><img src="https://github.com/gao-peng/images/raw/master/1528477806746.png" alt="1528477806746"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1528477806746.png" alt="1528477806746"></p>
 <blockquote>
 <p><strong>Cmder软件：</strong></p>
 <p>和cmd说拜拜</p>
@@ -428,9 +428,9 @@
 <p>所以让我们开始创建我们的第一个虚拟环境并安装django。</p>
 <p>在vote_poll文件夹中创建虚拟环境并激活它：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python -m venv vote_poll_venv</span><br><span class="line">vote_poll_venv\Scripts\activate.bat</span><br></pre></td></tr></table></figure>
-<p><img src="https://github.com/gao-peng/images/raw/master/1528478139176.png" alt="1528478139176"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1528478139176.png" alt="1528478139176"></p>
 <p>如果你在命令行前面看到 <strong>(vote_poll_venv)</strong>，就代表激活成功了，就像这样： </p>
-<p><img src="https://github.com/gao-peng/images/raw/master/1528478227525.png" alt="1528478227525"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1528478227525.png" alt="1528478227525"></p>
 <p>让我们试着了解一下这里发生了什么。我们创建了一个名为<strong>venv</strong>的特殊文件夹。该文件夹内包含了一个python的副本。在我们激活了<strong>venv</strong>环境之后，当我们运行<code>Python</code>命令时，它将使用我们存储在venv里面的本地副本，而不是我们之前在操作系统中安装的那个。 </p>
 <p>另一个重要的事情是，<strong>pip</strong>程序也已经安装好了，当我们使用它来安装Python的软件包（比如Django）时，它将被安装在<strong>venv</strong>环境中。</p>
 <p>请注意，当我们启用venv时，我们将使用命令<code>python</code>（而不是<code>python3</code>）来调用Python 3.6.2，并且仅使用<code>pip</code>（而不是<code>pip3</code>）来安装软件包。</p>
@@ -438,7 +438,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deactivate</span><br></pre></td></tr></table></figure>
 <h3 id="3-3-安装Django-2-0-6"><a href="#3-3-安装Django-2-0-6" class="headerlink" title="3.3 安装Django 2.0.6"></a>3.3 安装Django 2.0.6</h3><p>在虚拟环境中执行一下命令来安装django：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install django</span><br></pre></td></tr></table></figure>
-<p><img src="https://github.com/gao-peng/images/raw/master/1528478495654.png" alt="1528478495654"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1528478495654.png" alt="1528478495654"></p>
 <h3 id="3-4-验证"><a href="#3-4-验证" class="headerlink" title="3.4 验证"></a>3.4 验证</h3><p>若要验证 Django 是否能被 Python 识别，可以在 shell 中输入 <code>python</code>。 然后在 Python 提示符下（必须在虚拟环境下），尝试导入 Django：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> django</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(django.get_version())</span><br><span class="line"><span class="number">2.0</span><span class="number">.6</span></span><br></pre></td></tr></table></figure>
 
@@ -566,7 +566,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -577,7 +577,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -588,7 +588,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

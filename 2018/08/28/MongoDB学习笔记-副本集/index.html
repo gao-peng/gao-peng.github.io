@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux,MongoDB," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="MongoDB副本集基本概念MongoDB的replica set是一个mongod进程实例簇，数据在这个簇中相互复制，并自动进行故障切换。 MongoDB的数据库复制增加了冗余，确保了高可用性，简化了管理任务如备份，并且增加了读能力。大多数产品部署都使用了复制。MongoDB中primary处理写操作，其它进行复制的成员则是secondaries。 一个副本集可以最多支持12个成员，但是只有7个">
+<meta name="keywords" content="Linux,MongoDB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoDB学习笔记-副本集">
+<meta property="og:url" content="http://yoursite.com/2018/08/28/MongoDB学习笔记-副本集/index.html">
+<meta property="og:site_name" content="剑十三">
+<meta property="og:description" content="MongoDB副本集基本概念MongoDB的replica set是一个mongod进程实例簇，数据在这个簇中相互复制，并自动进行故障切换。 MongoDB的数据库复制增加了冗余，确保了高可用性，简化了管理任务如备份，并且增加了读能力。大多数产品部署都使用了复制。MongoDB中primary处理写操作，其它进行复制的成员则是secondaries。 一个副本集可以最多支持12个成员，但是只有7个">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1535519508194.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/19213049-a450bbc204064e7196d952dfed9387d6.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/19213118-59d1b3a31b9f45a48f58154471c4c431.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/19213227-0fc8db3f332140178025d7c6b33a9589.png">
+<meta property="og:updated_time" content="2018-09-10T12:28:35.707Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MongoDB学习笔记-副本集">
+<meta name="twitter:description" content="MongoDB副本集基本概念MongoDB的replica set是一个mongod进程实例簇，数据在这个簇中相互复制，并自动进行故障切换。 MongoDB的数据库复制增加了冗余，确保了高可用性，简化了管理任务如备份，并且增加了读能力。大多数产品部署都使用了复制。MongoDB中primary处理写操作，其它进行复制的成员则是secondaries。 一个副本集可以最多支持12个成员，但是只有7个">
+<meta name="twitter:image" content="https://github.com/gaoniao/images/raw/master/1535519508194.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/28/MongoDB学习笔记-副本集/"/>
+
+
+
+
+
+  <title>MongoDB学习笔记-副本集 | 剑十三</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑十三</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">剑未配妥，身已江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/28/MongoDB学习笔记-副本集/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="高鹏">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/jugg.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑十三">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MongoDB学习笔记-副本集</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-28T19:58:37+08:00">
+                2018-08-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MongoDB/" itemprop="url" rel="index">
+                    <span itemprop="name">MongoDB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="MongoDB副本集"><a href="#MongoDB副本集" class="headerlink" title="MongoDB副本集"></a>MongoDB副本集</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>MongoDB的replica set是一个mongod进程实例簇，数据在这个簇中相互复制，并自动进行故障切换。</p>
+<p>MongoDB的数据库复制增加了冗余，确保了高可用性，简化了管理任务如备份，并且增加了读能力。大多数产品部署都使用了复制。MongoDB中primary处理写操作，其它进行复制的成员则是secondaries。</p>
+<p>一个副本集可以最多支持12个成员，但是只有7个成员可以参与投票。</p>
+<blockquote>
+<p>注：<strong>MongoDB</strong>同时提供了传统的<strong>master/slave</strong>复制，这种复制的操作方法与副本集相同，但是<strong>master/slave</strong>复制不支持自动故障切换。很容易理解，主备模式下，<strong>cli</strong>端是指定了地址和端口进行<strong>mongodb</strong>的访问的，而副本集模式则是通过访问<strong>mongos</strong>来隐藏动态切换的。</p>
+</blockquote>
+<h3 id="成员配置"><a href="#成员配置" class="headerlink" title="成员配置"></a>成员配置</h3><p>成员可以是以下某种角色：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>成为primary</th>
+<th>对客户端可见</th>
+<th>参与投票</th>
+<th>延迟同步</th>
+<th>复制数据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Default</strong></td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>∕</td>
+<td>√</td>
+</tr>
+<tr>
+<td><strong>Secondary-Only</strong></td>
+<td>∕</td>
+<td>√</td>
+<td>√</td>
+<td>∕</td>
+<td>√</td>
+</tr>
+<tr>
+<td><strong>Hidden</strong></td>
+<td>∕</td>
+<td>∕</td>
+<td>√</td>
+<td>∕</td>
+<td>√</td>
+</tr>
+<tr>
+<td><strong>Delayed</strong></td>
+<td>∕</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td><strong>Arbiters</strong></td>
+<td>∕</td>
+<td>∕</td>
+<td>√</td>
+<td>∕</td>
+<td>∕</td>
+</tr>
+<tr>
+<td><strong>Non-Voting</strong></td>
+<td>√</td>
+<td>√</td>
+<td>∕</td>
+<td>∕</td>
+<td>√</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Secondary-Only</strong>:这种类型的节点和secondary节点一样拥有数据副本，但是它们在任何情形下都成为不了primary节点。</li>
+<li><strong>Hidden</strong>:这种类型的节点对客户端程序来说是不可见的，同样也不能成为primary节点，但是Hidden成员能够参与选举投票。</li>
+<li><strong>Delayed</strong>：这种类型的成员通过人为的设置，可以指定一个时间来延迟从primary节点同步数据。Delayed成员的作用在于帮助集群从一些误操作中恢复，比如管理员误删除了某个集合。不至于迅速扩散到整个集群中。因此Delayed节点必须不能成为primary节点（priority为0）并且是Hidden的。</li>
+<li><strong>Non-Voting</strong>：这就是上面提到了没有选举权的secondary节点。这种类型的节点一般当集群节点数超过12才会需要。</li>
+<li><strong>Arbiters</strong>：仲裁者只参与投票不拥有实际的数据，因此它对物理资源要求不严格。</li>
+</ul>
+<h3 id="故障切换"><a href="#故障切换" class="headerlink" title="故障切换"></a>故障切换</h3><p>副本集能够自动进行故障切换恢复。如果primary掉线或者无反应且多数的副本集成员能够相互连接，则选出一个新的primary。</p>
+<p>在多数情况下，当primary宕机、不可用或者是不适合做primary时，在没有管理者干预的几秒后会进行故障切换。</p>
+<p>如果MongoDB部署没有如预期那样进行故障切换，则可能是下面的问题：</p>
+<ul>
+<li>剩余的成员个数少于副本集的一半</li>
+<li>没有成员有资格成为primary</li>
+</ul>
+<h3 id="数据回滚"><a href="#数据回滚" class="headerlink" title="数据回滚"></a>数据回滚</h3><p>多数情况下，回滚操作可以优雅的对不能进行故障切换恢复的情况进行恢复。</p>
+<p>Rollbacks操作发生在primary处理写操作，但其它成员没有成功的进行复制之前primary掉线时。当先前的primary开始复制时，则表现出rollback。如果操作复制到其它成员，该成员可用，并且可以和大多数的副本集连接，则没有rollback。</p>
+<p>Rollbacks删除了那些没有进行复制的操作，以保证数据集的一致性。</p>
+<h3 id="投票选举"><a href="#投票选举" class="headerlink" title="投票选举"></a>投票选举</h3><p>当任意的故障切换发生，都会伴随着一个选举的出现，以此来决定哪个成员成为primary。</p>
+<p>选举提供了一种机制，用于副本集中的成员无需管理员的干预，自动的选出一个新的primary。选举可以让副本集快速和坚决的从故障中恢复。</p>
+<p>当primary变为不可达时，secondary成员发起选举，第一个收到大多数选票的成员成为新的primary。</p>
+<h3 id="成员优先级"><a href="#成员优先级" class="headerlink" title="成员优先级"></a>成员优先级</h3><p>在副本集中，每个成员都有优先级，它可以帮助决定选举出primary。默认情况下，所有的成员的优先级都为1。</p>
+<h3 id="一致性"><a href="#一致性" class="headerlink" title="一致性"></a>一致性</h3><p>在MongoDB中，所有针对于primary的读操作都与最后的写操作结果相一致。</p>
+<p>如果客户端配置了读选项以允许secondary读，读操作能从没有近期复制更新或操作的secondary成员返回结果。在这种情况下，查询操作可能返回之前的状态。</p>
+<p>这种行为有时称为最终一致性，因为secodary成员的状态最终都会是primary的状态。MongoDB不能保证从secondary成员的读操作的强一致性。</p>
+<p>没有办法保证从secondary成员读的一致性，除非在配置时保证写操作成功的在所有节点上都执行成功后才返回成功。</p>
+<h2 id="部署架构"><a href="#部署架构" class="headerlink" title="部署架构"></a>部署架构</h2><h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>不存在一个理想的副本集架构可以满足任意部署环境。</p>
+<p>最小的副本集推荐架构为三成员集合，其中一个为primary，另外两个为secondary，secondary在一定情况下可以成为primary。</p>
+<p>如果副本集中的成员多于三个，则需要遵照下面的架构条件：</p>
+<ul>
+<li><strong>集合中有奇数个参与投票的成员。如果有偶数个投票成员，则部署一个仲裁者将个数变为奇数。</strong></li>
+<li>集合中同一时刻不多于7个参与投票的成员</li>
+<li>如果不想让某些成员在故障切换时成为primary，则将它们的优先级设为0。</li>
+<li>集合的多数成员运行在主要的数据中心</li>
+</ul>
+<h3 id="地理上的分布式集"><a href="#地理上的分布式集" class="headerlink" title="地理上的分布式集"></a>地理上的分布式集</h3><p>一个基于地理的分布式副本集可以应对一个数据中心恢复失败的情况。这种集合至少包含了一个在备份数据中心的集合成员。</p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1535519508194.png" alt="1535519508194"></p>
+<p>图：基于地理上的分布式副本集</p>
+<p>如果primary掉线，则副本集选出一个新的primary；如果主数据中心和备数据中心连接失败，备数据中心的secondary不能成为primary。如果主数据中心失败，则需要人为的从备数据中心恢复数据。</p>
+<p>值得注意的是，<strong>这种架构下，必须注意在主数据中心要保持奇数个参与投票的成员，上图中则需要在主数据中心添加一个仲裁者</strong>。</p>
+<h3 id="非生产者成员"><a href="#非生产者成员" class="headerlink" title="非生产者成员"></a>非生产者成员</h3><p>在有些时候，我们可能想有一个成员能够拷贝整个的数据集，但并不使其成为primary。这种成员可以作为备份、支持报告操作或者作为一个冷备。这种成员被分为以下几种：</p>
+<ul>
+<li>低优先级：通过<code>local.system.replset.members[n].priority</code>设置成员的低优先级，从而使其不可能成为primary。</li>
+<li>隐藏（Hidden）：这种成员不可能primary，对客户端不可见。</li>
+<li>投票（Voting）：这会改变进行选举的副本集的票数。</li>
+</ul>
+<h2 id="副本集配置"><a href="#副本集配置" class="headerlink" title="副本集配置"></a>副本集配置</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">replication:</span></span><br><span class="line"><span class="attr">   oplogSizeMB:</span> <span class="string">&lt;int&gt;</span></span><br><span class="line"><span class="attr">   replSetName:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">   secondaryIndexPrefetch:</span> <span class="string">&lt;string&gt;</span></span><br><span class="line"><span class="attr">   enableMajorityReadConcern:</span> <span class="string">&lt;boolean&gt;</span>  <span class="comment">## Deprecated in 3.6</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>replication.oplogSizeMB</strong>：oplog最大值。</p>
+<p>默认情况下，该mongod进程基于可用的最大空间量创建oplog。对于64位系统，oplog通常占可用磁盘空间的5％。</p>
+<p>一旦mongod第一次创建了oplog，更改replication.oplogSizeMB选项将不会影响oplog的大小。</p>
+<p>要更改正在运行的副本集成员的oplog大小，请使用<code>replSetResizeOplog</code>管理命令。<code>replSetResizeOplog</code>可以动态调整oplog的大小，而无需重新启动mongod。</p>
+</li>
+<li><p><strong>replication.replSetName</strong>：副本集名称。</p>
+<p>如果应用程序连接到多个副本集，则每个副本集都应具有不同的名称。某些驱动程序按副本集名称对副本集进行连接。</p>
+</li>
+<li><p><strong>replication.secondaryIndexPrefetch</strong>：副本集成员在接受oplog之前是否加载索引到内存。默认情况下，secondary会将所有索引都加载到内存中。</p>
+<p>选项有：</p>
+<ul>
+<li><strong>none</strong>：secondary节点不会将索引加载到内存中。</li>
+<li><strong>all</strong>：加载所有索引到内存中。</li>
+<li><strong>_id_only</strong>：值加载_id索引到内存中。</li>
+</ul>
+</li>
+</ul>
+<h2 id="副本集实例"><a href="#副本集实例" class="headerlink" title="副本集实例"></a>副本集实例</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>三台服务器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">192.168.198.21</span><br><span class="line">192.168.198.22</span><br><span class="line">192.168.198.23</span><br></pre></td></tr></table></figure>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>三台服务器添加相同的replication配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/mongod.conf</span></span><br><span class="line"><span class="attr">net:</span></span><br><span class="line"><span class="attr">  port:</span> <span class="number">27017</span></span><br><span class="line"><span class="attr">  bindIp:</span> <span class="number">192.168</span><span class="number">.198</span><span class="number">.21</span> <span class="comment"># 根据主机IP更改，或者使用0.0.0.0</span></span><br><span class="line"></span><br><span class="line"><span class="attr">replication:</span></span><br><span class="line"><span class="attr">  replSetName:</span> <span class="string">mongo.test</span></span><br></pre></td></tr></table></figure>
+<p>重启mongod：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart mongod</span><br></pre></td></tr></table></figure>
+<h3 id="初始化副本集"><a href="#初始化副本集" class="headerlink" title="初始化副本集"></a>初始化副本集</h3><p>在任意一台上连接mongodb，初始化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># mongo</span><br><span class="line">&gt; use admin</span><br><span class="line">&gt; rs.initiate()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">        &quot;info2&quot; : &quot;no configuration specified. Using a default configuration for the set&quot;,</span><br><span class="line">        &quot;me&quot; : &quot;192.168.198.21:27017&quot;,</span><br><span class="line">        &quot;ok&quot; : 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>确认配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> rs.conf()</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">        &quot;_id&quot; : &quot;mongo.test&quot;,</span><br><span class="line">        &quot;version&quot; : 1,</span><br><span class="line">        &quot;protocolVersion&quot; : NumberLong(1),</span><br><span class="line">        &quot;members&quot; : [</span><br><span class="line">                &#123;</span><br><span class="line">                        &quot;_id&quot; : 0,</span><br><span class="line">                        &quot;host&quot; : &quot;192.168.198.21:27017&quot;,</span><br><span class="line">                        &quot;arbiterOnly&quot; : false,</span><br><span class="line">                        &quot;buildIndexes&quot; : true,</span><br><span class="line">                        &quot;hidden&quot; : false,</span><br><span class="line">                        &quot;priority&quot; : 1,</span><br><span class="line">                        &quot;tags&quot; : &#123;</span><br><span class="line"></span><br><span class="line">                        &#125;,</span><br><span class="line">                        &quot;slaveDelay&quot; : NumberLong(0),</span><br><span class="line">                        &quot;votes&quot; : 1</span><br><span class="line">                &#125;</span><br><span class="line">        ],</span><br><span class="line">        &quot;settings&quot; : &#123;</span><br><span class="line">                &quot;chainingAllowed&quot; : true,</span><br><span class="line">                &quot;heartbeatIntervalMillis&quot; : 2000,</span><br><span class="line">                &quot;heartbeatTimeoutSecs&quot; : 10,</span><br><span class="line">                &quot;electionTimeoutMillis&quot; : 10000,</span><br><span class="line">                &quot;catchUpTimeoutMillis&quot; : 60000,</span><br><span class="line">                &quot;getLastErrorModes&quot; : &#123;</span><br><span class="line"></span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;getLastErrorDefaults&quot; : &#123;</span><br><span class="line">                        &quot;w&quot; : 1,</span><br><span class="line">                        &quot;wtimeout&quot; : 0</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;replicaSetId&quot; : ObjectId(&quot;5b864c759be9fb9508a68f6e&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="添加成员"><a href="#添加成员" class="headerlink" title="添加成员"></a>添加成员</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> rs.add(&#123;host: <span class="string">"192.168.198.22:27017"</span>&#125;)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> rs.add(&#123;host: <span class="string">"192.168.198.23:27017"</span>, priority: 5&#125;) <span class="comment"># 优先级大的优先被选取为主库</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="查看副本集状态"><a href="#查看副本集状态" class="headerlink" title="查看副本集状态"></a>查看副本集状态</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> rs.status()</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">        &quot;set&quot; : &quot;mongo.test&quot;,</span><br><span class="line">        &quot;date&quot; : ISODate(&quot;2018-08-29T07:47:42.016Z&quot;),</span><br><span class="line">        &quot;myState&quot; : 2,</span><br><span class="line">        &quot;term&quot; : NumberLong(2),</span><br><span class="line">        &quot;syncingTo&quot; : &quot;192.168.198.23:27017&quot;,</span><br><span class="line">        &quot;syncSourceHost&quot; : &quot;192.168.198.23:27017&quot;,</span><br><span class="line">        &quot;syncSourceId&quot; : 2,</span><br><span class="line">        &quot;heartbeatIntervalMillis&quot; : NumberLong(2000),</span><br><span class="line">        &quot;optimes&quot; : &#123;</span><br><span class="line">                &quot;lastCommittedOpTime&quot; : &#123;</span><br><span class="line">                        &quot;ts&quot; : Timestamp(1535528853, 1),</span><br><span class="line">                        &quot;t&quot; : NumberLong(2)</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;appliedOpTime&quot; : &#123;</span><br><span class="line">                        &quot;ts&quot; : Timestamp(1535528853, 1),</span><br><span class="line">                        &quot;t&quot; : NumberLong(2)</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;durableOpTime&quot; : &#123;</span><br><span class="line">                        &quot;ts&quot; : Timestamp(1535528853, 1),</span><br><span class="line">                        &quot;t&quot; : NumberLong(2)</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;members&quot; : [</span><br><span class="line">                &#123;</span><br><span class="line">                        &quot;_id&quot; : 0,</span><br><span class="line">                        &quot;name&quot; : &quot;192.168.198.21:27017&quot;,</span><br><span class="line">                        &quot;health&quot; : 1,</span><br><span class="line">                        &quot;state&quot; : 2,</span><br><span class="line">                        &quot;stateStr&quot; : &quot;SECONDARY&quot;,</span><br><span class="line">                        &quot;uptime&quot; : 844,</span><br><span class="line">                        &quot;optime&quot; : &#123;</span><br><span class="line">                                &quot;ts&quot; : Timestamp(1535528853, 1),</span><br><span class="line">                                &quot;t&quot; : NumberLong(2)</span><br><span class="line">                        &#125;,</span><br><span class="line">                        &quot;optimeDate&quot; : ISODate(&quot;2018-08-29T07:47:33Z&quot;),</span><br><span class="line">                        &quot;syncingTo&quot; : &quot;192.168.198.23:27017&quot;,</span><br><span class="line">                        &quot;syncSourceHost&quot; : &quot;192.168.198.23:27017&quot;,</span><br><span class="line">                        &quot;syncSourceId&quot; : 2,</span><br><span class="line">                        &quot;infoMessage&quot; : &quot;&quot;,</span><br><span class="line">                        &quot;configVersion&quot; : 3,</span><br><span class="line">                        &quot;self&quot; : true,</span><br><span class="line">                        &quot;lastHeartbeatMessage&quot; : &quot;&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                        &quot;_id&quot; : 1,</span><br><span class="line">                        &quot;name&quot; : &quot;192.168.198.22:27017&quot;,</span><br><span class="line">                        &quot;health&quot; : 1,</span><br><span class="line">                        &quot;state&quot; : 2,</span><br><span class="line">                        &quot;stateStr&quot; : &quot;SECONDARY&quot;,</span><br><span class="line">                        &quot;uptime&quot; : 577,</span><br><span class="line">                        &quot;optime&quot; : &#123;</span><br><span class="line">                                &quot;ts&quot; : Timestamp(1535528853, 1),</span><br><span class="line">                                &quot;t&quot; : NumberLong(2)</span><br><span class="line">                        &#125;,</span><br><span class="line">                        &quot;optimeDurable&quot; : &#123;</span><br><span class="line">                                &quot;ts&quot; : Timestamp(1535528853, 1),</span><br><span class="line">                                &quot;t&quot; : NumberLong(2)</span><br><span class="line">                        &#125;,</span><br><span class="line">                        &quot;optimeDate&quot; : ISODate(&quot;2018-08-29T07:47:33Z&quot;),</span><br><span class="line">                        &quot;optimeDurableDate&quot; : ISODate(&quot;2018-08-29T07:47:33Z&quot;),</span><br><span class="line">                        &quot;lastHeartbeat&quot; : ISODate(&quot;2018-08-29T07:47:41.366Z&quot;),</span><br><span class="line">                        &quot;lastHeartbeatRecv&quot; : ISODate(&quot;2018-08-29T07:47:40.250Z&quot;),</span><br><span class="line">                        &quot;pingMs&quot; : NumberLong(0),</span><br><span class="line">                        &quot;lastHeartbeatMessage&quot; : &quot;&quot;,</span><br><span class="line">                        &quot;syncingTo&quot; : &quot;192.168.198.23:27017&quot;,</span><br><span class="line">                        &quot;syncSourceHost&quot; : &quot;192.168.198.23:27017&quot;,</span><br><span class="line">                        &quot;syncSourceId&quot; : 2,</span><br><span class="line">                        &quot;infoMessage&quot; : &quot;&quot;,</span><br><span class="line">                        &quot;configVersion&quot; : 3</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                        &quot;_id&quot; : 2,</span><br><span class="line">                        &quot;name&quot; : &quot;192.168.198.23:27017&quot;,</span><br><span class="line">                        &quot;health&quot; : 1,</span><br><span class="line">                        &quot;state&quot; : 1,</span><br><span class="line">                        &quot;stateStr&quot; : &quot;PRIMARY&quot;,</span><br><span class="line">                        &quot;uptime&quot; : 571,</span><br><span class="line">                        &quot;optime&quot; : &#123;</span><br><span class="line">                                &quot;ts&quot; : Timestamp(1535528853, 1),</span><br><span class="line">                                &quot;t&quot; : NumberLong(2)</span><br><span class="line">                        &#125;,</span><br><span class="line">                        &quot;optimeDurable&quot; : &#123;</span><br><span class="line">                                &quot;ts&quot; : Timestamp(1535528853, 1),</span><br><span class="line">                                &quot;t&quot; : NumberLong(2)</span><br><span class="line">                        &#125;,</span><br><span class="line">                        &quot;optimeDate&quot; : ISODate(&quot;2018-08-29T07:47:33Z&quot;),</span><br><span class="line">                        &quot;optimeDurableDate&quot; : ISODate(&quot;2018-08-29T07:47:33Z&quot;),</span><br><span class="line">                        &quot;lastHeartbeat&quot; : ISODate(&quot;2018-08-29T07:47:41.366Z&quot;),</span><br><span class="line">                        &quot;lastHeartbeatRecv&quot; : ISODate(&quot;2018-08-29T07:47:40.128Z&quot;),</span><br><span class="line">                        &quot;pingMs&quot; : NumberLong(0),</span><br><span class="line">                        &quot;lastHeartbeatMessage&quot; : &quot;&quot;,</span><br><span class="line">                        &quot;syncingTo&quot; : &quot;&quot;,</span><br><span class="line">                        &quot;syncSourceHost&quot; : &quot;&quot;,</span><br><span class="line">                        &quot;syncSourceId&quot; : -1,</span><br><span class="line">                        &quot;infoMessage&quot; : &quot;&quot;,</span><br><span class="line">                        &quot;electionTime&quot; : Timestamp(1535528302, 1),</span><br><span class="line">                        &quot;electionDate&quot; : ISODate(&quot;2018-08-29T07:38:22Z&quot;),</span><br><span class="line">                        &quot;configVersion&quot; : 3</span><br><span class="line">                &#125;</span><br><span class="line">        ],</span><br><span class="line">        &quot;ok&quot; : 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="副本集优化"><a href="#副本集优化" class="headerlink" title="副本集优化"></a>副本集优化</h2><h3 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h3><p>官网中建议不使用向从节点取数据。原因：</p>
+<ul>
+<li><p>所有的从节点拥有与主节点一样的写入负载，读的加入会增加其负载</p>
+</li>
+<li><p>对于分片的集合，在平衡器的关系下，数据的返回结果可能会缺失或者重复某部分数据。</p>
+</li>
+<li><p>相对而言，官方建议使用分片（shard）来分散读写请求。</p>
+</li>
+</ul>
+<p>使用的场景；</p>
+<ul>
+<li><p>操作不影响前端应用程序，比如备份或者报表；</p>
+</li>
+<li><p>在一个物理上分布的副本集群中，为了减少应用程序的延迟，可能会优先选择离应用程序更近的secondary节点而不是远在千里之外机房的主节点；</p>
+</li>
+<li><p>故障发生时候能够提供一个优雅的降级。副本集primary节点宕机后再选出新的primary节点这段时间内（10秒或更长时间）能够依然响应客户端应用的读请求；</p>
+</li>
+<li><p>应用能够容忍一定程度的数据不一致性。</p>
+</li>
+</ul>
+<blockquote>
+<p>副本集不是为了提高读性能存在的，在进行oplog的时候，读操作时被阻塞的。提高读取性能应该使用分片和索引，它的存在更多是作为数据冗余，备份。尤其当主库本来就面临着大量的写入压力，对于副本集的节点，也同样会面临写的压力。</p>
+</blockquote>
+<p><strong>Read References</strong>:</p>
+<p>应用程序驱动通过read reference来设定如何对副本集进行读取操作，默认的,客户端驱动所有的读操作都是直接访问primary节点的，从而保证了数据的严格一致性。</p>
+<p><img src="https://github.com/gaoniao/images/raw/master/19213049-a450bbc204064e7196d952dfed9387d6.png" alt="img"></p>
+<p>但有时为了缓解主节点的压力，我们可能需要直接从secondary节点读取，只需要保证最终一致性就可以了。</p>
+<p><img src="https://github.com/gaoniao/images/raw/master/19213118-59d1b3a31b9f45a48f58154471c4c431.png" alt="img"></p>
+<p>MongoDB 2.0之后支持五种的read preference模式：</p>
+<ul>
+<li><p><strong>Primary</strong>：默认，只从主节点上进行读取操作。</p>
+</li>
+<li><p><strong>primaryPreferred</strong>：在绝大部分的情形都是从主节点上读取数据的,只有当主节点不可用的时候，比如在进行failover的10秒或更长的时间内会从secondary节点读取数据。</p>
+</li>
+<li><p><strong>secondary</strong>：只从secondary节点上进行读取操作，存在的问题是secondary节点的数据会比primary节点数据“旧”。</p>
+</li>
+<li><p><strong>secondaryPreferred</strong>：优先从secondary节点进行读取操作。</p>
+</li>
+<li><p><strong>nearest</strong>：既有可能从primary，也有可能从secondary节点读取，这个决策是通过一个叫member selection过程处理的。（网络延迟）</p>
+</li>
+</ul>
+<p>基本上常用的是，Primary，secondary，nearest</p>
+<p>副本集的设定中可以通过Tag把成员归类，通过下面方法指定读的类型：</p>
+<ul>
+<li><p>程序连接的时候，指定读的类型ReadPreference</p>
+</li>
+<li><p>用mongo命令连接，只对当前连接有效</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> db.getMongo().setReadPref(``<span class="string">'secondaryPreferred'</span>``)</span></span><br></pre></td></tr></table></figure>
+<h3 id="OpLog"><a href="#OpLog" class="headerlink" title="OpLog"></a>OpLog</h3><p>oplog是一种特殊的capped collection,用来滚动的保存MongoDB中所有数据操作的日志。副本集中secondary节点异步的从primary节点同步oplog然后重新执行它记录的操作，以此达到了数据同步的作用。这就要求oplog必须是幂等的，也就是重复执行相同的oplog记录得到的数据结构必须是相同的。</p>
+<p><img src="https://github.com/gaoniao/images/raw/master/19213227-0fc8db3f332140178025d7c6b33a9589.png" alt="img"></p>
+<p>事实上副本集中所有节点之间都相互进行heartbeat来维持联系，任何节点都能从其它节点复制oplog。</p>
+<p>capped collection是MongoDB中一种提供高性能插入、读取和删除操作的固定大小集合。当集合被填满的时候，新的插入的文档会覆盖老的文档。因为oplog是capped collection所以指定它的大小非常重要。如果太小那么老的文档很快就被覆盖了，那么宕机的节点就很容易出现无法同步数据的结果，但也不是越大越好，MongoDB在初始化副本集的时候都会有一个默认的oplog大小：</p>
+<ul>
+<li>在64位的Linux,Solaris,FreeBSD以及Windows系统上，MongoDB会分配磁盘剩余空间的5%作为oplog的大小，如果这部分小于1GB则分配1GB的空间。</li>
+<li>在64的OS X系统上会分配183MB。</li>
+<li>在32位的系统上则只分配48MB。</li>
+</ul>
+<p>首先生产环境使用MongoDB毫无疑问必须的是64为操作系统。其次大多数情况下默认的大小是比较适合的。举个例子，如果oplog大小为空闲磁盘的5%，它在24H内能被填满，也就是说secondary节点可以停止复制oplog达24H后仍然能够catch up上primary节点。而且通常的MongoDB副本集的操作量要比这低得多。</p>
+<p><strong>oplog数据结构</strong>：</p>
+<p>oplog的数据结构如下所示：</p>
+<p><strong>{ ts : …, op: …, ns: …, o: … o2: …  }</strong></p>
+<ul>
+<li><strong>ts</strong>：8字节的时间戳，由4字节unix timestamp + 4字节自增计数表示。这个值很重要，在选举(如master宕机时)新primary时，会选择ts最大的那个secondary作为新primary。</li>
+<li><strong>op</strong>：1字节的操作类型，例如i表示insert，d表示delete。</li>
+<li><strong>ns</strong>：操作所在的namespace。</li>
+<li><strong>o</strong>：操作所对应的document,即当前操作的内容（比如更新操作时要更新的的字段和值）。</li>
+<li><strong>o2</strong>: 在执行更新操作时的where条件，仅限于update时才有该属性。</li>
+</ul>
+<p>其中op有以下几个值：</p>
+<ul>
+<li>“<strong>i</strong>“： insert。</li>
+<li>“<strong>u</strong>“： update。</li>
+<li>“<strong>d</strong>“： delete。</li>
+<li>“<strong>c</strong>“： db cmd。</li>
+<li>“<strong>db</strong>“：声明当前数据库 (其中ns 被设置成为=&gt;数据库名称+ ‘.’)。</li>
+<li>“<strong>n</strong>“:  no op,即空操作，其会定期执行以确保时效性。</li>
+</ul>
+<p><strong>查看oplog大小</strong>：</p>
+<p>通过<code>db.printReplicationInfo()</code> 可以查看副本集节点的oplog状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mongo.test:PRIMARY&gt; db.printReplicationInfo() </span><br><span class="line"></span><br><span class="line">configured oplog size:   990MB</span><br><span class="line">log length start to end: 2409secs (0.67hrs)</span><br><span class="line">oplog first event time:  Wed Aug 29 2018 15:38:04 GMT+0800 (CST)</span><br><span class="line">oplog last event time:   Wed Aug 29 2018 16:18:13 GMT+0800 (CST)</span><br><span class="line">now:                     Wed Aug 29 2018 16:18:19 GMT+0800 (CST)</span><br></pre></td></tr></table></figure>
+<p><strong>修改oplog大小</strong>：</p>
+<ul>
+<li><p>若集群未启动过，则可以通过配置参数来指定oplog大小：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">replication:</span></span><br><span class="line"><span class="attr">   oplogSizeMB:</span> <span class="string">&lt;int&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若已经启动集群，可以动态修改oplog大小：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">use local</span><br><span class="line">db.oplog.rs.stats().maxSize</span><br><span class="line">db.adminCommand(&#123;replSetResizeOplog: 1, size: 16000&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>建议</strong>：</p>
+<p>在现有的副本集中修改oplog的大小是相当麻烦的而且影响副本集性能，因此我们最好是预先根据应用的情况评估好oplog的大小：如果应用程序是读多写少，那么默认的大小已经足够了。</p>
+<p>如果你的应用下面几种场景很多可能考虑需要更大的oplog:</p>
+<ul>
+<li><p><strong>在同一个时刻更新多个文档</strong>：oplog为了维持幂等性必须将mutil-updates翻译成一个个独立的操作，这会用去大量的oplog空间，但数据库中的数据量却没有相对称的增加。</p>
+</li>
+<li><p>多文档同时更新从1.1.3就有的特性，在mongo shell执行类似如下的命令，第四个参数必须制定为true：<code>db.test.update({foo: &quot;bar&quot;}, {$set: {test: &quot;success!&quot;}}, false, true);</code></p>
+</li>
+<li><p><strong>在插入时同时删除相同大小数据</strong>：和上面的结果一样在数据量没有增加的情况下却消耗了大量的oplog空间。</p>
+</li>
+<li><strong>大量的In-Place更新操作</strong>：In-Place更新是指更新文档中原有的部分，但并不增加文档的大小。</li>
+</ul>
+<p>上面三点总结起来就是<strong>消耗了大量的oplog但是数据量却没有等量的增加</strong>。</p>
+<h3 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h3><p><strong>数据滞后</strong>:</p>
+<p>前面已经提到MongoDB副本集中secondary节点是通过oplog来同步primary节点数据的，那具体的细节是怎么样的？在说数据如何同步之间先介绍一下replication lag，因为存在数据同步那必然存在一定程度的落后。这个问题对于整个MongoDB副本集的部署是至关重要的。</p>
+<p>“滞后”是不可避免的，需要做的就是尽可能减小这种滞后，主要涉及到以下几点：</p>
+<ul>
+<li><p><strong>网络延迟</strong>：这是所有分布式系统都存在的问题。我们能做的就是尽可能减小副本集节点之间的网络延迟。</p>
+</li>
+<li><p><strong>磁盘吞吐量</strong>：secondary节点上数据刷入磁盘的速度比primary节点上慢的话会导致secondary节点很难跟上primary节点的节奏。</p>
+</li>
+<li><p><strong>并发</strong></p>
+<p>：并发大的情况下，primary节点上的一些耗时操作会阻塞secondary节点的复制操作，导致复制操作跟不上主节点的写入负荷。解决方法是通过设置操作的<a href="http://docs.mongodb.org/manual/core/write-concern/#replica-set-write-concern" target="_blank" rel="noopener">write concern</a>默认的副本集中写入操作只关心primary节点，但是可以指定写入操作同时传播到其他secondary节点，代价就是严重影响集群的并发性。</p>
+<blockquote>
+<p><strong>注意</strong>：而且这里还存在一个问题如果，如果写入操作关心的某个节点宕机了，那么操作将会一直被阻塞直到节点恢复。</p>
+</blockquote>
+</li>
+<li><p><strong>适当的write concern</strong>：我们为了提高集群写操作的吞吐量经常会将writer concern设置为unacknowledged write concern，这导致primary节点的写操作很快而secondary节点复制操作跟不上。解决方法和第三点是类似的就是在性能和一致性之间做权衡。</p>
+</li>
+</ul>
+<p><strong>数据同步</strong>:</p>
+<p>副本集中数据同步有两个阶段。</p>
+<p><strong>初始化</strong>(initial sync):这个过程发生在当副本集中创建一个新的数据库或其中某个节点刚从宕机中恢复,或者向副本集中添加新的成员的时候,默认的,副本集中的节点会从离它最近的节点复制oplog来同步数据,这个最近的节点可以是primary也可以是拥有最新oplog副本的secondary节点。这可以防止两个secondary节点之间相互进行同步操作。</p>
+<p><strong>复制</strong>(replication):在初始化后这个操作会一直持续的进行着,以保持各个secondary节点之间的数据同步。</p>
+<p>在MongoDB2.0以后的版本中,一旦初始化中确定了一个同步的目标节点后，只有当和同步节点之间的连接断开或连接过程中产生异常才可能会导致同步目标的变动，并且具有<strong>就近原则</strong>。考虑两种场景：</p>
+<ul>
+<li>有两个secondary节点在一个机房，primary在另外一个机房。假设几乎在同一时间启动这三个实例(之前都没有数据和oplog)，那么两个secondary节点应该都是从primary节点同步数据，因为他们之前见都不会拥有比对方更新的oplog。如果重启其中一个secondary，那么它的同步目标将会变成另一个secondary，因为就近原则。</li>
+<li>如果有一个primary和一个secondary分别在不同的机房，那么在之前secondary所在的机房中向副本集中新加一个节点时，那么新节点必然是从原先的那个secondary节点同步数据的。</li>
+</ul>
+<p>在2.2版本以后，数据同步增加了一些额外的行为：</p>
+<ul>
+<li>secondary节点只有当集群中没有其他选择的时候才会从delayed节点同步数据；</li>
+<li>secondary节点绝不会从hidden节点同步数据；</li>
+<li>当一个节点新加入副本集中会有一个recovering过程，在这段时间内secondary不会进行数据同步操作；</li>
+<li>当一个节点从另一个节点同步数据的时候，需要保证两个节点的local.system.replset.members[n].buildIndexes值是一样的，要不都是false，要不都是true。</li>
+</ul>
+<p><strong>注</strong>：buildIndexes指定副本集中成员是否可以创建索引(某些情况下比如没有读操作或者为了提高写性能可以省略索引的创建)。当然即使该值为false，MongoDB还是可以在<strong>_id</strong>上创建索引以为复制操作服务。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>🌐<a href="http://www.cnblogs.com/geekma/archive/2013/05/09/3068988.html" target="_blank" rel="noopener">MongoDB的副本集Replica Set</a></p>
+<p>:globe_with_meridians:<a href="https://docs.mongodb.com/manual/reference/configuration-options/" target="_blank" rel="noopener">MongoDB Configuration File Options</a></p>
+<p>:globe_with_meridians:<a href="https://www.cnblogs.com/magialmoon/p/3268963.html" target="_blank" rel="noopener">MongoDB副本集学习（三）：性能和优化相关</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/MongoDB/" rel="tag"># MongoDB</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/23/Redis学习笔记-主从/" rel="next" title="Redis学习笔记-主从">
+                <i class="fa fa-chevron-left"></i> Redis学习笔记-主从
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/29/MongoDB学习笔记-配置/" rel="prev" title="MongoDB学习笔记-配置">
+                MongoDB学习笔记-配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/jugg.JPG"
+                alt="高鹏" />
+            
+              <p class="site-author-name" itemprop="name">高鹏</p>
+              <p class="site-description motion-element" itemprop="description">有人的地方就有江湖</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://processon.com/" title="在线画图" target="_blank">在线画图</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://regex101.com/" title="正则表达式" target="_blank">正则表达式</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MongoDB副本集"><span class="nav-number">1.</span> <span class="nav-text">MongoDB副本集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#成员配置"><span class="nav-number">1.1.1.</span> <span class="nav-text">成员配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#故障切换"><span class="nav-number">1.1.2.</span> <span class="nav-text">故障切换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据回滚"><span class="nav-number">1.1.3.</span> <span class="nav-text">数据回滚</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#投票选举"><span class="nav-number">1.1.4.</span> <span class="nav-text">投票选举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#成员优先级"><span class="nav-number">1.1.5.</span> <span class="nav-text">成员优先级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一致性"><span class="nav-number">1.1.6.</span> <span class="nav-text">一致性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署架构"><span class="nav-number">1.2.</span> <span class="nav-text">部署架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#架构"><span class="nav-number">1.2.1.</span> <span class="nav-text">架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#地理上的分布式集"><span class="nav-number">1.2.2.</span> <span class="nav-text">地理上的分布式集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非生产者成员"><span class="nav-number">1.2.3.</span> <span class="nav-text">非生产者成员</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#副本集配置"><span class="nav-number">1.3.</span> <span class="nav-text">副本集配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#副本集实例"><span class="nav-number">1.4.</span> <span class="nav-text">副本集实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境"><span class="nav-number">1.4.1.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件"><span class="nav-number">1.4.2.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化副本集"><span class="nav-number">1.4.3.</span> <span class="nav-text">初始化副本集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加成员"><span class="nav-number">1.4.4.</span> <span class="nav-text">添加成员</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看副本集状态"><span class="nav-number">1.4.5.</span> <span class="nav-text">查看副本集状态</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#副本集优化"><span class="nav-number">1.5.</span> <span class="nav-text">副本集优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读写分离"><span class="nav-number">1.5.1.</span> <span class="nav-text">读写分离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OpLog"><span class="nav-number">1.5.2.</span> <span class="nav-text">OpLog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据同步"><span class="nav-number">1.5.3.</span> <span class="nav-text">数据同步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">1.6.</span> <span class="nav-text">参考链接</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">高鹏</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
