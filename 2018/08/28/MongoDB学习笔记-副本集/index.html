@@ -91,7 +91,7 @@
 <meta property="og:image" content="https://github.com/gaoniao/images/raw/master/19213049-a450bbc204064e7196d952dfed9387d6.png">
 <meta property="og:image" content="https://github.com/gaoniao/images/raw/master/19213118-59d1b3a31b9f45a48f58154471c4c431.png">
 <meta property="og:image" content="https://github.com/gaoniao/images/raw/master/19213227-0fc8db3f332140178025d7c6b33a9589.png">
-<meta property="og:updated_time" content="2018-09-10T12:28:35.707Z">
+<meta property="og:updated_time" content="2018-09-11T05:04:46.793Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MongoDB学习笔记-副本集">
 <meta name="twitter:description" content="MongoDB副本集基本概念MongoDB的replica set是一个mongod进程实例簇，数据在这个簇中相互复制，并自动进行故障切换。 MongoDB的数据库复制增加了冗余，确保了高可用性，简化了管理任务如备份，并且增加了读能力。大多数产品部署都使用了复制。MongoDB中primary处理写操作，其它进行复制的成员则是secondaries。 一个副本集可以最多支持12个成员，但是只有7个">
@@ -667,9 +667,9 @@
 <li>当一个节点从另一个节点同步数据的时候，需要保证两个节点的local.system.replset.members[n].buildIndexes值是一样的，要不都是false，要不都是true。</li>
 </ul>
 <p><strong>注</strong>：buildIndexes指定副本集中成员是否可以创建索引(某些情况下比如没有读操作或者为了提高写性能可以省略索引的创建)。当然即使该值为false，MongoDB还是可以在<strong>_id</strong>上创建索引以为复制操作服务。</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>🌐<a href="http://www.cnblogs.com/geekma/archive/2013/05/09/3068988.html" target="_blank" rel="noopener">MongoDB的副本集Replica Set</a></p>
-<p>:globe_with_meridians:<a href="https://docs.mongodb.com/manual/reference/configuration-options/" target="_blank" rel="noopener">MongoDB Configuration File Options</a></p>
-<p>:globe_with_meridians:<a href="https://www.cnblogs.com/magialmoon/p/3268963.html" target="_blank" rel="noopener">MongoDB副本集学习（三）：性能和优化相关</a></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>🌐[<a href="http://www.cnblogs.com/geekma/archive/2013/05/09/3068988.html" target="_blank" rel="noopener">MongoDB的副本集Replica Set</a>]</p>
+<p>🌐[<a href="https://docs.mongodb.com/manual/reference/configuration-options/" target="_blank" rel="noopener">MongoDB Configuration File Options</a>]</p>
+<p>🌐[<a href="https://www.cnblogs.com/magialmoon/p/3268963.html" target="_blank" rel="noopener">MongoDB副本集学习（三）：性能和优化相关</a>]</p>
 
       
     </div>

@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="Iptables笔记理解流程，理解表链、知道如何制定规则。 :globe_with_meridians:readhat官网文档 概念iptables并不是真正的防火墙，只是一个客户端代理，用户通过iptables代理将用户的安全设定执行到对应的安全框架中，这个安全框架才是真正的防火墙，叫netfilter。 netfilter/iptables组成Linux平台下的包过滤防火墙，完成封包过滤、封包">
+<meta name="description" content="Iptables笔记理解流程，理解表链、知道如何制定规则。 🌐[readhat官网文档] 概念iptables并不是真正的防火墙，只是一个客户端代理，用户通过iptables代理将用户的安全设定执行到对应的安全框架中，这个安全框架才是真正的防火墙，叫netfilter。 netfilter/iptables组成Linux平台下的包过滤防火墙，完成封包过滤、封包重定向、网络地址转换（NAT）等功能">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux学习笔记-SSH">
+<meta property="og:title" content="Linux学习笔记-Iptables">
 <meta property="og:url" content="http://yoursite.com/2018/08/09/Linux学习笔记-Iptables/index.html">
 <meta property="og:site_name" content="剑十三">
-<meta property="og:description" content="Iptables笔记理解流程，理解表链、知道如何制定规则。 :globe_with_meridians:readhat官网文档 概念iptables并不是真正的防火墙，只是一个客户端代理，用户通过iptables代理将用户的安全设定执行到对应的安全框架中，这个安全框架才是真正的防火墙，叫netfilter。 netfilter/iptables组成Linux平台下的包过滤防火墙，完成封包过滤、封包">
+<meta property="og:description" content="Iptables笔记理解流程，理解表链、知道如何制定规则。 🌐[readhat官网文档] 概念iptables并不是真正的防火墙，只是一个客户端代理，用户通过iptables代理将用户的安全设定执行到对应的安全框架中，这个安全框架才是真正的防火墙，叫netfilter。 netfilter/iptables组成Linux平台下的包过滤防火墙，完成封包过滤、封包重定向、网络地址转换（NAT）等功能">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1533786101815.png">
 <meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1533787748591.png">
@@ -93,10 +93,10 @@
 <meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1533789162872.png">
 <meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1533791453559.png">
 <meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1533793733411.png">
-<meta property="og:updated_time" content="2018-08-09T08:32:03.712Z">
+<meta property="og:updated_time" content="2018-09-11T05:03:10.174Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux学习笔记-SSH">
-<meta name="twitter:description" content="Iptables笔记理解流程，理解表链、知道如何制定规则。 :globe_with_meridians:readhat官网文档 概念iptables并不是真正的防火墙，只是一个客户端代理，用户通过iptables代理将用户的安全设定执行到对应的安全框架中，这个安全框架才是真正的防火墙，叫netfilter。 netfilter/iptables组成Linux平台下的包过滤防火墙，完成封包过滤、封包">
+<meta name="twitter:title" content="Linux学习笔记-Iptables">
+<meta name="twitter:description" content="Iptables笔记理解流程，理解表链、知道如何制定规则。 🌐[readhat官网文档] 概念iptables并不是真正的防火墙，只是一个客户端代理，用户通过iptables代理将用户的安全设定执行到对应的安全框架中，这个安全框架才是真正的防火墙，叫netfilter。 netfilter/iptables组成Linux平台下的包过滤防火墙，完成封包过滤、封包重定向、网络地址转换（NAT）等功能">
 <meta name="twitter:image" content="https://github.com/gaoniao/images/raw/master/1533786101815.png">
 
 
@@ -133,7 +133,7 @@
 
 
 
-  <title>Linux学习笔记-SSH | 剑十三</title>
+  <title>Linux学习笔记-Iptables | 剑十三</title>
   
 
 
@@ -311,7 +311,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Linux学习笔记-SSH</h1>
+          <h1 class="post-title" itemprop="name headline">Linux学习笔记-Iptables</h1>
         
 
         <div class="post-meta">
@@ -384,7 +384,7 @@
 
       
         <h1 id="Iptables笔记"><a href="#Iptables笔记" class="headerlink" title="Iptables笔记"></a>Iptables笔记</h1><p>理解流程，理解表链、知道如何制定规则。</p>
-<p>:globe_with_meridians:<a href="https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_linux/7/html/security_guide/sec-using_firewalls#sec-Introduction_to_firewalld" target="_blank" rel="noopener">readhat官网文档</a></p>
+<p>🌐[<a href="https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_linux/7/html/security_guide/sec-using_firewalls#sec-Introduction_to_firewalld" target="_blank" rel="noopener">readhat官网文档</a>]</p>
 <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><strong>iptables</strong>并不是真正的防火墙，只是一个客户端代理，用户通过iptables代理将用户的安全设定执行到对应的<strong>安全框架</strong>中，这个安全框架才是真正的防火墙，叫<strong>netfilter</strong>。</p>
 <p><strong>netfilter/iptables</strong>组成Linux平台下的包过滤防火墙，完成封包过滤、封包重定向、网络地址转换（NAT）等功能。</p>
 <p><strong>netfilter</strong>才是防火墙真正的安全框架（framework），位于内核空间。</p>

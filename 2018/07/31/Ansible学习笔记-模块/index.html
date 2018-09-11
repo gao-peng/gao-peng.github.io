@@ -82,14 +82,14 @@
 <meta name="description" content="Ansible常用模块笔记模块大致可分为（目前需要的，以后用到再添加）：  文件模块 命令模块 系统模块 安装包管理 网络工具模块 数据库模块 存储模块  模块分类参考：Ansible官方文档 模块的演示均采用Ad-Hoc模式，使用Playbook时按照固定格式传参即可。 关于Playbook实例相对比较复杂，会在Playbook笔记中整理。 Ansible-doc1234567891011121">
 <meta name="keywords" content="Ansible">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ansible学习笔记-Module">
+<meta property="og:title" content="Ansible学习笔记-模块">
 <meta property="og:url" content="http://yoursite.com/2018/07/31/Ansible学习笔记-模块/index.html">
 <meta property="og:site_name" content="剑十三">
 <meta property="og:description" content="Ansible常用模块笔记模块大致可分为（目前需要的，以后用到再添加）：  文件模块 命令模块 系统模块 安装包管理 网络工具模块 数据库模块 存储模块  模块分类参考：Ansible官方文档 模块的演示均采用Ad-Hoc模式，使用Playbook时按照固定格式传参即可。 关于Playbook实例相对比较复杂，会在Playbook笔记中整理。 Ansible-doc1234567891011121">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-01T15:54:31.210Z">
+<meta property="og:updated_time" content="2018-09-11T05:01:40.108Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ansible学习笔记-Module">
+<meta name="twitter:title" content="Ansible学习笔记-模块">
 <meta name="twitter:description" content="Ansible常用模块笔记模块大致可分为（目前需要的，以后用到再添加）：  文件模块 命令模块 系统模块 安装包管理 网络工具模块 数据库模块 存储模块  模块分类参考：Ansible官方文档 模块的演示均采用Ad-Hoc模式，使用Playbook时按照固定格式传参即可。 关于Playbook实例相对比较复杂，会在Playbook笔记中整理。 Ansible-doc1234567891011121">
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>Ansible学习笔记-Module | 剑十三</title>
+  <title>Ansible学习笔记-模块 | 剑十三</title>
   
 
 
@@ -304,7 +304,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Ansible学习笔记-Module</h1>
+          <h1 class="post-title" itemprop="name headline">Ansible学习笔记-模块</h1>
         
 
         <div class="post-meta">
@@ -1739,10 +1739,10 @@
 <h3 id="iptables"><a href="#iptables" class="headerlink" title="iptables"></a>iptables</h3><p>🌐<a href="https://docs.ansible.com/ansible/latest/modules/iptables_module.html#iptables-module" target="_blank" rel="noopener">iptables</a></p>
 <p>管理静态防火墙。</p>
 <h3 id="firewalld"><a href="#firewalld" class="headerlink" title="firewalld"></a>firewalld</h3><p>管理动态防火墙</p>
-<h3 id="selinux"><a href="#selinux" class="headerlink" title="selinux"></a>selinux</h3><p>:globe_with_meridians:<a href="https://docs.ansible.com/ansible/latest/modules/selinux_module.html#selinux-module" target="_blank" rel="noopener">selinux</a></p>
+<h3 id="selinux"><a href="#selinux" class="headerlink" title="selinux"></a>selinux</h3><p>🌐<a href="https://docs.ansible.com/ansible/latest/modules/selinux_module.html#selinux-module" target="_blank" rel="noopener">selinux</a></p>
 <p>管理selinux服务状态。</p>
 <h3 id="filesystem-1"><a href="#filesystem-1" class="headerlink" title="filesystem"></a>filesystem</h3><p>初始化文件系统。</p>
-<p>:globe_with_meridians:<a href="https://docs.ansible.com/ansible/latest/modules/filesystem_module.html#filesystem-module" target="_blank" rel="noopener">filesystem</a></p>
+<p>🌐<a href="https://docs.ansible.com/ansible/latest/modules/filesystem_module.html#filesystem-module" target="_blank" rel="noopener">filesystem</a></p>
 <h2 id="安装包相关模块"><a href="#安装包相关模块" class="headerlink" title="安装包相关模块"></a>安装包相关模块</h2><p>安装包相关模块目前只应用于简单的需求场景，复杂的需求没有用到过，因此只记录简要信息。</p>
 <h3 id="yum-repository"><a href="#yum-repository" class="headerlink" title="yum_repository"></a>yum_repository</h3><p>管理远程主机上的yum仓库。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-doc  yum_repository -s</span><br></pre></td></tr></table></figure>
@@ -1853,10 +1853,10 @@
 </li>
 </ol>
 <h2 id="网络工具模块"><a href="#网络工具模块" class="headerlink" title="网络工具模块"></a>网络工具模块</h2><h3 id="get-url"><a href="#get-url" class="headerlink" title="get_url"></a>get_url</h3><p>:globe_with_meridians:<a href="https://docs.ansible.com/ansible/latest/modules/get_url_module.html#get-url-module" target="_blank" rel="noopener">get_url</a></p>
-<h3 id="wait-for"><a href="#wait-for" class="headerlink" title="wait_for"></a>wait_for</h3><h2 id="数据库相关模块"><a href="#数据库相关模块" class="headerlink" title="数据库相关模块"></a>数据库相关模块</h2><h3 id="MySQL相关模块"><a href="#MySQL相关模块" class="headerlink" title="MySQL相关模块"></a>MySQL相关模块</h3><h4 id="mysql-db"><a href="#mysql-db" class="headerlink" title="mysql_db"></a>mysql_db</h4><p>:globe_with_meridians:<a href="https://docs.ansible.com/ansible/latest/modules/mysql_db_module.html#mysql-db-module" target="_blank" rel="noopener">mysql_db</a></p>
-<h4 id="mysql-replication"><a href="#mysql-replication" class="headerlink" title="mysql_replication"></a>mysql_replication</h4><h4 id="mysql-user"><a href="#mysql-user" class="headerlink" title="mysql_user"></a>mysql_user</h4><p>:globe_with_meridians:<a href="https://docs.ansible.com/ansible/latest/modules/mysql_user_module.html#mysql-user-module" target="_blank" rel="noopener">mysql_user</a></p>
-<h4 id="mysql-variables"><a href="#mysql-variables" class="headerlink" title="mysql_variables"></a>mysql_variables</h4><h3 id="MongoDB相关模块"><a href="#MongoDB相关模块" class="headerlink" title="MongoDB相关模块"></a>MongoDB相关模块</h3><h4 id="mongodb-parameter"><a href="#mongodb-parameter" class="headerlink" title="mongodb_parameter"></a>mongodb_parameter</h4><h4 id="mongodb-user"><a href="#mongodb-user" class="headerlink" title="mongodb_user"></a>mongodb_user</h4><h3 id="Redis相关模块"><a href="#Redis相关模块" class="headerlink" title="Redis相关模块"></a>Redis相关模块</h3><h4 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h4><h2 id="存储相关模块"><a href="#存储相关模块" class="headerlink" title="存储相关模块"></a>存储相关模块</h2><h3 id="glusterfs相关"><a href="#glusterfs相关" class="headerlink" title="glusterfs相关"></a>glusterfs相关</h3><h4 id="gluster-peer"><a href="#gluster-peer" class="headerlink" title="gluster_peer"></a>gluster_peer</h4><p>:globe_with_meridians:<a href="https://docs.ansible.com/ansible/latest/modules/gluster_peer_module.html#gluster-peer-module" target="_blank" rel="noopener">gluster_peer</a></p>
-<h4 id="gluster-volume"><a href="#gluster-volume" class="headerlink" title="gluster_volume"></a>gluster_volume</h4><p>:globe_with_meridians:<a href="https://docs.ansible.com/ansible/latest/modules/gluster_volume_module.html#gluster-volume-module" target="_blank" rel="noopener">gluster_volume</a></p>
+<h3 id="wait-for"><a href="#wait-for" class="headerlink" title="wait_for"></a>wait_for</h3><h2 id="数据库相关模块"><a href="#数据库相关模块" class="headerlink" title="数据库相关模块"></a>数据库相关模块</h2><h3 id="MySQL相关模块"><a href="#MySQL相关模块" class="headerlink" title="MySQL相关模块"></a>MySQL相关模块</h3><h4 id="mysql-db"><a href="#mysql-db" class="headerlink" title="mysql_db"></a>mysql_db</h4><p>🌐<a href="https://docs.ansible.com/ansible/latest/modules/mysql_db_module.html#mysql-db-module" target="_blank" rel="noopener">mysql_db</a></p>
+<h4 id="mysql-replication"><a href="#mysql-replication" class="headerlink" title="mysql_replication"></a>mysql_replication</h4><h4 id="mysql-user"><a href="#mysql-user" class="headerlink" title="mysql_user"></a>mysql_user</h4><p>🌐<a href="https://docs.ansible.com/ansible/latest/modules/mysql_user_module.html#mysql-user-module" target="_blank" rel="noopener">mysql_user</a></p>
+<h4 id="mysql-variables"><a href="#mysql-variables" class="headerlink" title="mysql_variables"></a>mysql_variables</h4><h3 id="MongoDB相关模块"><a href="#MongoDB相关模块" class="headerlink" title="MongoDB相关模块"></a>MongoDB相关模块</h3><h4 id="mongodb-parameter"><a href="#mongodb-parameter" class="headerlink" title="mongodb_parameter"></a>mongodb_parameter</h4><h4 id="mongodb-user"><a href="#mongodb-user" class="headerlink" title="mongodb_user"></a>mongodb_user</h4><h3 id="Redis相关模块"><a href="#Redis相关模块" class="headerlink" title="Redis相关模块"></a>Redis相关模块</h3><h4 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h4><h2 id="存储相关模块"><a href="#存储相关模块" class="headerlink" title="存储相关模块"></a>存储相关模块</h2><h3 id="glusterfs相关"><a href="#glusterfs相关" class="headerlink" title="glusterfs相关"></a>glusterfs相关</h3><h4 id="gluster-peer"><a href="#gluster-peer" class="headerlink" title="gluster_peer"></a>gluster_peer</h4><p>🌐<a href="https://docs.ansible.com/ansible/latest/modules/gluster_peer_module.html#gluster-peer-module" target="_blank" rel="noopener">gluster_peer</a></p>
+<h4 id="gluster-volume"><a href="#gluster-volume" class="headerlink" title="gluster_volume"></a>gluster_volume</h4><p>🌐<a href="https://docs.ansible.com/ansible/latest/modules/gluster_volume_module.html#gluster-volume-module" target="_blank" rel="noopener">gluster_volume</a></p>
 
       
     </div>
@@ -1897,8 +1897,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/04/Ansible学习笔记-剧本/" rel="prev" title="">
-                 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/04/Ansible学习笔记-剧本/" rel="prev" title="Ansible学习笔记-剧本">
+                Ansible学习笔记-剧本 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

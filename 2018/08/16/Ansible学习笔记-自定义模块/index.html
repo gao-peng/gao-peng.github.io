@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="创建自己的模块参照：《奔跑吧 ANSIBLE 》。 :globe_with_meridians:Ansible官方文档 模块存放位置Ansible会在Playbook的library目录下寻找自定义模块。 12345├── hosts├── library│   └── custom_module.py├── roles├── site.yml 所以将自定义模块存入playbooks/librar">
+<meta name="description" content="创建自己的模块参照：《奔跑吧 ANSIBLE 》。 🌐[Ansible官方文档] 模块存放位置Ansible会在Playbook的library目录下寻找自定义模块。 12345├── hosts├── library│   └── custom_module.py├── roles├── site.yml 所以将自定义模块存入playbooks/library/目录下。 Ansible 如何调">
 <meta name="keywords" content="Ansible">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ansible学习笔记-Roles">
 <meta property="og:url" content="http://yoursite.com/2018/08/16/Ansible学习笔记-自定义模块/index.html">
 <meta property="og:site_name" content="剑十三">
-<meta property="og:description" content="创建自己的模块参照：《奔跑吧 ANSIBLE 》。 :globe_with_meridians:Ansible官方文档 模块存放位置Ansible会在Playbook的library目录下寻找自定义模块。 12345├── hosts├── library│   └── custom_module.py├── roles├── site.yml 所以将自定义模块存入playbooks/librar">
+<meta property="og:description" content="创建自己的模块参照：《奔跑吧 ANSIBLE 》。 🌐[Ansible官方文档] 模块存放位置Ansible会在Playbook的library目录下寻找自定义模块。 12345├── hosts├── library│   └── custom_module.py├── roles├── site.yml 所以将自定义模块存入playbooks/library/目录下。 Ansible 如何调">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-16T11:08:42.554Z">
+<meta property="og:updated_time" content="2018-09-11T05:02:14.026Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ansible学习笔记-Roles">
-<meta name="twitter:description" content="创建自己的模块参照：《奔跑吧 ANSIBLE 》。 :globe_with_meridians:Ansible官方文档 模块存放位置Ansible会在Playbook的library目录下寻找自定义模块。 12345├── hosts├── library│   └── custom_module.py├── roles├── site.yml 所以将自定义模块存入playbooks/librar">
+<meta name="twitter:description" content="创建自己的模块参照：《奔跑吧 ANSIBLE 》。 🌐[Ansible官方文档] 模块存放位置Ansible会在Playbook的library目录下寻找自定义模块。 12345├── hosts├── library│   └── custom_module.py├── roles├── site.yml 所以将自定义模块存入playbooks/library/目录下。 Ansible 如何调">
 
 
 
@@ -377,7 +377,7 @@
 
       
         <h1 id="创建自己的模块"><a href="#创建自己的模块" class="headerlink" title="创建自己的模块"></a>创建自己的模块</h1><p>参照：《奔跑吧 ANSIBLE 》。</p>
-<p>:globe_with_meridians:<a href="https://docs.ansible.com/ansible/latest/dev_guide/developing_program_flow_modules.html" target="_blank" rel="noopener">Ansible官方文档</a></p>
+<p>🌐[<a href="https://docs.ansible.com/ansible/latest/dev_guide/developing_program_flow_modules.html" target="_blank" rel="noopener">Ansible官方文档</a>]</p>
 <h2 id="模块存放位置"><a href="#模块存放位置" class="headerlink" title="模块存放位置"></a>模块存放位置</h2><p>Ansible会在Playbook的library目录下寻找自定义模块。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">├── hosts</span><br><span class="line">├── library</span><br><span class="line">│   └── custom_module.py</span><br><span class="line">├── roles</span><br><span class="line">├── site.yml</span><br></pre></td></tr></table></figure>
 <p>所以将自定义模块存入<strong>playbooks/library/</strong>目录下。</p>

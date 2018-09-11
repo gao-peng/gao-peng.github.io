@@ -79,21 +79,21 @@
 
 
 
-<meta name="description" content="FirewallD笔记理解配置，理解区域、知道如何配置规则。 🌐readhat官网文档 :globe_with_meridians:firewalld官网文档 概念firewalld自身并不具备防火墙的功能，而是和iptables一样需要通过内核的netfilter来实现，也就是说 firewalld和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的netfilt">
+<meta name="description" content="FirewallD笔记理解配置，理解区域、知道如何配置规则。 🌐 [readhat官网文档] :globe_with_meridians: [firewalld官网文档] 概念firewalld自身并不具备防火墙的功能，而是和iptables一样需要通过内核的netfilter来实现，也就是说 firewalld和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的n">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux学习笔记-FirewallD">
 <meta property="og:url" content="http://yoursite.com/2018/08/09/Linux学习笔记-FirewallD/index.html">
 <meta property="og:site_name" content="剑十三">
-<meta property="og:description" content="FirewallD笔记理解配置，理解区域、知道如何配置规则。 🌐readhat官网文档 :globe_with_meridians:firewalld官网文档 概念firewalld自身并不具备防火墙的功能，而是和iptables一样需要通过内核的netfilter来实现，也就是说 firewalld和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的netfilt">
+<meta property="og:description" content="FirewallD笔记理解配置，理解区域、知道如何配置规则。 🌐 [readhat官网文档] :globe_with_meridians: [firewalld官网文档] 概念firewalld自身并不具备防火墙的功能，而是和iptables一样需要通过内核的netfilter来实现，也就是说 firewalld和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的n">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="e:/git/images/1533803100858.png">
-<meta property="og:image" content="e:/git/images/1533808993970.png">
-<meta property="og:updated_time" content="2018-08-10T11:04:02.824Z">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1533803100858.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1533808993970.png">
+<meta property="og:updated_time" content="2018-09-11T04:58:24.679Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux学习笔记-FirewallD">
-<meta name="twitter:description" content="FirewallD笔记理解配置，理解区域、知道如何配置规则。 🌐readhat官网文档 :globe_with_meridians:firewalld官网文档 概念firewalld自身并不具备防火墙的功能，而是和iptables一样需要通过内核的netfilter来实现，也就是说 firewalld和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的netfilt">
-<meta name="twitter:image" content="e:/git/images/1533803100858.png">
+<meta name="twitter:description" content="FirewallD笔记理解配置，理解区域、知道如何配置规则。 🌐 [readhat官网文档] :globe_with_meridians: [firewalld官网文档] 概念firewalld自身并不具备防火墙的功能，而是和iptables一样需要通过内核的netfilter来实现，也就是说 firewalld和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的n">
+<meta name="twitter:image" content="https://github.com/gaoniao/images/raw/master/1533803100858.png">
 
 
 
@@ -380,18 +380,18 @@
 
       
         <h1 id="FirewallD笔记"><a href="#FirewallD笔记" class="headerlink" title="FirewallD笔记"></a>FirewallD笔记</h1><p>理解配置，理解区域、知道如何配置规则。</p>
-<p>🌐<a href="https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_linux/7/html/security_guide/sec-using_firewalls#sec-Introduction_to_firewalld" target="_blank" rel="noopener">readhat官网文档</a></p>
-<p>:globe_with_meridians:<a href="https://firewalld.org/documentation/" target="_blank" rel="noopener">firewalld官网文档</a></p>
+<p>🌐 [<a href="https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_linux/7/html/security_guide/sec-using_firewalls#sec-Introduction_to_firewalld" target="_blank" rel="noopener">readhat官网文档</a>]</p>
+<p>:globe_with_meridians: [<a href="https://firewalld.org/documentation/" target="_blank" rel="noopener">firewalld官网文档</a>]</p>
 <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><strong>firewalld</strong>自身并不具备防火墙的功能，而是和iptables一样需要通过内核的<strong>netfilter</strong>来实现，也就是说</p>
 <p><strong>firewalld</strong>和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的<strong>netfilter</strong>，只不过firewalld和iptables的结 构以及使用方法不一样罢了。 </p>
-<p><img src="E:\git\images\1533803100858.png" alt="1533803100858"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1533803100858.png" alt="1533803100858"></p>
 <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>firewalld有两层设计：<strong>核心层</strong>和顶部的<strong>D-Bus层</strong>。</p>
 <ul>
 <li><strong>核心层</strong>：核心层负责处理配置和后端，如iptables，ip6tables，ebtables，ipset和模块加载器。 </li>
 <li><strong>D-Bus层</strong>：D-Bus接口是更改和创建防火墙配置的主要方式。 firewalld提供的工具都使用该接口，例如firewall-cmd，firewall-config和firewall-applet。</li>
 </ul>
 <p>firewalld正在运行时可以使用<strong>firewall-offline-cmd</strong>，但不推荐使用它，因为有大概5秒钟的延迟。</p>
-<p><img src="E:\git\images\1533808993970.png" alt="1533808993970"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1533808993970.png" alt="1533808993970"></p>
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="配置目录"><a href="#配置目录" class="headerlink" title="配置目录"></a>配置目录</h3><p>firewalld支持两个<strong>配置目录</strong>：</p>
 <ul>
 <li><p><strong>/etc/firewalld/</strong> ：用户配置文件目录</p>
@@ -531,8 +531,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/09/Linux学习笔记-Iptables/" rel="next" title="Linux学习笔记-SSH">
-                <i class="fa fa-chevron-left"></i> Linux学习笔记-SSH
+              <a href="/2018/08/09/Linux学习笔记-Iptables/" rel="next" title="Linux学习笔记-Iptables">
+                <i class="fa fa-chevron-left"></i> Linux学习笔记-Iptables
               </a>
             
           </div>

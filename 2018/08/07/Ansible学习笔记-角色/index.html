@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Ansible Roles学习笔记在Ansible中，Role是将Playbook分割为多个文件的主要机制。 role并不是某一个具体的东西，而是一个规范与抽象，Ansible将独立的功能抽象成role，并将该功能依赖的文件、变量、模板、Playbook以统一的格式进行规范化组织，以此简化了复杂的Playbook的编写，同样增加了Playbook的可维护性。 Galaxy网站:globe_with">
+<meta name="description" content="Ansible Roles学习笔记在Ansible中，Role是将Playbook分割为多个文件的主要机制。 role并不是某一个具体的东西，而是一个规范与抽象，Ansible将独立的功能抽象成role，并将该功能依赖的文件、变量、模板、Playbook以统一的格式进行规范化组织，以此简化了复杂的Playbook的编写，同样增加了Playbook的可维护性。 Galaxy网站🌐[Galaxy ]">
 <meta name="keywords" content="Ansible">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ansible学习笔记-Roles">
 <meta property="og:url" content="http://yoursite.com/2018/08/07/Ansible学习笔记-角色/index.html">
 <meta property="og:site_name" content="剑十三">
-<meta property="og:description" content="Ansible Roles学习笔记在Ansible中，Role是将Playbook分割为多个文件的主要机制。 role并不是某一个具体的东西，而是一个规范与抽象，Ansible将独立的功能抽象成role，并将该功能依赖的文件、变量、模板、Playbook以统一的格式进行规范化组织，以此简化了复杂的Playbook的编写，同样增加了Playbook的可维护性。 Galaxy网站:globe_with">
+<meta property="og:description" content="Ansible Roles学习笔记在Ansible中，Role是将Playbook分割为多个文件的主要机制。 role并不是某一个具体的东西，而是一个规范与抽象，Ansible将独立的功能抽象成role，并将该功能依赖的文件、变量、模板、Playbook以统一的格式进行规范化组织，以此简化了复杂的Playbook的编写，同样增加了Playbook的可维护性。 Galaxy网站🌐[Galaxy ]">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-09T05:51:12.871Z">
+<meta property="og:updated_time" content="2018-09-11T05:02:38.887Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ansible学习笔记-Roles">
-<meta name="twitter:description" content="Ansible Roles学习笔记在Ansible中，Role是将Playbook分割为多个文件的主要机制。 role并不是某一个具体的东西，而是一个规范与抽象，Ansible将独立的功能抽象成role，并将该功能依赖的文件、变量、模板、Playbook以统一的格式进行规范化组织，以此简化了复杂的Playbook的编写，同样增加了Playbook的可维护性。 Galaxy网站:globe_with">
+<meta name="twitter:description" content="Ansible Roles学习笔记在Ansible中，Role是将Playbook分割为多个文件的主要机制。 role并不是某一个具体的东西，而是一个规范与抽象，Ansible将独立的功能抽象成role，并将该功能依赖的文件、变量、模板、Playbook以统一的格式进行规范化组织，以此简化了复杂的Playbook的编写，同样增加了Playbook的可维护性。 Galaxy网站🌐[Galaxy ]">
 
 
 
@@ -378,10 +378,10 @@
       
         <h1 id="Ansible-Roles学习笔记"><a href="#Ansible-Roles学习笔记" class="headerlink" title="Ansible Roles学习笔记"></a>Ansible Roles学习笔记</h1><p>在Ansible中，Role是将Playbook分割为多个文件的主要机制。</p>
 <p><em>role</em>并不是某一个具体的东西，而是一个规范与抽象，Ansible将独立的功能抽象成<em>role</em>，并将该功能依赖的文件、变量、模板、Playbook以统一的格式进行规范化组织，以此简化了复杂的Playbook的编写，同样增加了Playbook的可维护性。</p>
-<h2 id="Galaxy网站"><a href="#Galaxy网站" class="headerlink" title="Galaxy网站"></a>Galaxy网站</h2><p>:globe_with_meridians:<a href="https://galaxy.ansible.com/" target="_blank" rel="noopener">Galaxy</a> 类似于Docker Hub，是一个开源网站。用于查找，下载和共享社区开发的角色。从Galaxy下载角色是快速启动自动化项目的好方法。</p>
+<h2 id="Galaxy网站"><a href="#Galaxy网站" class="headerlink" title="Galaxy网站"></a>Galaxy网站</h2><p>🌐[<a href="https://galaxy.ansible.com/" target="_blank" rel="noopener">Galaxy</a> ]类似于Docker Hub，是一个开源网站。用于查找，下载和共享社区开发的角色。从Galaxy下载角色是快速启动自动化项目的好方法。</p>
 <p>还可以使用该站点来共享您创建的角色。通过使用您的GitHub帐户对站点进行身份验证，您可以<em>导入</em>角色，使其可供Ansible社区使用。导入的角色在Galaxy搜索索引中可用，并在站点上可见，允许用户发现和下载它们。 </p>
 <p>还可以在公司或个人的Galaxy服务器上下载角色，默认使用服务器地址<a href="https://galaxy.ansible.com与Galaxy网站API进行通信，需要更改ansible.cfg配置文件来修改Galaxy服务器地址。" target="_blank" rel="noopener">https://galaxy.ansible.com与Galaxy网站API进行通信，需要更改ansible.cfg配置文件来修改Galaxy服务器地址。</a></p>
-<p>:globe_with_meridians: <a href="https://github.com/ansible/ansible-examples" target="_blank" rel="noopener">Ansible Github</a>也提供了一些最佳实践的例子，可以在学习或者工作的时候进行参考。</p>
+<p>🌐[<a href="https://github.com/ansible/ansible-examples" target="_blank" rel="noopener">Ansible Github</a>]也提供了一些最佳实践的例子，可以在学习或者工作的时候进行参考。</p>
 <h2 id="Galaxy命令用法"><a href="#Galaxy命令用法" class="headerlink" title="Galaxy命令用法"></a>Galaxy命令用法</h2><h2 id="Roles目录结构"><a href="#Roles目录结构" class="headerlink" title="Roles目录结构"></a>Roles目录结构</h2> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── group_vars</span><br><span class="line">│   ├── all</span><br><span class="line">│   └── dbservers</span><br><span class="line">├── hosts</span><br><span class="line">├── LICENSE.md</span><br><span class="line">├── README.md</span><br><span class="line">├── roles</span><br><span class="line">│   ├── common</span><br><span class="line">│   │   ├── handlers</span><br><span class="line">│   │   │   └── main.yml</span><br><span class="line">│   │   ├── tasks</span><br><span class="line">│   │   │   └── main.yml</span><br><span class="line">│   │   └── templates</span><br><span class="line">│   │       └── ntp.conf.j2</span><br><span class="line">│   ├── db</span><br><span class="line">│   │   ├── handlers</span><br><span class="line">│   │   │   └── main.yml</span><br><span class="line">│   │   ├── tasks</span><br><span class="line">│   │   │   └── main.yml</span><br><span class="line">│   │   └── templates</span><br><span class="line">│   │       └── my.cnf.j2</span><br><span class="line">│   └── web</span><br><span class="line">│       ├── handlers</span><br><span class="line">│       │   └── main.yml</span><br><span class="line">│       ├── tasks</span><br><span class="line">│       │   ├── copy_code.yml</span><br><span class="line">│       │   ├── install_httpd.yml</span><br><span class="line">│       │   └── main.yml</span><br><span class="line">│       └── templates</span><br><span class="line">│           └── index.php.j2</span><br><span class="line">└── site.yml</span><br></pre></td></tr></table></figure>
       
     </div>
@@ -412,8 +412,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/04/Ansible学习笔记-剧本/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2018/08/04/Ansible学习笔记-剧本/" rel="next" title="Ansible学习笔记-剧本">
+                <i class="fa fa-chevron-left"></i> Ansible学习笔记-剧本
               </a>
             
           </div>

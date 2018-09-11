@@ -87,13 +87,13 @@
 <meta property="og:site_name" content="剑十三">
 <meta property="og:description" content="有时候我们需要初始化一个嵌套着几个列表的列表。 最好的选择是使用列表推导： 12345&amp;gt;&amp;gt;&amp;gt; board = [[&apos;-&apos;] * 3 for i in range(3)][[&apos;-&apos;, &apos;-&apos;, &apos;-&apos;], [&apos;-&apos;, &apos;-&apos;, &apos;-&apos;], [&apos;-&apos;, &apos;-&apos;, &apos;-&apos;]]&amp;gt;&amp;gt;&amp;gt; board[1][2] = &apos;X&apos;&amp;gt;&amp;gt;&amp;gt; board[[&apos;-&apos;, &apos;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1529495824664.png">
-<meta property="og:image" content="https://github.com/gao-peng/images/raw/master/1529495918326.png">
-<meta property="og:updated_time" content="2018-07-12T16:38:36.001Z">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1529495824664.png">
+<meta property="og:image" content="https://github.com/gaoniao/images/raw/master/1529495918326.png">
+<meta property="og:updated_time" content="2018-09-11T04:27:15.403Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python由列表组成的列表中注意的问题">
 <meta name="twitter:description" content="有时候我们需要初始化一个嵌套着几个列表的列表。 最好的选择是使用列表推导： 12345&amp;gt;&amp;gt;&amp;gt; board = [[&apos;-&apos;] * 3 for i in range(3)][[&apos;-&apos;, &apos;-&apos;, &apos;-&apos;], [&apos;-&apos;, &apos;-&apos;, &apos;-&apos;], [&apos;-&apos;, &apos;-&apos;, &apos;-&apos;]]&amp;gt;&amp;gt;&amp;gt; board[1][2] = &apos;X&apos;&amp;gt;&amp;gt;&amp;gt; board[[&apos;-&apos;, &apos;">
-<meta name="twitter:image" content="https://github.com/gao-peng/images/raw/master/1529495824664.png">
+<meta name="twitter:image" content="https://github.com/gaoniao/images/raw/master/1529495824664.png">
 
 
 
@@ -387,9 +387,9 @@
 <p>错误的地方在于：第二种方法最终生成的列表其实包含3个指向用一个列表的引用。我们不做修改的时候，看起来还好，一旦我们试图修改其中包含的某一个列表中的元素时，就暴露了列表内的3个引用指向同一个对象的事实。</p>
 <p>如图：</p>
 <p>列表推导生成列表：</p>
-<p><img src="https://github.com/gao-peng/images/raw/master/1529495824664.png" alt="1529495824664"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1529495824664.png" alt="1529495824664"></p>
 <p>使用*便捷生成列表：</p>
-<p><img src="https://github.com/gao-peng/images/raw/master/1529495918326.png" alt="1529495918326"></p>
+<p><img src="https://github.com/gaoniao/images/raw/master/1529495918326.png" alt="1529495918326"></p>
 
       
     </div>
